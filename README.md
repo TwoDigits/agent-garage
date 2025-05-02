@@ -1,17 +1,27 @@
-# Self-hosted AI starter kit
+# Agent Garage: A GenAI Reference Architecture
 
-**Self-hosted AI Starter Kit** is an open-source Docker Compose template designed to swiftly initialize a comprehensive local AI and low-code development environment.
+**Agent Garage** is an open-source project aimed at building a reference architecture for a generative AI (GenAI) platform using open-source software. It is designed to serve as a starting point for creating agentic AI workflows and exploring modular, self-hosted AI solutions.
 
-![n8n.io - Screenshot](https://raw.githubusercontent.com/n8n-io/self-hosted-ai-starter-kit/main/assets/n8n-demo.gif)
+This project builds upon the foundation of the **Self-hosted AI Starter Kit**, curated by <https://github.com/n8n-io>, which combines the self-hosted n8n platform with a curated list of compatible AI products and components.
 
-Curated by <https://github.com/n8n-io>, it combines the self-hosted n8n
-platform with a curated list of compatible AI products and components to
-quickly get started with building self-hosted AI workflows.
+> [!NOTE]
+> **Work in Progress:** Agent Garage is in its early stages of development. Contributions and feedback are welcome as the project evolves.
 
-> [!TIP]
-> [Read the announcement](https://blog.n8n.io/self-hosted-ai/)
+### Key Features
 
-### What’s included
+🚗 **Agentic AI:** Build smart, autonomous agents effortlessly.
+
+🧰 **Full-Stack:** Frontend, backend, databases and local LLM covered.
+
+🛠️ **Modular:** Easily customizable, swap tools in and out.
+
+📖 **Documentation & Demos:** Practical examples and docs to learn and accelerate client showcases.
+
+🌐 **Open Source First:** 100% open-source tools, ready for enterprise adoption.
+
+### OpenSource Tech-Stack
+
+✅ [**Open WebUI**](https://openwebui.com/) -  User-friendly AI Interface.
 
 ✅ [**Self-hosted n8n**](https://n8n.io/) - Low-code platform with over 400
 integrations and advanced AI components
@@ -24,16 +34,6 @@ store with an comprehensive API
 
 ✅ [**PostgreSQL**](https://www.postgresql.org/) -  Workhorse of the Data
 Engineering world, handles large amounts of data safely.
-
-### What you can build
-
-⭐️ **AI Agents** for scheduling appointments
-
-⭐️ **Summarize Company PDFs** securely without data leaks
-
-⭐️ **Smarter Slack Bots** for enhanced company communications and IT operations
-
-⭐️ **Private Financial Document Analysis** at minimal cost
 
 ## Installation
 
@@ -224,15 +224,3 @@ interact with the local filesystem.
 
 This project is licensed under the Apache License 2.0 - see the
 [LICENSE](LICENSE) file for details.
-
-## 💬 Support
-
-Join the conversation in the [n8n Forum](https://community.n8n.io/), where you
-can:
-
-- **Share Your Work**: Show off what you’ve built with n8n and inspire others
-  in the community.
-- **Ask Questions**: Whether you’re just getting started or you’re a seasoned
-  pro, the community and our team are ready to support with any challenges.
-- **Propose Ideas**: Have an idea for a feature or improvement? Let us know!
-  We’re always eager to hear what you’d like to see next.
