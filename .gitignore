@@ -1,0 +1,15 @@
+# IDE / Editor folders
+.idea/
+.vscode/
+*~
+*.swp
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# OpenWebUI model cache
+openwebui/cache/
