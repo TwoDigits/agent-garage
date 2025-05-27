@@ -265,11 +265,6 @@ interact with the local filesystem.
 
 1. Navigate to http://localhost:3000
 
-### Attention:
- Open WebUI is already configured. It may take a few minutes for the configuration data to finish loading. Open WebUI should only be started in the browser once the status message 200 has been displayed as shown below:
-
-   ![alt text](readme_images/200_status.png)
-
 When starting http://localhost:3000 the Sign In appears: 
 
    ![alt text](readme_images/sign_in_n8n.png)
