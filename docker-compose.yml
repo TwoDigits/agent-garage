@@ -3,7 +3,8 @@ volumes:
   postgres_storage:
   ollama_storage:
   qdrant_storage:
-  
+  openwebui_storage:
+
 networks:
   demo:
 
@@ -49,6 +50,25 @@ x-init-ollama: &init-ollama
     - "sleep 3; ollama pull llama3.2"
 
 services:
+
+  openwebui-import:
+    image: alpine:3.18
+    container_name: openwebui-import
+    networks: ['demo']
+    volumes:
+      - openwebui_storage:/app/backend/data
+      - ./openwebui:/init-data:ro
+    command: [
+      "/bin/sh", "-c",
+      "if [ ! -f /app/backend/data/webui.db ]; then \
+         echo 'Copy webui.db in volume…'; \
+         cp /init-data/webui.db /app/backend/data/webui.db; \
+       else \
+         echo 'webui.db already initialized.'; \
+       fi"
+    ]
+    restart: "no"
+
   postgres:
     image: postgres:16-alpine
     hostname: postgres
@@ -73,9 +93,9 @@ services:
     entrypoint: /bin/sh
     command:
       - "-c"
-      - "n8n import:credentials --separate --input=/demo-data/credentials && n8n import:workflow --separate --input=/demo-data/workflows"
+      - "n8n import:credentials --separate --input=/backup/credentials && n8n import:workflow --separate --input=/backup/workflows"
     volumes:
-      - ./n8n/demo-data:/demo-data
+      - ./n8n/backup:/backup
     depends_on:
       postgres:
         condition: service_healthy
@@ -89,7 +109,7 @@ services:
       - 5678:5678
     volumes:
       - n8n_storage:/home/node/.n8n
-      - ./n8n/demo-data:/demo-data
+      - ./n8n/backup:/backup
       - ./shared:/data/shared
     depends_on:
       postgres:
@@ -114,12 +134,14 @@ services:
     hostname: openwebui
     networks: ['demo']
     restart: unless-stopped
-    environment:
-      - RESET_CONFIG_ON_START=false
+
     ports:
       - 3000:8080
     volumes:
-      - ./openwebui/webui.db:/app/backend/data/webui.db
+      - openwebui_storage:/app/backend/data
+    depends_on:
+      openwebui-import:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 10s
@@ -162,8 +184,8 @@ services:
       - ollama-gpu
 
   ollama-pull-llama-gpu-amd:
-    profiles: [gpu-amd]
+    profiles: ["gpu-amd"]
     <<: *init-ollama
     image: ollama/ollama:rocm
     depends_on:
-     - ollama-gpu-amd
+      - ollama-gpu-amd

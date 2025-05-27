@@ -242,7 +242,7 @@ your local n8n instance.
 
 - [Tax Code Assistant](https://n8n.io/workflows/2341-build-a-tax-code-assistant-with-qdrant-mistralai-and-openai/)
 - [Breakdown Documents into Study Notes with MistralAI and Qdrant](https://n8n.io/workflows/2339-breakdown-documents-into-study-notes-using-templating-mistralai-and-qdrant/)
-- [Financial Documents Assistant using Qdrant and](https://n8n.io/workflows/2335-build-a-financial-documents-assistant-using-qdrant-and-mistralai/)[Mistral.ai](http://mistral.ai/)
+- [Financial Documents Assistant using Qdrant and](https://n8n.io/workflows/2335-build-a-financial-documents-assistant-using-qdrant-and-mistralai/) [Mistral.ai](http://mistral.ai/)
 - [Recipe Recommendations with Qdrant and Mistral](https://n8n.io/workflows/2333-recipe-recommendations-with-qdrant-and-mistral/)
 
 ## Tips & tricks
@@ -278,7 +278,7 @@ When starting http://localhost:3000 the Sign In appears:
 
    Email: admin@test.com
 
-   Password: S2yjzup!3
+   Password:S2yjzup!3
 
 3. After login, the chat interface is visible.
 
@@ -296,7 +296,7 @@ When starting http://localhost:3000 the Sign In appears:
 
    ![alt text](readme_images/change-llm.png)
 
-   To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted:
+   To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted.
 
 
 2. #### Disclaimer: 
