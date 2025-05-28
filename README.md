@@ -46,7 +46,7 @@ cd agent-garage
 
 ### Running the multi container system
 
-> A container engine is required to run this multi-container system. Either Docker or Podman can be used. One of these must be selected prior to installation, as it serves as the foundational component for hosting the containers.
+A container engine is required to run this multi-container system. Either Docker or Podman can be used. One of these must be selected prior to installation, as it serves as the foundational component for hosting the containers.
 
 ### Running n8n using Docker Compose
  
