@@ -7,6 +7,9 @@ This project builds upon the foundation of the **Self-hosted AI Starter Kit**, c
 > [!NOTE]
 > **Work in Progress:** Agent Garage is in its early stages of development. Contributions and feedback are welcome as the project evolves.
 
+> [!NOTE]
+> **Enterprise Version available:** As this is only a showcasing lab environment there is also an enterprise implementation version that was implemented with on of our clients and that is in production for years. So, yes the concepts behind this solution here can also be an enterprise solution.
+
 ### Key Features
 
 🚗 **Agentic AI:** Build smart, autonomous agents effortlessly.
