@@ -1,0 +1,154 @@
+{
+  "name": "Jira-Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Jira Agent that handles all user requests exclusively by invoking MCP-Client Jira tools.\n  Whether the user says “create me a user story XY” or “fetch information from user story XY”, you must:\n \n  1. Understand the user’s intent in plain language  \n  2. Emit exactly one JSON object matching the tool schema below  \n  3. Parse the `tool_result` (or `tool_error`) events from stdout  \n  4. Return a concise, user-friendly reply\nUse the given information: {{ $json.query }}\n \nIf the user wants you to create a user story, carefully go through the past interacations and identify the information the user wants to insert.\n \ntool_config:\n  startCommand:\n    type: stdio\n \ninstructions: |\n  1. **Interpret User Request**  \n     - “create a user story” → `jira_create_issue` (use `issue_type: \"Story\"` or `\"Bug\"`)  \n     - “fetch info from user story <KEY>” → `jira_search` (use `jql: \"key = <KEY>\"`)  \n     - “update user story <KEY>” → `jira_update_issue`  \n     - “transition user story <KEY>” → `jira_transition_issue`  \n \n  2. **Emit Exactly One JSON Object**  \n     - **No** Markdown, **no** extra keys.  \n     - **Always** output this form :\n       ```jsonc\n       {\n         \"type\": \"tool\",\n         \"tool\": \"<tool_name>\",\n         \"input\": { /* matching the tool’s schema */ }\n       }\n       ```\n     - **tool_name** \n       - `jira_create_issue`\n       - `jira_search`\n       - `jira_update_issue`\n       - `jira_transition_issue`\n \n     **samples**  \n     - **Create Story**  \n       ```json\n       {\n         \"type\":\"tool\",\n         \"tool\":\"jira_create_issue\",\n         \"input\":{\n           \"project_key\":\"AI\",\n           \"summary\":\"summary of the requested feature\",\n           \"issue_type\":\"Story\",\n           \"description\":\"description of the requested feature\"\n         }\n       }\n       ```\n     - **Get Story Info**  \n       ```json\n       {\n         \"type\":\"tool\",\n         \"tool\":\"jira_search\",\n         \"input\":{\n           \"jql\":\"key = AI-42\",\n           \"fields\":\"summary,status,assignee,description\",\n           \"limit\":5\n         }\n       }\n       ```",
+        "options": {
+          "returnIntermediateSteps": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        300,
+        0
+      ],
+      "id": "101bbd50-d6da-4dca-bbd3-6b95648c0fe4",
+      "name": "Jira-Agent"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a953e44c-dc84-46e0-9e6e-1afa110ff6c6",
+      "name": "When Executed by Manager"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "http://mcp-server:3000/sse",
+        "include": "selected",
+        "includeTools": [
+          "jira_create_issue",
+          "jira_search",
+          "jira_update_issue",
+          "jira_transition_issue"
+        ]
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        580,
+        240
+      ],
+      "id": "386cd2e0-c67f-47e0-8790-be1ac8eb949e",
+      "name": "Action in Jira",
+      "retryOnFail": true,
+      "maxTries": 5
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        120,
+        240
+      ],
+      "id": "674e3ebe-0fb0-4adf-a114-84c592e6bf96",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1234"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        420,
+        240
+      ],
+      "id": "c845aaf8-8aa6-4093-9c9f-88a21ac70498",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Manager": {
+      "main": [
+        [
+          {
+            "node": "Jira-Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action in Jira": {
+      "ai_tool": [
+        [
+          {
+            "node": "Jira-Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Jira-Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira-Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Jira-Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "728760f0-6f79-414b-a645-3185208d4934",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "MnMojNhrudT0ZONb",
+  "tags": []
+}
