@@ -137,7 +137,7 @@ podman compose --profile cpu --file docker-compose.yml up
 4. The dashboard will be loaded.
 5. Open the included workflow "Manager-Agents"  by double-clicking on it.
 
-   ![alt text](readme_images/Manager-Agent.png.png)
+   ![alt text](readme_images/Manager-Agent.png)
 
 6. Before the workflow can be tried out, the workflow must be activated by clicking on the “Active” button in the top right-hand corner.
 
@@ -257,7 +257,7 @@ When starting http://localhost:3000 the Sign In appears:
 3. Click on "Set it up for me" and continue.
 
 4. In the next step you have to login.
-![alt text](readme_images/Jira_Login.png)
+![alt text](readme_images/Jira-Login.png)
 
 5. In the next step you have to choose a Jira-Product. Select "Jira" and continue.
 
