@@ -3,31 +3,20 @@
   "nodes": [
     {
       "parameters": {
-        "inputSource": "passthrough"
-      },
-      "type": "n8n-nodes-base.executeWorkflowTrigger",
-      "typeVersion": 1.1,
-      "position": [
-        -240,
-        160
-      ],
-      "id": "e0517395-cb82-4d0a-9ebc-9be7a50d1b01",
-      "name": "When Executed by Manager"
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=You take on the role of the Business Analyst in our agile development team. Your primary responsibility is to craft well-structured, clear, and verifiable user stories for upcoming product increments.\nInstructions:\nFormat\n\nUse the user request to understand the content of the user story: {{ $json.query }}\nAlways use the standard template:\nAs a <role> I want <feature/function> so that <benefit>\nQuality Criteria (INVEST)\nIndependent (each story stands alone)\nNegotiable (open to discussion)\nValuable (delivers clear value)\nEstimable (can be sized)\nSmall (fits within a single sprint)\nTestable (has clear acceptance criteria)\nAcceptance Criteria\nProvide 3–5 precise criteria per story, phrased as:\nGiven…, When…, Then…\nAdditional Notes\nDefine any domain-specific terms so developers and testers fully understand them.\nBreak down large themes (epics) into smaller, sprint-sized stories.\nExamples:\nExample 1\nUser Story\nAs a registered user I want to log in with my email and password so that I can access my personal dashboard.\nAcceptance Criteria\nGiven a registered user is on the login page; When they enter a valid email and password; Then they are redirected to their dashboard.\nGiven a user enters an incorrect password; When they click “Log In”; Then they see the error message “Invalid credentials.”\nGiven a user has forgotten their password; When they click “Forgot Password”; Then they receive an email with a password-reset link.\nExample 2\nUser Story\nAs a product manager I want to generate a monthly user-engagement report so that I can spot trends early and take action.\nAcceptance Criteria\nGiven the product manager is in the reporting module; When they select “Last Month” and click “Generate Report”; Then a PDF with KPIs (DAU, MAU, session duration) is produced.\nGiven the report is ready; When the product manager clicks “Download”; Then the PDF downloads locally.\nGiven there is no data for the selected period; When the report is generated; Then the message “No data for the selected period” appears.\n\n",
+        "httpMethod": "POST",
+        "path": "assistant_on_creating_user_stories",
+        "responseMode": "responseNode",
         "options": {}
       },
-      "type": "@n8n/n8n-nodes-langchain.agent",
-      "typeVersion": 1.7,
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
       "position": [
-        40,
+        860,
         160
       ],
-      "id": "b790f616-3d03-4227-b463-a1dd0dcf7740",
-      "name": "User-Story-Creator-Agent"
+      "id": "a306dce1-e0e1-4e56-b430-44eabb8ebd62",
+      "name": "Webhook",
+      "webhookId": "9066e90b-78e9-4efb-b5c1-d5fd3778b1d7"
     },
     {
       "parameters": {
@@ -37,10 +26,10 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
       "typeVersion": 1,
       "position": [
-        20,
+        1220,
         380
       ],
-      "id": "85c9f4d0-aade-46b6-a81f-c15728183b66",
+      "id": "2ecba473-8192-419f-b588-e79f0f43a711",
       "name": "Ollama Chat Model",
       "credentials": {
         "ollamaApi": {
@@ -52,41 +41,220 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "1234"
+        "sessionKey": "={{ $('Webhook').item.json.body.sessionId }}"
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        140,
+        1440,
         380
       ],
-      "id": "25604f1f-4245-4341-a4d6-a30d8e89432d",
+      "id": "17d13940-325f-42ad-9b62-9a094c5ce76e",
       "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        160
+      ],
+      "id": "d401a165-e52b-4bee-82a8-1d75c9b3e7e4",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe memory keeps a history of previous messages, allowing for an ongoing conversation with the AI, rather than every interaction starting fresh.\n\n\nThis short term memory stores a customizable length of chat history for the current session.",
+        "height": 340,
+        "width": 170
+      },
+      "id": "5e325367-54b6-46df-aba2-b96b82f041a5",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe Ollama Chat Model node allows to use Large Language Models (LLMs) with conversational agents.\n\nThe LLM llama3.2 is used here.\n",
+        "height": 340,
+        "width": 170
+      },
+      "id": "3eb9ad8b-7421-4a37-9b24-9b9710103c5d",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1180,
+        520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 👆\n The Webhook node is used to create webhooks, which can receive data from apps and services when an event occurs. It's a trigger node, which means it can start an n8n workflow. In this case it allows Open WebUI  to connect to n8n and run a workflow. \n\nTherefore, the workflow is started as soon as a chat message is sent from Open Webui.",
+        "height": 540,
+        "width": 170
+      },
+      "id": "67582f1c-de4e-4598-b14b-b1f177d67393",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        820,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nUse the Respond to Webhook node to control the response to incoming webhooks. This node works with the Webhook node.\n\nIn this case, the generated response from the AI-Agent is sent to Open WebUI via this node.",
+        "height": 540,
+        "width": 170
+      },
+      "id": "9afa19d7-be94-4b45-9118-2b26987bc8eb",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1740,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# AI-Agents\nAn AI-Agent is an autonomous system that receives data, makes rational decisions, and acts within its environment to achieve specific goals.\n\n### AI agents can be characterised by three components: ###\n\n* Memory Capacities \n* Tools \n* LLM \n\n\n* An LLM acts as the reasoning engine behind the agent and decides what actions to take and in which order. \n\n* Moreover the Agent can use external tools and APIs to perform actions and retrieve information. It can understand the capabilities of different tools and determine which tool to use depending on the task.\n\n\n## Customization of agents\n\n* AI-Agents in n8n can be easily customized using system prompts.\nA system prompt defines the agent’s role, behavior, and area of expertise—whether it's acting as a writer, analyst, advisor, or something else.\n\n* In this case, the AI-Agent has been configured specifically to generate user stories. It analyzes requirements and produces complete user stories in the classic format, including acceptance criteria.\n\n* The agent's purpose can be changed at any time: \nBy simply adjusting the system prompt, it can be reconfigured for virtually any task—such as writing marketing content or drafting support replies.",
+        "height": 760,
+        "width": 520
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        60
+      ],
+      "typeVersion": 1,
+      "id": "04adaa41-5c22-4496-91c4-4d740886ce8d",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## 1. Receiving the user's chat input from Open WebUI",
+        "height": 240,
+        "width": 340,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        760,
+        60
+      ],
+      "typeVersion": 1,
+      "id": "e79fa2f9-9e28-4966-a463-46dab0f2c6d1",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "",
+        "height": 900,
+        "width": 2720,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "a5cba250-6d3d-4bf2-8767-aeb90ebaa811",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## 2. Generating Response",
+        "height": 240,
+        "width": 340,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1200,
+        60
+      ],
+      "typeVersion": 1,
+      "id": "e453e16f-286f-4f29-b956-57393fd40d1f",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## 3. Sending Response to Open WebUI",
+        "height": 240,
+        "width": 340,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1620,
+        60
+      ],
+      "typeVersion": 1,
+      "id": "c5546fbd-985e-4c3a-9db1-8585938a0ab7",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "# Description of the workflow\n\nThe workflow enables users to enter a request via chat in Open WebUI, from which a complete user story is automatically generated. A specialised AI-Agent in n8n takes over the analysis and formulation - the result is displayed directly in the chat.\n\n\n### 1. Receipt of the user request:\n* A user sends a chat message via Open WebUI with the intention of having a user story created. This request automatically starts the n8n workflow.\n* The message is transmitted to n8n - it contains, for example, an idea, requirement or description from which a user story is to be generated.\n\n\n### 2. Processing by AI agent:\n* The message is forwarded to a specially configured AI Agent Node.\n* This agent is designed to create a complete user story from the perspective of a business analyst.\n* The AI-Agent analyses the input and formulates a structured user story in the classic format (‘As a [role], I would like [...] to [...]’).\n\n### 3. Generation of the user story:\n* The generated story is sent back to OpenWebUI and displayed to the user directly in the chat window as a response",
+        "height": 760,
+        "width": 520
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2120,
+        60
+      ],
+      "typeVersion": 1,
+      "id": "c6a37041-36db-4331-af9f-e5a5fd7dba84",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Webhook').item.json.body.chatInput }}",
+        "options": {
+          "systemMessage": "=You take on the role of the Business Analyst in our agile development team. Your primary responsibility is to craft well-structured, clear, and verifiable user stories for upcoming product increments.\nInstructions:\nFormat\nAlways use the standard template:\nAs a <role> I want <feature/function> so that <benefit>\nQuality Criteria (INVEST)\nIndependent (each story stands alone)\nNegotiable (open to discussion)\nValuable (delivers clear value)\nEstimable (can be sized)\nSmall (fits within a single sprint)\nTestable (has clear acceptance criteria)\nAcceptance Criteria\nProvide 3–5 precise criteria per story, phrased as:\nGiven…, When…, Then…\nAdditional Notes\nDefine any domain-specific terms so developers and testers fully understand them.\nBreak down large themes (epics) into smaller, sprint-sized stories.\nExamples:\nExample 1\nUser Story\nAs a registered user I want to log in with my email and password so that I can access my personal dashboard.\nAcceptance Criteria\nGiven a registered user is on the login page; When they enter a valid email and password; Then they are redirected to their dashboard.\nGiven a user enters an incorrect password; When they click “Log In”; Then they see the error message “Invalid credentials.”\nGiven a user has forgotten their password; When they click “Forgot Password”; Then they receive an email with a password-reset link.\nExample 2\nUser Story\nAs a product manager I want to generate a monthly user-engagement report so that I can spot trends early and take action.\nAcceptance Criteria\nGiven the product manager is in the reporting module; When they select “Last Month” and click “Generate Report”; Then a PDF with KPIs (DAU, MAU, session duration) is produced.\nGiven the report is ready; When the product manager clicks “Download”; Then the PDF downloads locally.\nGiven there is no data for the selected period; When the report is generated; Then the message “No data for the selected period” appears."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1240,
+        160
+      ],
+      "id": "1db01905-25ac-43d0-b1a5-cc427eb72851",
+      "name": "User Story Creator"
     }
   ],
   "pinData": {},
   "connections": {
-    "When Executed by Manager": {
+    "Webhook": {
       "main": [
         [
           {
-            "node": "User-Story-Creator-Agent",
+            "node": "User Story Creator",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "User-Story-Creator-Agent": {
-      "main": [
-        []
-      ]
-    },
     "Ollama Chat Model": {
       "ai_languageModel": [
         [
           {
-            "node": "User-Story-Creator-Agent",
+            "node": "User Story Creator",
             "type": "ai_languageModel",
             "index": 0
           }
@@ -97,8 +265,19 @@
       "ai_memory": [
         [
           {
-            "node": "User-Story-Creator-Agent",
+            "node": "User Story Creator",
             "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User Story Creator": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
             "index": 0
           }
         ]
@@ -109,11 +288,10 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "be518f0c-e3c2-4c55-a66f-680da8368de6",
+  "versionId": "3a71233e-f63e-4058-822b-d79e93c86209",
   "meta": {
-    "templateCredsSetupCompleted": true,
     "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
   },
-  "id": "5g3wIBt23oVl7EOC",
+  "id": "V4Ij2EuIHhjLeXAR",
   "tags": []
 }
