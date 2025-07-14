@@ -301,6 +301,44 @@ When starting http://localhost:3000 the Sign In appears:
    Please note that Open WebUI is still under active development and is intended for experimentation and testing only. It is not recommended for production use. As a result, you may occasionally experience display delays within the Open WebUI interface. In this case, reloading the page or waiting a few seconds will usually solve the problem.
 
 
+## 🤖 Chat-based Workflow Creation with n8n-MCP
+
+Agent Garage becomes even more powerful with the n8n-MCP (Model Context Protocol) Server! This enables you to create n8n workflows directly through chat interactions in AI development environments like Claude, Windsurf, or Cursor - without having to dig through the complete n8n documentation.
+
+### What is n8n-MCP?
+
+The n8n-MCP Server gives AI assistants comprehensive access to n8n node documentation and enables:
+- Chat-based workflow creation without deep n8n knowledge
+- Smart node search and suggestions
+- Validation of node configurations before deployment
+- Access to more than 500 n8n nodes with extensive property coverage
+
+### Quick Start
+
+1. **Installation via npx (recommended):**
+   ```bash
+   npx n8n-mcp
+   ```
+
+2. **Configure in your AI development environment:**
+   - Add the MCP server to your Claude/Cursor/Windsurf configuration
+   - Start a new chat and describe your desired workflow
+
+3. **Create workflows:**
+   Simply describe in chat what you want to automate:
+   ```
+   "Create a workflow that daily fetches emails from Gmail, 
+   saves attachments to Google Drive, and sends a Slack notification"
+   ```
+
+### Benefits for Agent Garage Users
+
+- **No n8n expertise required:** The AI assistant translates your requirements into working workflows
+- **Faster development:** From idea to workflow in minutes instead of hours
+- **Error reduction:** Automatic validation of node configurations
+
+For more details and complete documentation, visit the [n8n-MCP Repository](https://github.com/czlonkowski/n8n-mcp).
+
 ## 📜 License
 
 This project is licensed under the Apache License 2.0 - see the
