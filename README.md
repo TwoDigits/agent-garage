@@ -4,13 +4,27 @@
 
 This project builds upon the foundation of the **Self-hosted AI Starter Kit**, curated by <https://github.com/n8n-io>, which combines the self-hosted n8n platform with a curated list of compatible AI products and components.
 
+## Table of Contents
+
+- [Key Features](#key-features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Quick Start and Usage](#️-quick-start-and-usage)
+- [Upgrading](#upgrading)
+- [Recommended Reading](#-recommended-reading)
+- [Video Walkthrough](#-video-walkthrough)
+- [More AI Templates](#️-more-ai-templates)
+- [Tips & Tricks](#-tips--tricks)
+- [Chat-based Workflow Creation with n8n-MCP](#-chat-based-workflow-creation-with-n8n-mcp)
+- [License](#-license)
+
 > [!NOTE]
 > **Work in Progress:** Agent Garage is in its early stages of development. Contributions and feedback are welcome as the project evolves.
 
 > [!NOTE]
-> **Enterprise Version available:** As this is only a showcasing lab environment there is also an enterprise implementation version that was implemented with on of our clients and that is in production for years. So, yes the concepts behind this solution here can also be an enterprise solution.
+> **Enterprise Version Available:** While this is a showcase lab environment, an enterprise implementation version has been successfully deployed with one of our clients and has been in production for years. This demonstrates that the concepts behind this solution are enterprise-ready.
 
-### Key Features
+## Key Features
 
 🚗 **Agentic AI:** Build smart, autonomous agents effortlessly.
 
@@ -22,21 +36,17 @@ This project builds upon the foundation of the **Self-hosted AI Starter Kit**, c
 
 🌐 **Open Source First:** 100% open-source tools, ready for enterprise adoption.
 
-### OpenSource Tech-Stack
+## Tech Stack
 
-✅ [**Open WebUI**](https://openwebui.com/) -  User-friendly AI Interface.
+✅ [**Open WebUI**](https://openwebui.com/) - User-friendly AI interface
 
-✅ [**Self-hosted n8n**](https://n8n.io/) - Low-code platform with over 400
-integrations and advanced AI components
+✅ [**Self-hosted n8n**](https://n8n.io/) - Low-code platform with over 400 integrations and advanced AI components
 
-✅ [**Ollama**](https://ollama.com/) - Cross-platform LLM platform to install
-and run the latest local LLMs
+✅ [**Ollama**](https://ollama.com/) - Cross-platform LLM platform to install and run the latest local LLMs
 
-✅ [**Qdrant**](https://qdrant.tech/) - Open-source, high performance vector
-store with an comprehensive API
+✅ [**Qdrant**](https://qdrant.tech/) - Open-source, high-performance vector store with a comprehensive API
 
-✅ [**PostgreSQL**](https://www.postgresql.org/) -  Workhorse of the Data
-Engineering world, handles large amounts of data safely.
+✅ [**PostgreSQL**](https://www.postgresql.org/) - Reliable database system that handles large amounts of data safely
 
 ## Installation
 
@@ -47,15 +57,15 @@ git clone https://github.com/twodigits-genai/agent-garage.git
 cd agent-garage
 ```
 
-### Running the multi container system
+### Running the Multi-Container System
 
 A container engine is required to run this multi-container system. Either Docker or Podman can be used. One of these must be selected prior to installation, as it serves as the foundational component for hosting the containers.
 
-### Running n8n using Docker Compose
+### Using Docker Compose
  
-#### For Nvidia GPU users
- 
-```
+#### For Nvidia GPU Users
+
+```bash
 git clone https://github.com/twodigits-genai/agent-garage.git
 cd agent-garage
 docker compose --profile gpu-nvidia up
@@ -65,15 +75,15 @@ docker compose --profile gpu-nvidia up
 > If you have not used your Nvidia GPU with Docker before, please follow the
 > [Ollama Docker instructions](https://github.com/ollama/ollama/blob/main/docs/docker.md).
 
-### For AMD GPU users on Linux
+#### For AMD GPU Users on Linux
 
-```
+```bash
 git clone https://github.com/twodigits-genai/agent-garage.git
 cd agent-garage
 docker compose --profile gpu-amd up
 ```
 
-#### For Mac / Apple Silicon users
+#### For Mac / Apple Silicon Users
 
 If you’re using a Mac with an M1 or newer processor, you can't expose your GPU
 to the Docker instance, unfortunately. There are two options in this case:
@@ -83,19 +93,19 @@ to the Docker instance, unfortunately. There are two options in this case:
 2. Run Ollama on your Mac for faster inference, and connect to that from the
    n8n instance
 
-If you want to run Ollama on your mac, check the
+If you want to run Ollama on your Mac, check the
 [Ollama homepage](https://ollama.com/)
 for installation instructions, and run the starter kit as follows:
 
-```
+```bash
 git clone https://github.com/twodigits-genai/agent-garage.git
 cd agent-garage
 docker compose up
 ```
 
-##### For Mac users running OLLAMA locally
+##### For Mac Users Running Ollama Locally
 
-If you're running OLLAMA locally on your Mac (not in Docker), you need to modify the OLLAMA_HOST environment variable
+If you're running Ollama locally on your Mac (not in Docker), you need to modify the OLLAMA_HOST environment variable
 in the n8n service configuration. Update the x-n8n section in your Docker Compose file as follows:
 
 ```yaml
@@ -112,53 +122,53 @@ Additionally, after you see "Editor is now accessible via: <http://localhost:567
 2. Click on "Local Ollama service"
 3. Change the base URL to "http://host.docker.internal:11434/"
 
-#### For everyone else
+#### For Everyone Else (CPU Only)
 
-```
+```bash
 git clone https://github.com/twodigits-genai/agent-garage.git
 cd agent-garage
 docker compose --profile cpu up
 ```
 
-### Running n8n using Podman:
+### Using Podman
 
-#### For Nvidia GPU users
-```
+#### For Nvidia GPU Users
+
+```bash
 podman compose --profile gpu-nvidia --file docker-compose.yml up
 ```
 
-#### For AMD GPU users on Linux
+#### For AMD GPU Users on Linux
 
-```
+```bash
 podman compose --profile gpu-amd --file docker-compose.yml up
 ```
 
-#### For Mac / Apple Silicon users
+#### For Mac / Apple Silicon Users
 
 If you’re using a Mac with an M1 or newer processor, you can't expose your GPU
 to the Docker instance, unfortunately. There are two options in this case:
 
-1. Run the multi-container-system fully on CPU, like in the section "For everyone else"
+1. Run the multi-container system fully on CPU, like in the section "For Everyone Else (CPU Only)"
    below
 2. Run Ollama on your Mac for faster inference, and connect to that from the
    n8n instance
 
 
-```
+```bash
 podman compose --file docker-compose.yml up
 ```
 
-#### For everyone else
+#### For Everyone Else (CPU Only)
 
-```
+```bash
 podman compose --profile cpu --file docker-compose.yml up
 ```
 
 
-## ⚡️ Quick start and usage
+## ⚡️ Quick Start and Usage
 
-The core of the Self-hosted AI Starter Kit is a Docker Compose file, pre-configured with network and storage settings, minimizing the need for additional installations.
-After completing the installation steps above, simply follow the steps below to get started.
+The core of Agent Garage is a Docker Compose file, pre-configured with network and storage settings, minimizing the need for additional installations. After completing the installation steps above, follow these steps to get started.
 
 ### n8n
 
@@ -189,31 +199,30 @@ After completing the installation steps above, simply follow the steps below to 
 
 ## Upgrading
 
-* ### For Nvidia GPU setups:
+### For Nvidia GPU Setups
 
 ```bash
 docker compose --profile gpu-nvidia pull
 docker compose create && docker compose --profile gpu-nvidia up
 ```
 
-* ### For Mac / Apple Silicon users
+### For Mac / Apple Silicon Users
 
 ```
 docker compose pull
 docker compose create && docker compose up
 ```
 
-* ### For Non-GPU setups:
+### For Non-GPU Setups (CPU Only)
 
 ```bash
 docker compose --profile cpu pull
 docker compose create && docker compose --profile cpu up
 ```
 
-## 👓 Recommended reading
+## 👓 Recommended Reading
 
-n8n is full of useful content for getting started quickly with its AI concepts
-and nodes. If you run into an issue, go to [support](#support).
+n8n is full of useful content for getting started quickly with its AI concepts and nodes.
 
 - [AI agents for developers: from theory to practice with n8n](https://blog.n8n.io/ai-agents/)
 - [Tutorial: Build an AI workflow in n8n](https://docs.n8n.io/advanced-ai/intro-tutorial/)
@@ -221,18 +230,18 @@ and nodes. If you run into an issue, go to [support](#support).
 - [Demonstration of key differences between agents and chains](https://docs.n8n.io/advanced-ai/examples/agent-chain-comparison/)
 - [What are vector databases?](https://docs.n8n.io/advanced-ai/examples/understand-vector-databases/)
 
-## 🎥 Video walkthrough
+## 🎥 Video Walkthrough
 
 - [Installing and using Local AI for n8n](https://www.youtube.com/watch?v=xz_X2N-hPg0)
 
-## 🛍️ More AI templates
+## 🛍️ More AI Templates
 
 For more AI workflow ideas, visit the [**official n8n AI template
 gallery**](https://n8n.io/workflows/?categories=AI). From each workflow,
 select the **Use workflow** button to automatically import the workflow into
 your local n8n instance.
 
-### Learn AI key concepts
+### Learn AI Key Concepts
 
 - [AI Agent Chat](https://n8n.io/workflows/1954-ai-agent-chat/)
 - [AI chat with any data source (using the n8n workflow too)](https://n8n.io/workflows/2026-ai-chat-with-any-data-source-using-the-n8n-workflow-tool/)
@@ -241,24 +250,22 @@ your local n8n instance.
 - [Chat with PDF docs using AI (quoting sources)](https://n8n.io/workflows/2165-chat-with-pdf-docs-using-ai-quoting-sources/)
 - [AI agent that can scrape webpages](https://n8n.io/workflows/2006-ai-agent-that-can-scrape-webpages/)
 
-### Local AI templates
+### Local AI Templates
 
 - [Tax Code Assistant](https://n8n.io/workflows/2341-build-a-tax-code-assistant-with-qdrant-mistralai-and-openai/)
 - [Breakdown Documents into Study Notes with MistralAI and Qdrant](https://n8n.io/workflows/2339-breakdown-documents-into-study-notes-using-templating-mistralai-and-qdrant/)
 - [Financial Documents Assistant using Qdrant and](https://n8n.io/workflows/2335-build-a-financial-documents-assistant-using-qdrant-and-mistralai/) [Mistral.ai](http://mistral.ai/)
 - [Recipe Recommendations with Qdrant and Mistral](https://n8n.io/workflows/2333-recipe-recommendations-with-qdrant-and-mistral/)
 
-## Tips & tricks
+## 💡 Tips & Tricks
 
-### Accessing local files
+### Accessing Local Files
 
-The self-hosted AI starter kit will create a shared folder (by default,
-located in the same directory) which is mounted to the n8n container and
-allows n8n to access files on disk. This folder within the n8n container is
+Agent Garage will create a shared folder (by default, located in the same directory) which is mounted to the n8n container and allows n8n to access files on disk. This folder within the n8n container is
 located at `/data/shared` -- this is the path you’ll need to use in nodes that
 interact with the local filesystem.
 
-**Nodes that interact with the local filesystem**
+**Nodes that interact with the local filesystem:**
 
 - [Read/Write Files from Disk](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.filesreadwrite/)
 - [Local File Trigger](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.localfiletrigger/)
@@ -268,7 +275,7 @@ interact with the local filesystem.
 
 1. Navigate to http://localhost:3000
 
-When starting http://localhost:3000 the Sign In appears: 
+When starting http://localhost:3000, the Sign In page appears: 
 
    ![alt text](readme_images/sign_in_n8n.png)
 
@@ -276,7 +283,7 @@ When starting http://localhost:3000 the Sign In appears:
 
    Email: admin@test.com
 
-   Password:S2yjzup!3
+   Password: S2yjzup!3
 
 3. After login, the chat interface is visible.
 
@@ -289,7 +296,7 @@ When starting http://localhost:3000 the Sign In appears:
 
 ## 💡 Notes
 
-1. The llama 3.2 model is installed in the system as standard. Alternatively, it is possible to use different LLMs. The exchange is carried out simply by adapting the model name in the compose.yml file:
+1. **Default Model:** The Llama 3.2 model is installed by default. You can use different LLMs by simply changing the model name in the `docker-compose.yml` file:
 
 
    ![alt text](readme_images/change-llm.png)
@@ -297,8 +304,7 @@ When starting http://localhost:3000 the Sign In appears:
    To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted.
 
 
-2. #### Disclaimer: 
-   Please note that Open WebUI is still under active development and is intended for experimentation and testing only. It is not recommended for production use. As a result, you may occasionally experience display delays within the Open WebUI interface. In this case, reloading the page or waiting a few seconds will usually solve the problem.
+2. **Disclaimer:** Open WebUI is still under active development and is intended for experimentation and testing only. It is not recommended for production use. You may occasionally experience display delays within the Open WebUI interface. In this case, reloading the page or waiting a few seconds will usually solve the problem.
 
 
 ## 🤖 Chat-based Workflow Creation with n8n-MCP
