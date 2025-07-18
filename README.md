@@ -53,7 +53,7 @@ This project builds upon the foundation of the **Self-hosted AI Starter Kit**, c
 ### Cloning the Repository
 
 ```bash
-git clone https://github.com/twodigits-genai/agent-garage.git
+git clone https://github.com/twodigits/agent-garage.git
 cd agent-garage
 ```
 
@@ -66,7 +66,7 @@ A container engine is required to run this multi-container system. Either Docker
 #### For Nvidia GPU Users
 
 ```bash
-git clone https://github.com/twodigits-genai/agent-garage.git
+git clone https://github.com/twodigits/agent-garage.git
 cd agent-garage
 docker compose --profile gpu-nvidia up
 ```
@@ -78,7 +78,7 @@ docker compose --profile gpu-nvidia up
 #### For AMD GPU Users on Linux
 
 ```bash
-git clone https://github.com/twodigits-genai/agent-garage.git
+git clone https://github.com/twodigits/agent-garage.git
 cd agent-garage
 docker compose --profile gpu-amd up
 ```
@@ -98,7 +98,7 @@ If you want to run Ollama on your Mac, check the
 for installation instructions, and run the starter kit as follows:
 
 ```bash
-git clone https://github.com/twodigits-genai/agent-garage.git
+git clone https://github.com/twodigits/agent-garage.git
 cd agent-garage
 docker compose up
 ```
@@ -125,7 +125,7 @@ Additionally, after you see "Editor is now accessible via: <http://localhost:567
 #### For Everyone Else (CPU Only)
 
 ```bash
-git clone https://github.com/twodigits-genai/agent-garage.git
+git clone https://github.com/twodigits/agent-garage.git
 cd agent-garage
 docker compose --profile cpu up
 ```
