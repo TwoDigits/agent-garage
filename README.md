@@ -347,5 +347,18 @@ For more details and complete documentation, visit the [n8n-MCP Repository](http
 
 ## 📜 License
 
-This project is licensed under the Apache License 2.0 - see the
-[LICENSE](LICENSE) file for details.
+This project is [licensed under the Apache 2.0 license](LICENSE).
+
+## ⚠️ Disclaimer
+
+Just to reiterate the point from the license:
+This project is provided on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+This project is provided as a **proof of concept** and is intended for **experimental
+or educational purposes only**. It's maintained on best-effort basis. While it's
+perfectly possible to use it as a base for an enterprise implementation, the project
+"as is" is **not** suitable for production or mission-critical use. The maintainers do
+not guarantee that the software functions as intended, nor do they assume responsibility
+for any loss or damage resulting from its use.
+
+Use of this project does not imply any affiliation with or endorsement by Accenture.
