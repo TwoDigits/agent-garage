@@ -187,6 +187,7 @@ The core of Agent Garage is a Docker Compose file, pre-configured with network a
 1. Navigate to http://localhost:5678
 2. The Registration form will appear.
 3. Enter the requested data. However, these do not have to be valid, as the e-mail address is not checked. You only have to set this up once.
+
    ![alt text](readme_images/SetUp-n8n.png)
 4. The dashboard will be loaded.
 
@@ -302,7 +303,7 @@ There are two main categories of workflows:
 The User Story Creator workflow is highlighted with a red border.
 
 It represents the simplest entry point into the system and is ideal for getting started.
-This workflow is based on a single AI agent and lets you directly try out core features like prompt-based user story generation.
+This workflow is based on a single AI agent and lets you directly try out user story generation.
 We recommend starting with this workflow to explore the basics before diving into the full multi-agent architecture.
 
 🟩 **Multi-Agent System Workflows**
@@ -324,11 +325,14 @@ For an easy first step, use the **User Story Creator** workflow in **n8n**. This
 - ✅ **Goal**: Get quick results & understand the platform basics  
 ### How it works:  
   1. Double click on the User Story Creator workflow 
+
       ![alt text](readme_images/Overview-n8n.png)
   2. Take a moment to review the explanations in the workflow and explore AI agents in n8n.
-  3. Activate the workflow by clicking the Active Button
+  3. Activate the workflow by clicking the Active Button:
+
       ![alt text](readme_images/Activated-Workflow.png)
-  4. In the chat interface of **Open WebUI** , select the **User-Story-Creator** chat from the list:
+  4. In the chat interface of **Open WebUI** , select the **User Story Creator** chat from the list:
+
     ![alt text](readme_images/User-Story-Creator-Chat.png)
 
   5. Enter a request (e.g. “Create a user story for a login function”)  via the chat interface and start interacting with the User Story Creator!
@@ -348,12 +352,15 @@ For the next step, use the **Multi-Agent System** workflow in **n8n**. This work
 - ✅ **Goal**: Understand agent collaboration 
 
 ### How it works:  
-  1. Double click on the **Manager-Agent** workflow  
+  1. Double click on the **Manager-Agent** workflow
+
       ![alt text](readme_images/Manager-Agent.png)
   2. Take a moment to review the explanations in the workflow and explore how the Manager-Agent and the other AI agents interact in **n8n**.  
-  3. Activate the workflow by clicking the Active Button
+  3. Activate the workflow by clicking the Active Button:
+
       ![alt text](readme_images/Activated-Manager-Agent.png)
-  4. In the chat interface of **Open WebUI**, select the chat named **SDLC Agents**:  
+  4. In the chat interface of **Open WebUI**, select the chat named **SDLC Agents**: 
+
       ![alt text](readme_images/SDLC-Agents-Chat.png)
   5. Enter a request (e.g. “Analyze this log file and create a bug report”) via the chat interface. The Manager-Agent will automatically coordinate the involved agents and return the result to you.
 
@@ -392,11 +399,12 @@ If the log file is replaced or renamed, make sure to update the corresponding pa
 3. Click on "I'll set it up myself" and continue.
 
 4. Choose "Built In Database".
+
 ![alt text](readme_images/Jira-Database-Setup.png)
 
 5. The application properties can be adopted by default.
 
-6. The next step is to generate a Server ID, which is required to use Jira. In addition, a Jira license must be available to which the Server ID is linked. If the license is not available, click on the “Generate a new trial license” link below.
+6. The next step is to generate a Server ID, which is required to use Jira. In addition, a Jira license must be available to which the Server ID is linked. If the license is not available, click on the “Generate a new trial license” for jira Software (Data Center) with the link below.
 
 ![alt text](readme_images/Jira-License-Key.png)
 
@@ -405,7 +413,7 @@ Click on Settings at the top right of your profile, select Issues from the menu 
 
 ![alt text](readme_images/Jira_issue_types.png)
 
-8. In order to link Jira with the n8n workflows, adapt the .env File.
+8. In order to link Jira with the n8n workflows, adapt the `.env` file.
 
 ### Create and configure personal access tokens
 1. Log in to your profile and open Settings.
@@ -414,9 +422,9 @@ Click on Settings at the top right of your profile, select Issues from the menu 
 
 3. Click on Create new token to create a token.
 
-4. Copy the generated token and paste it into the .env file:
+4. Copy the generated token and paste it into the `.env` file:
 
-JIRA_PERSONAL_TOKEN=your_token
+   JIRA_PERSONAL_TOKEN=your_token
 
 
 ### Create project and store metadata
@@ -424,9 +432,9 @@ JIRA_PERSONAL_TOKEN=your_token
 
 2. Enter the following information in the .env file:
 
-JIRA_USERNAME=your_username
+   JIRA_USERNAME=your_username
 
-JIRA_PROJECT=project_key
+   JIRA_PROJECT=project_key
 
 ## 🤖 Chat-based Workflow Creation with n8n-MCP
 
