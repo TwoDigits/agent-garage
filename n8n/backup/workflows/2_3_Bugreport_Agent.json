@@ -1,0 +1,229 @@
+{
+  "name": "2.3 Bugreport-Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -420,
+        -180
+      ],
+      "id": "cea7fe84-c340-45ee-aaba-60dd7cc6503a",
+      "name": "When Executed by Manager"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        0
+      ],
+      "id": "e486a78e-990d-4cc5-86e8-dc3dfa196557",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1234"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        180,
+        0
+      ],
+      "id": "bda91661-8db7-4b32-acb1-d93d1b90113b",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe memory keeps a history of previous messages, allowing for an ongoing conversation with the AI, rather than every interaction starting fresh.\n\n\nThis short term memory stores a customizable length of chat history for the current session.",
+        "height": 420,
+        "width": 170
+      },
+      "id": "382eb330-43b8-46a6-8037-9b7c7047b877",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        140,
+        120
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe Ollama Chat Model node allows to use Large Language Models (LLMs) with conversational agents.\n\nThe LLM llama3.2 is used here.\n",
+        "height": 420,
+        "width": 170
+      },
+      "id": "4e7f6ce5-0b5a-40f2-86dd-a14cfb624bc8",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -100,
+        120
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 1. Receiving the input from the Manger-Agent",
+        "height": 240,
+        "width": 300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -520,
+        -260
+      ],
+      "typeVersion": 1,
+      "id": "97570e29-234e-4bfd-9ad4-2562d0143885",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## 2. Generating a structured Bugreport and returning it to the Manager",
+        "height": 240,
+        "width": 440,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -180,
+        -260
+      ],
+      "typeVersion": 1,
+      "id": "5d57b6e5-c7a0-435b-a54c-faf305ad312a",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## 👈\n**Click on the AI-Agent-Node** in the workflow to view the **system prompt used by the Bugreport-Agent**.",
+        "height": 140,
+        "width": 310
+      },
+      "id": "90730311-6f40-4ee8-ad00-ff45ff24187f",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        300,
+        -200
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Bugreport-Agent\n\nThe **Bugreport-Agent** is a specialized agent within the multi-agent system. It is triggered via the **“Execute Sub-workflow Trigger”** in **n8n**, typically as part of a workflow that is controlled by the **Manager-Agent**.\n\nIts task is to generate **detailed bug reports** based on analyzed **stack traces, exceptions**, and **critical logfile findings**. \n\nEach bugreport follows a structured format, which includes:\n\n- A clear title and unique Bug ID  \n- Description of the issue and its impact  \n- Reproduction steps  \n- Expected vs. actual behavior  \n- Environment information\n\n* The Bug-Report-Agent returns its results to the **Manager Agent**.",
+        "height": 540,
+        "width": 380
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -520,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "b2c19fd4-0d39-4213-815f-8fc6395efba7",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "# Overview of the Bugreport-Agent",
+        "height": 900,
+        "width": 1240,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -560,
+        -340
+      ],
+      "typeVersion": 1,
+      "id": "2a765fa7-510f-439c-a15a-998ff9b3bc99",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Your task is to create bugreport. Use the following structure to create bugreports:\n\n1. Title/Bug ID:\nA short, specific title that clearly identifies the bug.\nA unique Bug ID helps track and manage the bug. \n2. Description:\nA detailed explanation of the bug, including what's expected and what actually happens.\nExplain the impact of the bug on the user experience. \n3. Steps to Reproduce:\nClear, step-by-step instructions on how to recreate the bug.\nInclude all necessary actions, clicks, or inputs. \n4. Expected vs. Actual Results:\nClearly state what you expected to happen after following the reproduction steps.\nDescribe the actual outcome, including any error messages. \n5. Environment:\nInformation about the software, operating system, browser, or device where the bug was found.\nInclude relevant configuration settings. \n\n",
+        "options": {
+          "returnIntermediateSteps": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -100,
+        -180
+      ],
+      "id": "57f27f74-56ba-47dc-aeaa-e6de9c67ecd1",
+      "name": "Bugreport-Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Manager": {
+      "main": [
+        [
+          {
+            "node": "Bugreport-Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Bugreport-Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Bugreport-Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bugreport-Agent": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a53460a8-7520-40f5-ad60-f4f9f8a0b330",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "SgmPFKoRyQXLAOLu",
+  "tags": []
+}

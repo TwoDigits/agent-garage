@@ -7,8 +7,7 @@
 
  :: Spring Boot ::                (v3.4.2)
 
-2025-06-05T10:39:46.750+02:00  INFO 91495 --- [           main] c.t.s.user.UserManagementApplication     : Starting UserManagementApplication using Java 23.0.2 with PID 91495 (/Users/thorsten.a.maier/Projects/spring-training/target/classes sta
-rted by thorsten.a.maier in /Users/thorsten.a.maier/Projects/spring-training)
+
 2025-06-05T10:39:46.751+02:00  INFO 91495 --- [           main] c.t.s.user.UserManagementApplication     : No active profile set, falling back to 1 default profile: "default"
 2025-06-05T10:39:47.032+02:00  INFO 91495 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
 2025-06-05T10:39:47.054+02:00  INFO 91495 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 19 ms. Found 2 JPA repository interfaces.

@@ -1,5 +1,5 @@
 {
-  "name": "User Story Creator",
+  "name": "1 User Story Creator",
   "nodes": [
     {
       "parameters": {
@@ -133,8 +133,8 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        80,
-        60
+        140,
+        80
       ],
       "typeVersion": 1,
       "id": "04adaa41-5c22-4496-91c4-4d740886ce8d",
@@ -160,12 +160,12 @@
       "parameters": {
         "content": "",
         "height": 900,
-        "width": 2720,
+        "width": 2660,
         "color": 7
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        0,
+        60,
         0
       ],
       "typeVersion": 1,
@@ -212,7 +212,7 @@
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        2120,
+        2080,
         60
       ],
       "typeVersion": 1,
@@ -288,7 +288,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "3a71233e-f63e-4058-822b-d79e93c86209",
+  "versionId": "4f06b34c-6057-4cec-a830-ba55400869b8",
   "meta": {
     "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
   },

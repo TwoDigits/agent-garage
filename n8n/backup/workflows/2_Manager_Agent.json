@@ -1,0 +1,436 @@
+{
+  "name": "2 Manager-Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are the Manager in a software development project. Your responsibility is to interpret user requests and determine which specialized tools should be activated to fulfill them.\nAnalyze the user's input and break down the query into individual subtasks. Based on the subtasks, consider which tools you need to call up to process the tasks.\n\nAvailable tools:\n1. **Logfile-Agent**: Analyzes log files or error messages. It detects known vs. unknown error patterns and creates structured, Markdown-formatted bug reports. Always use this tool if the user input contains requests regarding bugs.\n2. **Jira-Agent**: Manages Jira tickets. It can create, update, assign, or retrieve Jira issues based on structured inputs or user instructions.\n3. **User-Story-Agent**: Is a helpful assistant that creates the content of user stories.\n4. **Bugreport-Agent**: Is a helpful assistant that creates structured bugreports.\n\n\nYou have access to:\n- The latest user message\n- Optionally, prior conversation history to improve intent understanding\n\nYour responsibilities:\n- Identify the user's **intent** (e.g., log analysis, ticket creation, status lookup, bugreport, lofilfe analysis)\n- Decide **which agent(s)** to activate\n- Determine the **execution order**, if multiple agents are needed\nAnalyze the following user request:\n{{ $json.body.chatInput }}\n-Return relevant partial results in the response for the user\n\n",
+        "options": {
+          "returnIntermediateSteps": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        300,
+        40
+      ],
+      "id": "a06f7e88-46e2-4837-b2a5-0ddc983b470d",
+      "name": "Manager-Agent"
+    },
+    {
+      "parameters": {
+        "content": "## 1. Receiving the user's chat input from Open WebUI",
+        "height": 280,
+        "width": 340,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -120,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "2abfd2ea-1258-4aa2-a919-d07898ef97e8",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [
+        780,
+        40
+      ],
+      "id": "370e6bc5-b3df-4c62-afe5-b05bdc472c24",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "content": "## 3. Sending Response to Open WebUI",
+        "height": 280,
+        "width": 340,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        640,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "84d231bb-935a-442a-9844-5088d2a667a5",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sdlc-agents",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -20,
+        40
+      ],
+      "id": "a7b7805d-022b-4f71-a019-c238684444a7",
+      "name": "Receive input via Webhook",
+      "webhookId": "9066e90b-78e9-4efb-b5c1-d5fd3778b1d7"
+    },
+    {
+      "parameters": {
+        "content": "## 2. Acts as a manager and coordinates specialized AI-Agents",
+        "height": 280,
+        "width": 340,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        260,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "339adea0-d449-46be-99e8-0509337c54df",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1234"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        340
+      ],
+      "id": "fc15dacb-7b56-48ba-babb-345366b65f94",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        340
+      ],
+      "id": "7fdcadae-f9a9-40ff-91a9-6939117856db",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# AI-Agents\nAn AI-Agent is an autonomous system that receives data, makes rational decisions, and acts within its environment to achieve specific goals.\n\n### AI agents can be characterised by three components: ###\n\n* Memory Capacities \n* Tools \n* LLM \n\n\n* An LLM acts as the reasoning engine behind the agent and decides what actions to take and in which order. \n\n* Moreover the Agent can use external tools and APIs to perform actions and retrieve information. It can understand the capabilities of different tools and determine which tool to use depending on the task.\n\n\n## Customization of agents\n\n* AI-Agents in n8n can be easily customized using system prompts.\nA system prompt defines the agent’s role, behavior, and area of expertise—whether it's acting as a writer, analyst, advisor, or something else.\n\n* In this case, the AI-Agent has been configured specifically to generate user stories. It analyzes requirements and produces complete user stories in the classic format, including acceptance criteria.\n\n* The agent's purpose can be changed at any time: \nBy simply adjusting the system prompt, it can be reconfigured for virtually any task—such as writing marketing content or drafting support replies.",
+        "height": 800,
+        "width": 520,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1340,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "8c20d458-252b-4438-9ba5-2ec3688ddffd",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# Overview of the Multi-Agent System",
+        "height": 1040,
+        "width": 1840,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -760,
+        -200
+      ],
+      "typeVersion": 1,
+      "id": "f85d9277-3e02-4dc3-a467-0dd36b76ce0e",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "# Getting started with the Manager-Agent\nThis workflow shows the Manager Agent, which acts as the central control unit within a multi-agent system for software development. It is part of a supervisor architecture in which several specialized agents work together to process complex tasks automatically.\n\n### What happens here?\nA user request - for example\n\n* to create a new user story,\n\n* to analyze the errors currently occurring in the log file, or\n\n* to search for a suitable Jira ticket for a specific problem -\nis sent to the Manager Agent via a webhook from the Open WebUI.\n\nThe Manager-Agent analyzes the input and decides which of the specialized agents need to be integrated.\n\n### The following specialized agents are used:\n\n* AI-Agent for analyzing log files and detecting critical errors\n\n* AI-Agent for creating structured bug reports\n\n* AI-Agent for generating user stories\n\n* AI-Agent for executing actions in Jira\n\n\nThe specialized agents are organized in separate workflows. The Manager-Agent uses n8n's call-other-workflow tool to call up the appropriate agent workflows in a targeted manner. In this way, tasks can be processed modularly, in parallel and flexibly.\n\nAs soon as all relevant workflows have been completed and the information has been processed, the Manager Agent bundles the results and returns them to the user via the Open WebUI.\n",
+        "height": 880,
+        "width": 520
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -680,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "766efab9-04af-47c2-89e0-788e9331c312",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe memory keeps a history of previous messages, allowing for an ongoing conversation with the AI, rather than every interaction starting fresh.\n\n\nThis short term memory stores a customizable length of chat history for the current session.",
+        "height": 340,
+        "width": 170
+      },
+      "id": "abbed35d-a152-4059-b959-4caa5f17b35b",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        120,
+        460
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe Ollama Chat Model node allows to use Large Language Models (LLMs) with conversational agents.\n\nThe LLM llama3.2 is used here.\n",
+        "height": 340,
+        "width": 170
+      },
+      "id": "4b22564c-489c-4fc1-8e30-ea494bd324b4",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -120,
+        460
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n## 👆\nThis section shows the specialized AI-Agents that are called and orchestrated by the Manager-Agent.\n\nA total of four AI-Agents are currently in use. Each of them takes on selected tasks from the software development process.\n\nThe selection shown represents an exemplary section of the development process and does not claim to be exhaustive.\n\nFurther information on the respective AI-Agents is documented in the associated workflows.",
+        "height": 500,
+        "width": 630
+      },
+      "id": "5257f369-99c7-4b7c-b1b9-98d58db82825",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        360,
+        300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to analyze log files and generate a structured bug report. Identify relevant error patterns, classify the issue type and severity, and provide a clear summary with context and reproduction steps. Use this when new system anomalies or failures are have to be detected.",
+        "workflowId": {
+          "__rl": true,
+          "value": "lhy5QVdBC5llXOjA",
+          "mode": "list",
+          "cachedResultName": "Logfile-Agent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        400,
+        340
+      ],
+      "id": "357788c8-5466-40ed-a233-3b0bfa5a30e4",
+      "name": "Logfile-Agent"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to generate detailed and structured bugreports.",
+        "workflowId": {
+          "__rl": true,
+          "value": "SgmPFKoRyQXLAOLu",
+          "mode": "list",
+          "cachedResultName": "Bugreport-Agent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        340
+      ],
+      "id": "a2ac3629-c54c-4feb-958d-afcee7036a4b",
+      "name": "Bugreport-Agent"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to create the content of a user story.",
+        "workflowId": {
+          "__rl": true,
+          "value": "5g3wIBt23oVl7EOC",
+          "mode": "list",
+          "cachedResultName": "User-Story-Agent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        700,
+        340
+      ],
+      "id": "34dd0b42-0df1-4cdb-8394-ec4631d74a16",
+      "name": "User-Story-Agent"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool to interact with Jira. Use it to create, search, update, or transition issues based on the current task or analysis results. Provide all necessary fields like project key, issue type, summary, and status as needed.",
+        "workflowId": {
+          "__rl": true,
+          "value": "MnMojNhrudT0ZONb",
+          "mode": "list",
+          "cachedResultName": "Jira-Agent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        840,
+        340
+      ],
+      "id": "f16e4ebe-9530-4b42-bf3d-9390694a33f8",
+      "name": "Jira-Agent"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manager-Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Receive input via Webhook": {
+      "main": [
+        [
+          {
+            "node": "Manager-Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Manager-Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Manager-Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Logfile-Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Manager-Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bugreport-Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Manager-Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User-Story-Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Manager-Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira-Agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "Manager-Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e8bbdbc9-2a88-46f4-86d8-e587614f9cdf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "Wjsuol1f22g2dN26",
+  "tags": []
+}

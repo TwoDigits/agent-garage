@@ -1,0 +1,227 @@
+{
+  "name": "2.2 User-Story-Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -280,
+        160
+      ],
+      "id": "e0517395-cb82-4d0a-9ebc-9be7a50d1b01",
+      "name": "When Executed by Manager"
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        20,
+        400
+      ],
+      "id": "85c9f4d0-aade-46b6-a81f-c15728183b66",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1234"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        260,
+        400
+      ],
+      "id": "25604f1f-4245-4341-a4d6-a30d8e89432d",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You take on the role of the Business Analyst in our agile development team. Your primary responsibility is to craft well-structured, clear, and verifiable user stories for upcoming product increments.\nInstructions:\nFormat\n\nUse the user request to understand the content of the user story: {{ $json.query }}\nAlways use the standard template:\nAs a <role> I want <feature/function> so that <benefit>\n\nAcceptance Criteria:\nProvide 3–5 precise criteria per story, phrased as:\nGiven…, When…, Then…\nAdditional Notes\nDefine any domain-specific terms so developers and testers fully understand them.\nBreak down large themes (epics) into smaller, sprint-sized stories.\n\nExamples:\nExample 1\nUser Story\nAs a registered user I want to log in with my email and password so that I can access my personal dashboard.\nAcceptance Criteria\nGiven a registered user is on the login page; When they enter a valid email and password; Then they are redirected to their dashboard.\nGiven a user enters an incorrect password; When they click “Log In”; Then they see the error message “Invalid credentials.”\nGiven a user has forgotten their password; When they click “Forgot Password”; Then they receive an email with a password-reset link.\n\nExample 2\nUser Story\nAs a product manager I want to generate a monthly user-engagement report so that I can spot trends early and take action.\nAcceptance Criteria\nGiven the product manager is in the reporting module; When they select “Last Month” and click “Generate Report”; Then a PDF with KPIs (DAU, MAU, session duration) is produced.\nGiven the report is ready; When the product manager clicks “Download”; Then the PDF downloads locally.\nGiven there is no data for the selected period; When the report is generated; Then the message “No data for the selected period” appears.\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        40,
+        160
+      ],
+      "id": "b790f616-3d03-4227-b463-a1dd0dcf7740",
+      "name": "User-Story-Agent"
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe memory keeps a history of previous messages, allowing for an ongoing conversation with the AI, rather than every interaction starting fresh.\n\n\nThis short term memory stores a customizable length of chat history for the current session.",
+        "height": 340,
+        "width": 170
+      },
+      "id": "f4b0ae54-4861-4c9d-be2a-5dfc4c0e4289",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        220,
+        520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe Ollama Chat Model node allows to use Large Language Models (LLMs) with conversational agents.\n\nThe LLM llama3.2 is used here.\n",
+        "height": 340,
+        "width": 170
+      },
+      "id": "0ccd9caf-17c2-4f50-b166-06392b5478e6",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -20,
+        520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Overview of the User-Story-Agent",
+        "height": 900,
+        "width": 1240,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -480,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "aec6b0c0-0837-4576-92dd-8e85c53c35e1",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# User-Story-Agent\n\nThe **User-Story-Agent** is a specialized agent within the multi-agent system. It is triggered via the **“Execute Sub-workflow Trigger”** in **n8n**, typically as part of a workflow that is controlled by the **Manager Agent**.\n\nIts main task is to generate **structured user stories** that support the development process. To do this, it uses a **dedicated system prompt structure** that is specifically tailored to the creation of user stories  to the pattern: \n_As [role], I want [goal] to [benefit]_).\n\n* The agent follows a consistent, prompt-driven logic and generates both simple and complex user stories based on the information provided by the system or other agents.\n\n* After the agent has created the User Story, it is automatically returned to the Manager -Agent\n\n",
+        "height": 500,
+        "width": 380
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -420,
+        360
+      ],
+      "typeVersion": 1,
+      "id": "da65397f-3675-444b-a21f-354583d41f41",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## 👈\n**Click on the AI-Agent-Node** in the workflow to view the **system prompt used by the User-Story-Agent**.",
+        "height": 140,
+        "width": 310
+      },
+      "id": "b1abfbb1-4ee5-4aa2-8f7a-148144d3e01e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        420,
+        160
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 1. Receiving the input from the Manger-Agent",
+        "height": 240,
+        "width": 340,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -420,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "2c38c477-b296-4e66-bde3-c0a0dc60d075",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## 2. Generating a structured User Story and returning it to the Manager",
+        "height": 240,
+        "width": 440,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -60,
+        80
+      ],
+      "typeVersion": 1,
+      "id": "1a97955f-3652-4e22-98c6-4ef37c4602d3",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Manager": {
+      "main": [
+        [
+          {
+            "node": "User-Story-Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "User-Story-Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "User-Story-Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User-Story-Agent": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d729d217-d951-4486-9335-370743d692f2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "5g3wIBt23oVl7EOC",
+  "tags": []
+}
