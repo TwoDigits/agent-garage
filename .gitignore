@@ -4,6 +4,8 @@
 *~
 *.swp
 
+# Logs
+.log 
 
 # OS files
 .DS_Store
