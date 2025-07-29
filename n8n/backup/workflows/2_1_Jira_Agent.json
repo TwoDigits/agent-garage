@@ -166,7 +166,7 @@
     },
     {
       "parameters": {
-        "content": "# Jira-Agent\n\nThe **Jira-Agent** is a specialized agent within the multi-agent system. It is triggered via the **“Execute Sub-workflow Trigger”** in **n8n**, typically as part of a workflow coordinated by the **Manager-Agent**.\n\nIts primary role is to **understand user requests** related to issue tracking and perform the corresponding **actions in Jira**.  \nJira is a widely used platform for **issue tracking**, **project management**, and **agile workflows** (e.g., Scrum, Kanban).\n\nTo interact with Jira, the agent uses an integrated **MCP client tool**, which communicates with a **MCP server** to execute actions such as:\n\n- Creating new Jira issues  \n- Updating existing tickets  \n- Searching for issues based on criteria\n\n⚠️ **Disclaimer:** The agent currently uses a community-maintained **open-source MCP server**, which may lead to occasional reliability issues.\n\n* The Jira-Agent processes structured input (e.g. from upstream agents or user queries), performs the desired Jira action via MCP, and returns the result to the **Manager Agent** for further use or user feedback.",
+        "content": "# Jira-Agent\n\nThe **Jira-Agent** is a specialized agent within the multi-agent system. It is triggered via the **“Execute Sub-workflow Trigger”** in **n8n**, typically as part of a workflow coordinated by the **Manager-Agent**.\n\nIts primary role is to **understand user requests** related to issue tracking and perform the corresponding **actions in Jira**.  \nJira is a widely used platform for **issue tracking**, **project management**, and **agile workflows** (e.g., Scrum, Kanban).\n\nTo interact with Jira, the agent uses an integrated **MCP client tool**, which communicates with a **MCP server** to execute actions such as:\n\n- Creating new Jira issues  \n- Updating existing tickets  \n- Searching for issues based on criteria\n\n⚠️ **Disclaimer:** The agent currently uses a community-maintained **open-source MCP server**, which may lead to occasional reliability issues.\n\n* The Jira-Agent processes structured input (e.g. from upstream agents or user queries), performs the desired Jira action via MCP, and returns the result to the **Manager-Agent** for further use or user feedback.",
         "height": 660,
         "width": 420
       },
@@ -283,7 +283,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "c5f50fc8-f60d-4352-94dc-48dce09f1d71",
+  "versionId": "57a00913-9ad2-46e6-949e-3e36cdb6b9d1",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"

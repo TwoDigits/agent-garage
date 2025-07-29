@@ -127,7 +127,7 @@
     },
     {
       "parameters": {
-        "content": "# Bugreport-Agent\n\nThe **Bugreport-Agent** is a specialized agent within the multi-agent system. It is triggered via the **“Execute Sub-workflow Trigger”** in **n8n**, typically as part of a workflow that is controlled by the **Manager-Agent**.\n\nIts task is to generate **detailed bug reports** based on analyzed **stack traces, exceptions**, and **critical logfile findings**. \n\nEach bugreport follows a structured format, which includes:\n\n- A clear title and unique Bug ID  \n- Description of the issue and its impact  \n- Reproduction steps  \n- Expected vs. actual behavior  \n- Environment information\n\n* The Bug-Report-Agent returns its results to the **Manager Agent**.",
+        "content": "# Bugreport-Agent\n\nThe **Bugreport-Agent** is a specialized agent within the multi-agent system. It is triggered via the **“Execute Sub-workflow Trigger”** in **n8n**, typically as part of a workflow that is controlled by the **Manager-Agent**.\n\nIts task is to generate **detailed bug reports** based on analyzed **stack traces, exceptions**, and **critical logfile findings**. \n\nEach bugreport follows a structured format, which includes:\n\n- A clear title and unique Bug ID  \n- Description of the issue and its impact  \n- Reproduction steps  \n- Expected vs. actual behavior  \n- Environment information\n\n* The Bug-Report-Agent returns its results to the **Manager-Agent**.",
         "height": 540,
         "width": 380
       },
@@ -219,7 +219,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "a53460a8-7520-40f5-ad60-f4f9f8a0b330",
+  "versionId": "35f9710d-9b6c-44d9-b1f4-3beeb039882b",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"

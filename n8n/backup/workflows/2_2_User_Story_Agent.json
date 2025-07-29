@@ -111,7 +111,7 @@
     },
     {
       "parameters": {
-        "content": "# User-Story-Agent\n\nThe **User-Story-Agent** is a specialized agent within the multi-agent system. It is triggered via the **“Execute Sub-workflow Trigger”** in **n8n**, typically as part of a workflow that is controlled by the **Manager Agent**.\n\nIts main task is to generate **structured user stories** that support the development process. To do this, it uses a **dedicated system prompt structure** that is specifically tailored to the creation of user stories  to the pattern: \n_As [role], I want [goal] to [benefit]_).\n\n* The agent follows a consistent, prompt-driven logic and generates both simple and complex user stories based on the information provided by the system or other agents.\n\n* After the agent has created the User Story, it is automatically returned to the Manager -Agent\n\n",
+        "content": "# User-Story-Agent\n\nThe **User-Story-Agent** is a specialized agent within the multi-agent system. It is triggered via the **“Execute Sub-workflow Trigger”** in **n8n**, typically as part of a workflow that is controlled by the **Manager-Agent**.\n\nIts main task is to generate **structured user stories** that support the development process. To do this, it uses a **dedicated system prompt structure** that is specifically tailored to the creation of user stories  to the pattern: \n_As [role], I want [goal] to [benefit]_).\n\n* The agent follows a consistent, prompt-driven logic and generates both simple and complex user stories based on the information provided by the system or other agents.\n\n* After the agent has created the User Story, it is automatically returned to the Manager-Agent\n\n",
         "height": 500,
         "width": 380
       },
@@ -217,7 +217,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d729d217-d951-4486-9335-370743d692f2",
+  "versionId": "9527211c-2c96-48d4-9900-000804278845",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"

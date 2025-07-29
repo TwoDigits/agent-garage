@@ -164,7 +164,7 @@
     },
     {
       "parameters": {
-        "content": "# Getting started with the Manager-Agent\nThis workflow shows the Manager Agent, which acts as the central control unit within a multi-agent system for software development. It is part of a supervisor architecture in which several specialized agents work together to process complex tasks automatically.\n\n### What happens here?\nA user request - for example\n\n* to create a new user story,\n\n* to analyze the errors currently occurring in the log file, or\n\n* to search for a suitable Jira ticket for a specific problem -\nis sent to the Manager Agent via a webhook from the Open WebUI.\n\nThe Manager-Agent analyzes the input and decides which of the specialized agents need to be integrated.\n\n### The following specialized agents are used:\n\n* AI-Agent for analyzing log files and detecting critical errors\n\n* AI-Agent for creating structured bug reports\n\n* AI-Agent for generating user stories\n\n* AI-Agent for executing actions in Jira\n\n\nThe specialized agents are organized in separate workflows. The Manager-Agent uses n8n's call-other-workflow tool to call up the appropriate agent workflows in a targeted manner. In this way, tasks can be processed modularly, in parallel and flexibly.\n\nAs soon as all relevant workflows have been completed and the information has been processed, the Manager Agent bundles the results and returns them to the user via the Open WebUI.\n",
+        "content": "# Getting started with the Manager-Agent\nThis workflow shows the Manager-Agent, which acts as the central control unit within a multi-agent system for software development. It is part of a supervisor architecture in which several specialized agents work together to process complex tasks automatically.\n\n### What happens here?\nA user request - for example\n\n* to create a new user story,\n\n* to analyze the errors currently occurring in the log file, or\n\n* to search for a suitable Jira ticket for a specific problem \n\nis sent to the Manager Agent via a webhook from the Open WebUI.\n\nThe Manager-Agent analyzes the input and decides which of the specialized agents need to be integrated.\n\n### The following specialized agents are used:\n\n* AI-Agent for analyzing log files and detecting critical errors\n\n* AI-Agent for creating structured bug reports\n\n* AI-Agent for generating user stories\n\n* AI-Agent for executing actions in Jira\n\n\nThe specialized agents are organized in separate workflows. The Manager-Agent uses n8n's Call-n8n-Workflow-Tool-node to call up the appropriate agent workflows in a targeted manner. In this way, tasks can be processed modularly, in parallel and flexibly.\n\nAs soon as all relevant workflows have been completed and the information has been processed, the Manager-Agent bundles the results and returns them to the user via the Open WebUI.\n",
         "height": 880,
         "width": 520
       },
@@ -426,7 +426,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "e8bbdbc9-2a88-46f4-86d8-e587614f9cdf",
+  "versionId": "03cfd199-caec-4085-ac66-f1e64ba877f7",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"

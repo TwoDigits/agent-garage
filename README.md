@@ -290,6 +290,23 @@ interact with the local filesystem.
 
 # 🚀 Getting Started with the Agent Garage
 
+## Purpose
+This platform is built to support **exploration**, **experimentation** and **development** with AI agents. It offers a practical environment for any user who wants to understand how intelligent AI-agents can be used to automate tasks, solve problems, or implement custom workflows. Whether you want to try out existing agents, adapt them to your needs, or build entirely new solutions, the agent garage provides a flexible and accessible starting point.
+
+### Key Goals of the Platform
+
+*  Use and interact with **preconfigured AI agents**
+
+* Create your **own workflows** using modular components
+
+* Get started quickly thanks to **labeled and guided workflows**
+
+All workflows in n8n are clearly labeled and structured, making it easy to understand their purpose and discover how agents are connected.
+The agent garage encourages to follow, explore, and build on the existing components.
+This makes the platform an ideal starting point for working with agent-based automation, open-ended, guided, and ready for your own ideas.
+
+
+
 
 ## Overview
 When opening the n8n interface, you’ll see an overview of all available workflows .
@@ -333,7 +350,7 @@ For an easy first step, use the **User Story Creator** workflow in **n8n**. This
       ![alt text](readme_images/Activated-Workflow.png)
   4. In the chat interface of **Open WebUI** , select the **User Story Creator** chat from the list:
 
-    ![alt text](readme_images/User-Story-Creator-Chat.png)
+      ![alt text](readme_images/User-Story-Creator-Chat.png)
 
   5. Enter a request (e.g. “Create a user story for a login function”)  via the chat interface and start interacting with the User Story Creator!
   
