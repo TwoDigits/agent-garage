@@ -3,6 +3,7 @@ volumes:
   postgres_storage:
   ollama_storage:
   qdrant_storage:
+  jira_storage:
   openwebui_storage:
 
 networks:
@@ -23,6 +24,7 @@ x-n8n: &service-n8n
     - OLLAMA_HOST=ollama:11434
     - WEBHOOK_URL=http://n8n:5678
     - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+    - N8N_LOG_LEVEL=debug
   env_file:
     - .env
 
@@ -111,6 +113,7 @@ services:
       - n8n_storage:/home/node/.n8n
       - ./n8n/backup:/backup
       - ./shared:/data/shared
+      - ./logs:/data/logs:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -127,14 +130,15 @@ services:
       - 6333:6333
     volumes:
       - qdrant_storage:/qdrant/storage
-
+    
   openwebui:
     image: ghcr.io/open-webui/open-webui:main
     container_name: openwebui
     hostname: openwebui
     networks: ['demo']
     restart: unless-stopped
-
+    environment:
+      - RESET_CONFIG_ON_START=false
     ports:
       - 3000:8080
     volumes:
@@ -188,4 +192,57 @@ services:
     <<: *init-ollama
     image: ollama/ollama:rocm
     depends_on:
-      - ollama-gpu-amd
+     - ollama-gpu-amd
+
+  jira:
+    image: cptactionhank/atlassian-jira:latest
+    hostname: jira
+    container_name: jira
+    networks: ['demo']
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    volumes:
+      - jira_storage:/var/atlassian/jira
+
+  mcp-server:
+    image: ghcr.io/sooperset/mcp-atlassian:latest
+    container_name: mcp-server
+    hostname: mcp-server
+    restart: unless-stopped
+    networks: ['demo']
+    ports:
+      - 5000:3000
+    command:
+      - "--transport"
+      - "sse"
+      - "--port"
+      - "3000"
+      - "-vv"
+    environment:
+      - ENABLED_TOOLS=jira
+      - JIRA_URL=http://jira:8080
+      - JIRA_USERNAME=${JIRA_USERNAME}
+      - JIRA_PERSONAL_TOKEN=${JIRA_PERSONAL_TOKEN}
+      - JIRA_PROJECT=${JIRA_PROJECT}
+      - MCP_VERBOSE=true
+      - JIRA_SSL_VERIFY=true
+      - ENABLED_TOOLS=",jira_search,jira_create_issue,jira_update_issue,jira_transition_issue,jira_add_comment"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+    - .env
+
+
+  logfile-writer:
+    image: alpine:3.18
+    container_name: logfile
+    networks: ['demo']
+    volumes:
+      - ./test.log:/app/logs/test.log:ro
+    working_dir: /app
+    command: ["sh", "-c", "sleep infinity"]
+    restart: unless-stopped

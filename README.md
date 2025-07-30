@@ -9,17 +9,28 @@ This project builds upon the foundation of the **Self-hosted AI Starter Kit**, c
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
-- [Quick Start and Usage](#️-quick-start-and-usage)
+- [Getting Started with the Agent Garage](#-getting-started-with-the-agent-garage)
+- [Chat-based Workflow Creation with n8n-MCP](#-chat-based-workflow-creation-with-n8n-mcp)
 - [Upgrading](#upgrading)
 - [Recommended Reading](#-recommended-reading)
 - [Video Walkthrough](#-video-walkthrough)
 - [More AI Templates](#️-more-ai-templates)
 - [Tips & Tricks](#-tips--tricks)
-- [Chat-based Workflow Creation with n8n-MCP](#-chat-based-workflow-creation-with-n8n-mcp)
 - [License](#-license)
 
-> [!NOTE]
-> **Work in Progress:** Agent Garage is in its early stages of development. Contributions and feedback are welcome as the project evolves.
+## ⚠️ Disclaimer
+
+Just to reiterate the point from the license:
+This project is provided on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+This project is provided as a **proof of concept** and is intended for **experimental
+or educational purposes only**. It's maintained on best-effort basis. While it's
+perfectly possible to use it as a base for an enterprise implementation, the project
+"as is" is **not** suitable for production or mission-critical use. The maintainers do
+not guarantee that the software functions as intended, nor do they assume responsibility
+for any loss or damage resulting from its use.
+
+Use of this project does not imply any affiliation with or endorsement by Accenture.
 
 > [!NOTE]
 > **Enterprise Version Available:** While this is a showcase lab environment, an enterprise implementation version has been successfully deployed with one of our clients and has been in production for years. This demonstrates that the concepts behind this solution are enterprise-ready.
@@ -166,7 +177,21 @@ podman compose --profile cpu --file docker-compose.yml up
 ```
 
 
-## ⚡️ Quick Start and Usage
+# 🚀 Getting Started with the Agent Garage
+## Purpose
+This platform is built to support **exploration**, **experimentation** and **development** with AI agents. It offers a practical environment for any user who wants to understand how intelligent AI-agents can be used to automate tasks, solve problems, or implement custom workflows. Whether you want to try out existing agents, adapt them to your needs, or build entirely new solutions, the agent garage provides a flexible and accessible starting point.
+
+### Key Goals of the Platform
+
+*  Use and interact with **preconfigured AI agents**
+
+* Create your **own workflows** using modular components
+
+* Get started quickly thanks to **labeled and guided workflows**
+
+All workflows in n8n are clearly labeled and structured, making it easy to understand their purpose and discover how agents are connected.
+The agent garage encourages to follow, explore, and build on the existing components.
+This makes the platform an ideal starting point for working with agent-based automation, open-ended, guided, and ready for your own ideas.
 
 The core of Agent Garage is a Docker Compose file, pre-configured with network and storage settings, minimizing the need for additional installations. After completing the installation steps above, follow these steps to get started.
 
@@ -177,25 +202,209 @@ The core of Agent Garage is a Docker Compose file, pre-configured with network a
 3. Enter the requested data. However, these do not have to be valid, as the e-mail address is not checked. You only have to set this up once.
 
    ![alt text](readme_images/SetUp-n8n.png)
-
-
 4. The dashboard will be loaded.
-5. Open the included workflow "Assistant on creating user stories" via http://localhost:5678/workflow/5g3wIBt23oVl7EOC or by double-clicking on it.
 
-   ![alt text](readme_images/Open-Workflow.png)
 
-6. Before the workflow can be tried out, the workflow must be activated by clicking on the “Active” button in the top right-hand corner.
 
-   ![alt text](readme_images/Active-Button-n8n-1.png)
-   ![alt text](readme_images/WF-active-n8n.png)
+### Open WebUI
 
-7. The workflow is then ready for use. The agent can easily be used for many other tasks by customizing the system prompt. The workflow's functionality can be understood through the explanations in the workflow.
+1. Navigate to http://localhost:3000 .The Sign In page will appear: 
 
-> [!NOTE]
-> This starter kit is designed to help you get started with self-hosted AI
-> workflows. While it’s not fully optimized for production environments, it
-> combines robust components that work well together for proof-of-concept
-> projects. You can customize it to meet your specific needs
+   ![alt text](readme_images/sign_in_n8n.png)
+
+2. Use the following credentials to sign in:
+
+   Email: admin@test.com
+
+   Password: S2yjzup!3
+
+3. After login, the chat interface is visible.
+
+**Disclaimer:** Open WebUI is still under active development and is intended for experimentation and testing only. It is not recommended for production use. You may occasionally experience display delays within the Open WebUI interface. In this case, reloading the page or waiting a few seconds will usually solve the problem.
+
+## Further steps
+When opening the n8n interface, you’ll see an overview of all available workflows .
+
+![alt text](readme_images/n8n-Dashboard.png)
+
+There are two main categories of workflows:
+
+🟥 **Simple Entry Workflow**
+
+The User Story Creator workflow is highlighted with a red border.
+
+It represents the simplest entry point into the system and is ideal for getting started.
+This workflow is based on a single AI agent and lets you directly try out user story generation.
+We recommend starting with this workflow to explore the basics before diving into the full multi-agent architecture.
+
+🟩 **Multi-Agent System Workflows**
+
+Workflows belonging to the multi-agent system are marked with a green border. The structure follows a clear hierarchy:
+
+* The Manager-Agent is labeled with the number 2.
+
+* The connected sub-agents are numbered 2.1 to 2.4, each handling a specific task (e.g. log analysis, bug reporting, Jira interaction, user story generation).
+
+* These workflows belong together and operate as a collaborative system coordinated by the Manager-Agent.
+
+---
+## 1.   Simple Workflow – *User Story Creator*
+
+For an easy first step, use the **User Story Creator** workflow in **n8n**. This workflow is designed to explore the basic functionality and interaction with the chat interface of **Open WebUI**.
+- 🔧 **Technically**, the workflow is based on a single AI-Agent that creates structured User Stories.
+
+- ✅ **Goal**: Get quick results & understand the platform basics  
+### How it works:  
+  1. Double click on the User Story Creator workflow 
+
+      ![alt text](readme_images/User-Story-Creator-n8n.png)
+  2. Take a moment to review the explanations in the workflow and explore AI agents in n8n.
+  3. Activate the workflow by clicking the Active Button:
+
+      ![alt text](readme_images/Activated-Workflow.png)
+  4. In the chat interface of **Open WebUI** , select the **User Story Creator** chat from the list:
+
+      ![alt text](readme_images/User-Story-Creator-Chat.png)
+
+  5. Enter a request (e.g. “Create a user story for a login function”)  via the chat interface and start interacting with the User Story Creator!
+  
+This entry point is ideal for getting familiar with the **core concepts** of the platform and testing your own ideas.
+
+## 2. Next Level: Multi-Agent System with Supervisor Architecture
+
+For the next step, use the **Multi-Agent System** workflow in **n8n**. This workflow is designed to demonstrate how multiple specialized AI agents collaborate under a supervisor architecture to handle selected tasks from the software development process.
+ It consists of several specialized AI agents that work together to solve more complex tasks related to selected aspects of the software development process.
+
+- 👥 Agents are clearly separated and each focuses on a specific task within the software development process.  
+- 🧠 The **Supervisor Architecture** ensures that a central agent (Manager-Agent) coordinates workflows and distributes tasks  
+
+- 🔧 **Technically**, the workflow is coordinated by a central **Manager-Agent**, which delegates tasks to other specialized agents ( User-Story-Agent, Logfile-Agent, Bugreport-Agent, Jira-Agent).
+
+- ✅ **Goal**: Understand agent collaboration 
+
+### How it works:  
+  1. Double click on the **Manager-Agent** workflow
+
+      ![alt text](readme_images/Manager-Agent.png)
+  2. Take a moment to review the explanations in the workflow and explore how the Manager-Agent and the other AI agents interact in **n8n**.  
+  3. Activate the workflow by clicking the Active Button:
+
+      ![alt text](readme_images/Activated-Manager-Agent.png)
+  4. In the chat interface of **Open WebUI**, select the chat named **SDLC Agents**: 
+
+      ![alt text](readme_images/SDLC-Agents-Chat.png)
+  5. Enter a request (e.g. “Analyze this log file and create a bug report”) via the chat interface. The Manager-Agent will automatically coordinate the involved agents and return the result to you.
+
+### Overview: Specialized Agents in the Multi-Agent System
+
+| Agent Name         | Responsibility                                         | Input / Artifacts | Output / Artifacts |
+|--------------------|--------------------------------------------------------|-------------------|--------------------|
+| **Jira-Agent**      | - Creating, searching, and updating tickets        |      - Ticket change <br>     - Search request for ticket <br>   - Ticket description     |  - Correctly modified data in Jira                  |
+| **Logfile-Agent**   | - Analysis of logfiles for critical bugs and stack traces    |   -Logfile                 |          - Detailed analysis of bugs (error description, cause of error, etc.)          |
+| **Bugreport-Agent** | - Generating structured bug reports based on analysis      |      - Detailed description of a bug             |       - Bugreport             |
+| **User-Story-Agent**| - Generating structured user stories from requests         |       - Idea for software feature            |       - User story             |
+
+
+# 💡 Notes
+
+## Default Model
+The Llama 3.2 model is installed by default. You can use different LLMs by simply changing the model name in the `docker-compose.yml` file:
+
+
+   ![alt text](readme_images/change-llm.png)
+
+   To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted.
+
+## Change logfile
+The **Logfile Agent** has access to a specific log file (`test.log`) located within the project folder.  
+If the log file is replaced or renamed, make sure to update the corresponding path and filename in the **n8n workflow** of the Logfile Agent to ensure correct analysis.
+
+
+## Setting up Jira to use the Jira-Agent
+
+1. Navigate to http://localhost:8080
+2. The Jira-Setup page will be visible
+
+![alt text](readme_images/Jira-Setup.png)
+
+3. Click on "I'll set it up myself" and continue.
+
+4. Choose "Built In Database".
+
+![alt text](readme_images/Jira-Database-Setup.png)
+
+5. The application properties can be adopted by default.
+
+6. The next step is to generate a Server ID, which is required to use Jira. In addition, a Jira license must be available to which the Server ID is linked. If the license is not available, click on the “Generate a new trial license” for jira Software (Data Center) with the link below.
+
+![alt text](readme_images/Jira-License-Key.png)
+
+7. Now, Jira can be configured and projects can be set up. Note that only “tasks” exist as issue types in the jira version. The issue types "Story" and "Bug" must first be configured.
+Click on Settings at the top right of your profile, select Issues from the menu and configure the issue types Story and Bug as shown in the image.
+
+![alt text](readme_images/Jira_issue_types.png)
+
+8. In order to link Jira with the n8n workflows, adapt the `.env` file.
+
+### Create and configure personal access tokens
+1. Log in to your profile and open Settings.
+
+2. Select Personal Access Tokens in the left sidebar.
+
+3. Click on Create new token to create a token.
+
+4. Copy the generated token and paste it into the `.env` file:
+
+   JIRA_PERSONAL_TOKEN=your_token
+
+
+### Create project and store metadata
+1. Create a new repository or project in your GitHub organization or user account.
+
+2. Enter the following information in the .env file:
+
+   JIRA_USERNAME=your_username
+
+   JIRA_PROJECT=project_key
+
+## 🤖 Chat-based Workflow Creation with n8n-MCP
+
+Agent Garage becomes even more powerful with the n8n-MCP (Model Context Protocol) Server! This enables you to create n8n workflows directly through chat interactions in AI development environments like Claude, Windsurf, or Cursor - without having to dig through the complete n8n documentation.
+
+### What is n8n-MCP?
+
+The n8n-MCP Server gives AI assistants comprehensive access to n8n node documentation and enables:
+- Chat-based workflow creation without deep n8n knowledge
+- Smart node search and suggestions
+- Validation of node configurations before deployment
+- Access to more than 500 n8n nodes with extensive property coverage
+
+### Quick Start
+
+1. **Installation via npx (recommended):**
+   ```bash
+   npx n8n-mcp
+   ```
+
+2. **Configure in your AI development environment:**
+   - Add the MCP server to your Claude/Cursor/Windsurf configuration
+   - Start a new chat and describe your desired workflow
+
+3. **Create workflows:**
+   Simply describe in chat what you want to automate:
+   ```
+   "Create a workflow that daily fetches emails from Gmail, 
+   saves attachments to Google Drive, and sends a Slack notification"
+   ```
+
+### Benefits for Agent Garage Users
+
+- **No n8n expertise required:** The AI assistant translates your requirements into working workflows
+- **Faster development:** From idea to workflow in minutes instead of hours
+- **Error reduction:** Automatic validation of node configurations
+
+For more details and complete documentation, visit the [n8n-MCP Repository](https://github.com/czlonkowski/n8n-mcp).
+
 
 ## Upgrading
 
@@ -271,94 +480,13 @@ interact with the local filesystem.
 - [Local File Trigger](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.localfiletrigger/)
 - [Execute Command](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executecommand/)
 
-### Open WebUI
+> [!NOTE]
+> This starter kit is designed to help you get started with self-hosted AI
+> workflows. While it’s not fully optimized for production environments, it
+> combines robust components that work well together for proof-of-concept
+> projects. You can customize it to meet your specific needs
 
-1. Navigate to http://localhost:3000
-
-When starting http://localhost:3000, the Sign In page appears: 
-
-   ![alt text](readme_images/sign_in_n8n.png)
-
-2. Use the following credentials to sign in:
-
-   Email: admin@test.com
-
-   Password: S2yjzup!3
-
-3. After login, the chat interface is visible.
-
-
-   ![alt text](readme_images/chat_interface.png)
-
-
-4. Start Chatting! The chat interface is ready for use. Requests regarding user stories can be sent and then the AI-Agent's response is generated and finally displayed in the chat interface of Open WebUI.
-
-
-## 💡 Notes
-
-1. **Default Model:** The Llama 3.2 model is installed by default. You can use different LLMs by simply changing the model name in the `docker-compose.yml` file:
-
-
-   ![alt text](readme_images/change-llm.png)
-
-   To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted.
-
-
-2. **Disclaimer:** Open WebUI is still under active development and is intended for experimentation and testing only. It is not recommended for production use. You may occasionally experience display delays within the Open WebUI interface. In this case, reloading the page or waiting a few seconds will usually solve the problem.
-
-
-## 🤖 Chat-based Workflow Creation with n8n-MCP
-
-Agent Garage becomes even more powerful with the n8n-MCP (Model Context Protocol) Server! This enables you to create n8n workflows directly through chat interactions in AI development environments like Claude, Windsurf, or Cursor - without having to dig through the complete n8n documentation.
-
-### What is n8n-MCP?
-
-The n8n-MCP Server gives AI assistants comprehensive access to n8n node documentation and enables:
-- Chat-based workflow creation without deep n8n knowledge
-- Smart node search and suggestions
-- Validation of node configurations before deployment
-- Access to more than 500 n8n nodes with extensive property coverage
-
-### Quick Start
-
-1. **Installation via npx (recommended):**
-   ```bash
-   npx n8n-mcp
-   ```
-
-2. **Configure in your AI development environment:**
-   - Add the MCP server to your Claude/Cursor/Windsurf configuration
-   - Start a new chat and describe your desired workflow
-
-3. **Create workflows:**
-   Simply describe in chat what you want to automate:
-   ```
-   "Create a workflow that daily fetches emails from Gmail, 
-   saves attachments to Google Drive, and sends a Slack notification"
-   ```
-
-### Benefits for Agent Garage Users
-
-- **No n8n expertise required:** The AI assistant translates your requirements into working workflows
-- **Faster development:** From idea to workflow in minutes instead of hours
-- **Error reduction:** Automatic validation of node configurations
-
-For more details and complete documentation, visit the [n8n-MCP Repository](https://github.com/czlonkowski/n8n-mcp).
 
 ## 📜 License
 
 This project is [licensed under the Apache 2.0 license](LICENSE).
-
-## ⚠️ Disclaimer
-
-Just to reiterate the point from the license:
-This project is provided on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-
-This project is provided as a **proof of concept** and is intended for **experimental
-or educational purposes only**. It's maintained on best-effort basis. While it's
-perfectly possible to use it as a base for an enterprise implementation, the project
-"as is" is **not** suitable for production or mission-critical use. The maintainers do
-not guarantee that the software functions as intended, nor do they assume responsibility
-for any loss or damage resulting from its use.
-
-Use of this project does not imply any affiliation with or endorsement by Accenture.

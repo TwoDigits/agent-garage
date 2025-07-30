@@ -1,0 +1,299 @@
+{
+  "name": "2.4 Logfile-Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -240,
+        40
+      ],
+      "id": "d79adf58-a819-49db-938e-5f9aad69f380",
+      "name": "When Executed by Manager"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        240,
+        40
+      ],
+      "id": "8b9626ae-b5a1-4f87-ab6f-a0dc1759798e",
+      "name": "Extract from Logfile"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/data/logs/test.log",
+        "options": {
+          "fileName": "logfile.log",
+          "dataPropertyName": "data"
+        }
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        60,
+        40
+      ],
+      "id": "620ef74f-2173-427b-bec5-1fb631cc47ba",
+      "name": "Read Logfile",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        480,
+        240
+      ],
+      "id": "0a9f7575-ad51-4aec-986f-f6c9e488d531",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1234"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        720,
+        240
+      ],
+      "id": "61620857-a375-4d66-b16f-88a3502679d5",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Your primary task is to examine the provided logfile, identify and extract critical bugs, stack traces, exceptions, and any abnormal or unexpected behavior that could indicate a malfunction, regression, or system instability.\n\nYou will receive the full logfile as input. Based on that, perform a focused analysis.\n\nUse the given logfile:\n{{ $json.data }}\n\nPresent your findings in a clear, concise, and structured format. If applicable, group findings by severity or relevance. Avoid including unnecessary or unfiltered raw logs in your output.\n\n\n\n",
+        "options": {
+          "systemMessage": "Here is the logfile you have to analyze:\n{{ $json.data }} \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        520,
+        40
+      ],
+      "id": "cd3ff2ec-8249-429f-a976-470f8adcf24c",
+      "name": "Logfile-Agent"
+    },
+    {
+      "parameters": {
+        "content": "# Overview of the Logfile-Agent",
+        "height": 920,
+        "width": 1640,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -380,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "58a28cce-8c9c-4990-bdec-9bc1e409fb6f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Logfile-Agent\n\nThe **Logfile-Agent** is a specialized agent within the multi-agent system. It is triggered via the **“Execute Sub-workflow Trigger”** in **n8n**, typically as part of a workflow that is controlled by the **Manager-Agent**.\n\nIts core responsibility is to **analyze logfiles** in a continuous and structured way. The agent has **permanent access to a designated logfile** and monitors it for:\n\n- Critical errors and exceptions  \n- Traces and stack information  \n- Structural changes or anomalies  \n- Relevant system messages or performance warnings\n\n* Using a prompt-driven analysis approach, the Logfile-Agent interprets and evaluates log data to identify patterns, detect regressions, and extract actionable insights.\n\n* Whenever significant findings are detected, the agent generates corresponding messages or reports and returns them automatically to the **Manager-Agent** for further coordination or escalation.\n",
+        "height": 500,
+        "width": 660
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -340,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "7cae79b8-88d8-4882-b9ff-a6cb365cb669",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe memory keeps a history of previous messages, allowing for an ongoing conversation with the AI, rather than every interaction starting fresh.\n\n\nThis short term memory stores a customizable length of chat history for the current session.",
+        "height": 340,
+        "width": 170
+      },
+      "id": "5eeab440-d0a1-44e8-a77c-5d9a4b07df94",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        680,
+        360
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe Ollama Chat Model node allows to use Large Language Models (LLMs) with conversational agents.\n\nThe LLM llama3.2 is used here.\n",
+        "height": 340,
+        "width": 170
+      },
+      "id": "fab60b25-19ed-45d1-9206-32711b7b58e8",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        440,
+        360
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 1. Receiving the input from the Manger-Agent",
+        "height": 240,
+        "width": 300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -340,
+        -40
+      ],
+      "typeVersion": 1,
+      "id": "afb7fbdc-f5eb-444e-b68a-c4b5d24698f3",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## 2. Preparing the logfile as input for the agent",
+        "height": 240,
+        "width": 440,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -20,
+        -40
+      ],
+      "typeVersion": 1,
+      "id": "6e45bd8e-ab45-4860-afd8-b5715b456264",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## 3. Analysis of the logfile and returning the results to the Manager",
+        "height": 240,
+        "width": 440,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        440,
+        -40
+      ],
+      "typeVersion": 1,
+      "id": "2c5b5c70-2870-4134-8535-0d811d734782",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## 👈\n**Click on the AI-Agent-Node** in the workflow to view the **system prompt used by the Logfile-Agent**.",
+        "height": 140,
+        "width": 310
+      },
+      "id": "a06e045d-0692-43fd-a3bd-715393bec600",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        900,
+        20
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Manager": {
+      "main": [
+        [
+          {
+            "node": "Read Logfile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from Logfile": {
+      "main": [
+        [
+          {
+            "node": "Logfile-Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Logfile": {
+      "main": [
+        [
+          {
+            "node": "Extract from Logfile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Logfile-Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Logfile-Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Logfile-Agent": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "860c4f2b-9fb7-4bae-bff9-00541837da39",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "lhy5QVdBC5llXOjA",
+  "tags": []
+}

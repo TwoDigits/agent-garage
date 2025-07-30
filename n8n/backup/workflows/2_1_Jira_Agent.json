@@ -1,0 +1,293 @@
+{
+  "name": "2.1 Jira-Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Jira Agent that handles all user requests exclusively by invoking MCP-Client Jira tools.\n  Whether the user says “create me a user story XY” or “fetch information from user story XY”, you must:\n \n  1. Understand the user’s intent in plain language  \n  2. Emit exactly one JSON object matching the tool schema below  \n  3. Parse the `tool_result` (or `tool_error`) events from stdout  \n  4. Return a concise, user-friendly reply\nUse the given information: {{ $json.query }}\n \nIf the user wants you to create a user story, carefully go through the past interacations and identify the information the user wants to insert.\n \ntool_config:\n  startCommand:\n    type: stdio\n \ninstructions: |\n  1. **Interpret User Request**  \n     - “create a user story” → `jira_create_issue` (use `issue_type: \"Story\"` or `\"Bug\"`)  \n     - “fetch info from user story <KEY>” → `jira_search` (use `jql: \"key = <KEY>\"`)  \n     - “update user story <KEY>” → `jira_update_issue`  \n     - “transition user story <KEY>” → `jira_transition_issue`  \n \n  2. **Emit Exactly One JSON Object**  \n     - **No** Markdown, **no** extra keys.  \n     - **Always** output this form :\n       ```jsonc\n       {\n         \"type\": \"tool\",\n         \"tool\": \"<tool_name>\",\n         \"input\": { /* matching the tool’s schema */ }\n       }\n       ```\n     - **tool_name** \n       - `jira_create_issue`\n       - `jira_search`\n       - `jira_update_issue`\n       - `jira_transition_issue`\n \n     **samples**  \n     - **Create Story**  \n       ```json\n       {\n         \"type\":\"tool\",\n         \"tool\":\"jira_create_issue\",\n         \"input\":{\n           \"project_key\":\"AI\",\n           \"summary\":\"summary of the requested feature\",\n           \"issue_type\":\"Story\",\n           \"description\":\"description of the requested feature\"\n         }\n       }\n       ```\n     - **Get Story Info**  \n       ```json\n       {\n         \"type\":\"tool\",\n         \"tool\":\"jira_search\",\n         \"input\":{\n           \"jql\":\"key = AI-42\",\n           \"fields\":\"summary,status,assignee,description\",\n           \"limit\":5\n         }\n       }\n       ```",
+        "options": {
+          "returnIntermediateSteps": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        300,
+        0
+      ],
+      "id": "101bbd50-d6da-4dca-bbd3-6b95648c0fe4",
+      "name": "Jira-Agent"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -20,
+        0
+      ],
+      "id": "a953e44c-dc84-46e0-9e6e-1afa110ff6c6",
+      "name": "When Executed by Manager"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "http://mcp-server:3000/sse",
+        "include": "selected",
+        "includeTools": [
+          "jira_create_issue",
+          "jira_search",
+          "jira_update_issue",
+          "jira_transition_issue"
+        ]
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        840,
+        240
+      ],
+      "id": "386cd2e0-c67f-47e0-8790-be1ac8eb949e",
+      "name": "Action in Jira",
+      "retryOnFail": true,
+      "maxTries": 5
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        360,
+        240
+      ],
+      "id": "674e3ebe-0fb0-4adf-a114-84c592e6bf96",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1234"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        580,
+        240
+      ],
+      "id": "c845aaf8-8aa6-4093-9c9f-88a21ac70498",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe memory keeps a history of previous messages, allowing for an ongoing conversation with the AI, rather than every interaction starting fresh.\n\n\nThis short term memory stores a customizable length of chat history for the current session.",
+        "height": 480,
+        "width": 170
+      },
+      "id": "7e7ee475-c495-4814-80c0-55de06853f47",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        540,
+        360
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe Ollama Chat Model node allows to use Large Language Models (LLMs) with conversational agents.\n\nThe LLM llama3.2 is used here.\n",
+        "height": 480,
+        "width": 170
+      },
+      "id": "35617510-79be-4cc8-af9c-514765838a53",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        320,
+        360
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 1. Receiving the input from the Manger-Agent",
+        "height": 240,
+        "width": 340,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -120,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "d77199d3-8225-4db5-b091-7c0e7a41b29c",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## 2. Execution of an action in Jira",
+        "height": 240,
+        "width": 440,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        260,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "788af8f9-ebaf-4921-8608-2625d05683ab",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## 👈\n**Click on the AI-Agent-Node** in the workflow to view the **system prompt used by the Jira-Agent**.",
+        "height": 140,
+        "width": 310
+      },
+      "id": "4044cfd8-430e-4a89-92a6-ac10e5a93a24",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        740,
+        -40
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Jira-Agent\n\nThe **Jira-Agent** is a specialized agent within the multi-agent system. It is triggered via the **“Execute Sub-workflow Trigger”** in **n8n**, typically as part of a workflow coordinated by the **Manager-Agent**.\n\nIts primary role is to **understand user requests** related to issue tracking and perform the corresponding **actions in Jira**.  \nJira is a widely used platform for **issue tracking**, **project management**, and **agile workflows** (e.g., Scrum, Kanban).\n\nTo interact with Jira, the agent uses an integrated **MCP client tool**, which communicates with a **MCP server** to execute actions such as:\n\n- Creating new Jira issues  \n- Updating existing tickets  \n- Searching for issues based on criteria\n\n⚠️ **Disclaimer:** The agent currently uses a community-maintained **open-source MCP server**, which may lead to occasional reliability issues.\n\n* The Jira-Agent processes structured input (e.g. from upstream agents or user queries), performs the desired Jira action via MCP, and returns the result to the **Manager-Agent** for further use or user feedback.",
+        "height": 660,
+        "width": 420
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -120,
+        180
+      ],
+      "typeVersion": 1,
+      "id": "fb5f1b2c-0d98-4349-ba99-d3c7962a4a80",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## 👆\nThe **MCP Client** is a tool made available to the agent. It enables the agent to communicate with an **MCP Server** in order to perform actions.\n\nThese actions are defined and configured on the MCP Server and  include \n* creating \n* updating \n* searching for Jira tickets.\n\nIn this case this [Atlassian-MCP-Server](https://github.com/sooperset/mcp-atlassian) is used.\n",
+        "height": 480,
+        "width": 170
+      },
+      "id": "26866c42-695e-4e84-b738-cdc5b2311679",
+      "name": "Sticky Note9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        360
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Overview of the Jira-Agent",
+        "height": 1000,
+        "width": 1240,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "f8613948-92f3-42e9-b23c-c79f37ce2ff4",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "> ## ⚠️ **Disclaimer:**  \n\n> Before this agent can be executed or tested, the corresponding **Jira instance must be properly configured**.  \n> Please refer to the setup instructions in the **README** for detailed guidance.\n",
+        "height": 220,
+        "width": 300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -540,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "038ba33f-a348-49d5-b85d-10efc7b3052f",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Manager": {
+      "main": [
+        [
+          {
+            "node": "Jira-Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Action in Jira": {
+      "ai_tool": [
+        [
+          {
+            "node": "Jira-Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Jira-Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira-Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Jira-Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "57a00913-9ad2-46e6-949e-3e36cdb6b9d1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "MnMojNhrudT0ZONb",
+  "tags": []
+}
