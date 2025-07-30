@@ -11,7 +11,6 @@ This project builds upon the foundation of the **Self-hosted AI Starter Kit**, c
 - [Installation](#installation)
 - [Getting Started with the Agent Garage](#-getting-started-with-the-agent-garage)
 - [Chat-based Workflow Creation with n8n-MCP](#-chat-based-workflow-creation-with-n8n-mcp)
-- [Quick Start and Usage](#️-quick-start-and-usage)
 - [Upgrading](#upgrading)
 - [Recommended Reading](#-recommended-reading)
 - [Video Walkthrough](#-video-walkthrough)
@@ -179,7 +178,6 @@ podman compose --profile cpu --file docker-compose.yml up
 
 
 # 🚀 Getting Started with the Agent Garage
-
 ## Purpose
 This platform is built to support **exploration**, **experimentation** and **development** with AI agents. It offers a practical environment for any user who wants to understand how intelligent AI-agents can be used to automate tasks, solve problems, or implement custom workflows. Whether you want to try out existing agents, adapt them to your needs, or build entirely new solutions, the agent garage provides a flexible and accessible starting point.
 
@@ -407,8 +405,6 @@ The n8n-MCP Server gives AI assistants comprehensive access to n8n node document
 
 For more details and complete documentation, visit the [n8n-MCP Repository](https://github.com/czlonkowski/n8n-mcp).
 
-
-## ⚡️ Quick Start and Usage
 
 ## Upgrading
 
