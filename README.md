@@ -9,14 +9,14 @@ This project builds upon the foundation of the **Self-hosted AI Starter Kit**, c
 - [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
+- [Getting Started with the Agent Garage](#-getting-started-with-the-agent-garage)
+- [Chat-based Workflow Creation with n8n-MCP](#-chat-based-workflow-creation-with-n8n-mcp)
 - [Quick Start and Usage](#️-quick-start-and-usage)
 - [Upgrading](#upgrading)
 - [Recommended Reading](#-recommended-reading)
 - [Video Walkthrough](#-video-walkthrough)
 - [More AI Templates](#️-more-ai-templates)
 - [Tips & Tricks](#-tips--tricks)
-- [Getting Started with the Agent Garage](#-getting-started-with-the-agent-garage)
-- [Chat-based Workflow Creation with n8n-MCP](#-chat-based-workflow-creation-with-n8n-mcp)
 - [License](#-license)
 
 ## ⚠️ Disclaimer
@@ -178,116 +178,6 @@ podman compose --profile cpu --file docker-compose.yml up
 ```
 
 
-## ⚡️ Quick Start and Usage
-
-The core of Agent Garage is a Docker Compose file, pre-configured with network and storage settings, minimizing the need for additional installations. After completing the installation steps above, follow these steps to get started.
-
-### n8n
-
-1. Navigate to http://localhost:5678
-2. The Registration form will appear.
-3. Enter the requested data. However, these do not have to be valid, as the e-mail address is not checked. You only have to set this up once.
-
-   ![alt text](readme_images/SetUp-n8n.png)
-4. The dashboard will be loaded.
-
-> [!NOTE]
-> This starter kit is designed to help you get started with self-hosted AI
-> workflows. While it’s not fully optimized for production environments, it
-> combines robust components that work well together for proof-of-concept
-> projects. You can customize it to meet your specific needs
-
-## Upgrading
-
-### For Nvidia GPU Setups
-
-```bash
-docker compose --profile gpu-nvidia pull
-docker compose create && docker compose --profile gpu-nvidia up
-```
-
-### For Mac / Apple Silicon Users
-
-```
-docker compose pull
-docker compose create && docker compose up
-```
-
-### For Non-GPU Setups (CPU Only)
-
-```bash
-docker compose --profile cpu pull
-docker compose create && docker compose --profile cpu up
-```
-
-## 👓 Recommended Reading
-
-n8n is full of useful content for getting started quickly with its AI concepts and nodes.
-
-- [AI agents for developers: from theory to practice with n8n](https://blog.n8n.io/ai-agents/)
-- [Tutorial: Build an AI workflow in n8n](https://docs.n8n.io/advanced-ai/intro-tutorial/)
-- [Langchain Concepts in n8n](https://docs.n8n.io/advanced-ai/langchain/langchain-n8n/)
-- [Demonstration of key differences between agents and chains](https://docs.n8n.io/advanced-ai/examples/agent-chain-comparison/)
-- [What are vector databases?](https://docs.n8n.io/advanced-ai/examples/understand-vector-databases/)
-
-## 🎥 Video Walkthrough
-
-- [Installing and using Local AI for n8n](https://www.youtube.com/watch?v=xz_X2N-hPg0)
-
-## 🛍️ More AI Templates
-
-For more AI workflow ideas, visit the [**official n8n AI template
-gallery**](https://n8n.io/workflows/?categories=AI). From each workflow,
-select the **Use workflow** button to automatically import the workflow into
-your local n8n instance.
-
-### Learn AI Key Concepts
-
-- [AI Agent Chat](https://n8n.io/workflows/1954-ai-agent-chat/)
-- [AI chat with any data source (using the n8n workflow too)](https://n8n.io/workflows/2026-ai-chat-with-any-data-source-using-the-n8n-workflow-tool/)
-- [Chat with OpenAI Assistant (by adding a memory)](https://n8n.io/workflows/2098-chat-with-openai-assistant-by-adding-a-memory/)
-- [Use an open-source LLM (via Hugging Face)](https://n8n.io/workflows/1980-use-an-open-source-llm-via-huggingface/)
-- [Chat with PDF docs using AI (quoting sources)](https://n8n.io/workflows/2165-chat-with-pdf-docs-using-ai-quoting-sources/)
-- [AI agent that can scrape webpages](https://n8n.io/workflows/2006-ai-agent-that-can-scrape-webpages/)
-
-### Local AI Templates
-
-- [Tax Code Assistant](https://n8n.io/workflows/2341-build-a-tax-code-assistant-with-qdrant-mistralai-and-openai/)
-- [Breakdown Documents into Study Notes with MistralAI and Qdrant](https://n8n.io/workflows/2339-breakdown-documents-into-study-notes-using-templating-mistralai-and-qdrant/)
-- [Financial Documents Assistant using Qdrant and](https://n8n.io/workflows/2335-build-a-financial-documents-assistant-using-qdrant-and-mistralai/) [Mistral.ai](http://mistral.ai/)
-- [Recipe Recommendations with Qdrant and Mistral](https://n8n.io/workflows/2333-recipe-recommendations-with-qdrant-and-mistral/)
-
-## 💡 Tips & Tricks
-
-### Accessing Local Files
-
-Agent Garage will create a shared folder (by default, located in the same directory) which is mounted to the n8n container and allows n8n to access files on disk. This folder within the n8n container is
-located at `/data/shared` -- this is the path you’ll need to use in nodes that
-interact with the local filesystem.
-
-**Nodes that interact with the local filesystem:**
-
-- [Read/Write Files from Disk](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.filesreadwrite/)
-- [Local File Trigger](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.localfiletrigger/)
-- [Execute Command](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executecommand/)
-
-### Open WebUI
-
-1. Navigate to http://localhost:3000 .The Sign In page will appear: 
-
-   ![alt text](readme_images/sign_in_n8n.png)
-
-2. Use the following credentials to sign in:
-
-   Email: admin@test.com
-
-   Password: S2yjzup!3
-
-3. After login, the chat interface is visible.
-
-**Disclaimer:** Open WebUI is still under active development and is intended for experimentation and testing only. It is not recommended for production use. You may occasionally experience display delays within the Open WebUI interface. In this case, reloading the page or waiting a few seconds will usually solve the problem.
-
-
 # 🚀 Getting Started with the Agent Garage
 
 ## Purpose
@@ -305,10 +195,36 @@ All workflows in n8n are clearly labeled and structured, making it easy to under
 The agent garage encourages to follow, explore, and build on the existing components.
 This makes the platform an ideal starting point for working with agent-based automation, open-ended, guided, and ready for your own ideas.
 
+The core of Agent Garage is a Docker Compose file, pre-configured with network and storage settings, minimizing the need for additional installations. After completing the installation steps above, follow these steps to get started.
+
+### n8n
+
+1. Navigate to http://localhost:5678
+2. The Registration form will appear.
+3. Enter the requested data. However, these do not have to be valid, as the e-mail address is not checked. You only have to set this up once.
+
+   ![alt text](readme_images/SetUp-n8n.png)
+4. The dashboard will be loaded.
 
 
 
-## Overview
+### Open WebUI
+
+1. Navigate to http://localhost:3000 .The Sign In page will appear: 
+
+   ![alt text](readme_images/sign_in_n8n.png)
+
+2. Use the following credentials to sign in:
+
+   Email: admin@test.com
+
+   Password: S2yjzup!3
+
+3. After login, the chat interface is visible.
+
+**Disclaimer:** Open WebUI is still under active development and is intended for experimentation and testing only. It is not recommended for production use. You may occasionally experience display delays within the Open WebUI interface. In this case, reloading the page or waiting a few seconds will usually solve the problem.
+
+## Further steps
 When opening the n8n interface, you’ll see an overview of all available workflows .
 
 ![alt text](readme_images/n8n-Dashboard.png)
@@ -343,7 +259,7 @@ For an easy first step, use the **User Story Creator** workflow in **n8n**. This
 ### How it works:  
   1. Double click on the User Story Creator workflow 
 
-      ![alt text](readme_images/Overview-n8n.png)
+      ![alt text](readme_images/User-Story-Creator-n8n.png)
   2. Take a moment to review the explanations in the workflow and explore AI agents in n8n.
   3. Activate the workflow by clicking the Active Button:
 
@@ -490,6 +406,90 @@ The n8n-MCP Server gives AI assistants comprehensive access to n8n node document
 - **Error reduction:** Automatic validation of node configurations
 
 For more details and complete documentation, visit the [n8n-MCP Repository](https://github.com/czlonkowski/n8n-mcp).
+
+
+## ⚡️ Quick Start and Usage
+
+## Upgrading
+
+### For Nvidia GPU Setups
+
+```bash
+docker compose --profile gpu-nvidia pull
+docker compose create && docker compose --profile gpu-nvidia up
+```
+
+### For Mac / Apple Silicon Users
+
+```
+docker compose pull
+docker compose create && docker compose up
+```
+
+### For Non-GPU Setups (CPU Only)
+
+```bash
+docker compose --profile cpu pull
+docker compose create && docker compose --profile cpu up
+```
+
+## 👓 Recommended Reading
+
+n8n is full of useful content for getting started quickly with its AI concepts and nodes.
+
+- [AI agents for developers: from theory to practice with n8n](https://blog.n8n.io/ai-agents/)
+- [Tutorial: Build an AI workflow in n8n](https://docs.n8n.io/advanced-ai/intro-tutorial/)
+- [Langchain Concepts in n8n](https://docs.n8n.io/advanced-ai/langchain/langchain-n8n/)
+- [Demonstration of key differences between agents and chains](https://docs.n8n.io/advanced-ai/examples/agent-chain-comparison/)
+- [What are vector databases?](https://docs.n8n.io/advanced-ai/examples/understand-vector-databases/)
+
+## 🎥 Video Walkthrough
+
+- [Installing and using Local AI for n8n](https://www.youtube.com/watch?v=xz_X2N-hPg0)
+
+## 🛍️ More AI Templates
+
+For more AI workflow ideas, visit the [**official n8n AI template
+gallery**](https://n8n.io/workflows/?categories=AI). From each workflow,
+select the **Use workflow** button to automatically import the workflow into
+your local n8n instance.
+
+### Learn AI Key Concepts
+
+- [AI Agent Chat](https://n8n.io/workflows/1954-ai-agent-chat/)
+- [AI chat with any data source (using the n8n workflow too)](https://n8n.io/workflows/2026-ai-chat-with-any-data-source-using-the-n8n-workflow-tool/)
+- [Chat with OpenAI Assistant (by adding a memory)](https://n8n.io/workflows/2098-chat-with-openai-assistant-by-adding-a-memory/)
+- [Use an open-source LLM (via Hugging Face)](https://n8n.io/workflows/1980-use-an-open-source-llm-via-huggingface/)
+- [Chat with PDF docs using AI (quoting sources)](https://n8n.io/workflows/2165-chat-with-pdf-docs-using-ai-quoting-sources/)
+- [AI agent that can scrape webpages](https://n8n.io/workflows/2006-ai-agent-that-can-scrape-webpages/)
+
+### Local AI Templates
+
+- [Tax Code Assistant](https://n8n.io/workflows/2341-build-a-tax-code-assistant-with-qdrant-mistralai-and-openai/)
+- [Breakdown Documents into Study Notes with MistralAI and Qdrant](https://n8n.io/workflows/2339-breakdown-documents-into-study-notes-using-templating-mistralai-and-qdrant/)
+- [Financial Documents Assistant using Qdrant and](https://n8n.io/workflows/2335-build-a-financial-documents-assistant-using-qdrant-and-mistralai/) [Mistral.ai](http://mistral.ai/)
+- [Recipe Recommendations with Qdrant and Mistral](https://n8n.io/workflows/2333-recipe-recommendations-with-qdrant-and-mistral/)
+
+## 💡 Tips & Tricks
+
+### Accessing Local Files
+
+Agent Garage will create a shared folder (by default, located in the same directory) which is mounted to the n8n container and allows n8n to access files on disk. This folder within the n8n container is
+located at `/data/shared` -- this is the path you’ll need to use in nodes that
+interact with the local filesystem.
+
+**Nodes that interact with the local filesystem:**
+
+- [Read/Write Files from Disk](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.filesreadwrite/)
+- [Local File Trigger](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.localfiletrigger/)
+- [Execute Command](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executecommand/)
+
+> [!NOTE]
+> This starter kit is designed to help you get started with self-hosted AI
+> workflows. While it’s not fully optimized for production environments, it
+> combines robust components that work well together for proof-of-concept
+> projects. You can customize it to meet your specific needs
+
 
 ## 📜 License
 
