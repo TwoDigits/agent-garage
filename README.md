@@ -10,6 +10,8 @@ This project builds upon the foundation of the **Self-hosted AI Starter Kit**, c
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
 - [Getting Started with the Agent Garage](#-getting-started-with-the-agent-garage)
+- [Notes](#-notes)
+- [OpenWebUI and n8n Integration Architecture](#-openwebui-and-n8n-integration-architecture)
 - [Chat-based Workflow Creation with n8n-MCP](#-chat-based-workflow-creation-with-n8n-mcp)
 - [Upgrading](#upgrading)
 - [Recommended Reading](#-recommended-reading)
@@ -177,8 +179,8 @@ podman compose --profile cpu --file docker-compose.yml up
 ```
 
 
-# 🚀 Getting Started with the Agent Garage
-## Purpose
+## 🚀 Getting Started with the Agent Garage
+### Purpose
 This platform is built to support **exploration**, **experimentation** and **development** with AI agents. It offers a practical environment for any user who wants to understand how intelligent AI-agents can be used to automate tasks, solve problems, or implement custom workflows. Whether you want to try out existing agents, adapt them to your needs, or build entirely new solutions, the agent garage provides a flexible and accessible starting point.
 
 ### Key Goals of the Platform
@@ -222,7 +224,7 @@ The core of Agent Garage is a Docker Compose file, pre-configured with network a
 
 **Disclaimer:** Open WebUI is still under active development and is intended for experimentation and testing only. It is not recommended for production use. You may occasionally experience display delays within the Open WebUI interface. In this case, reloading the page or waiting a few seconds will usually solve the problem.
 
-## Further steps
+### Further steps
 When opening the n8n interface, you’ll see an overview of all available workflows .
 
 ![alt text](readme_images/n8n-Dashboard.png)
@@ -248,7 +250,7 @@ Workflows belonging to the multi-agent system are marked with a green border. Th
 * These workflows belong together and operate as a collaborative system coordinated by the Manager-Agent.
 
 ---
-## 1.   Simple Workflow – *User Story Creator*
+### 1. Simple Workflow – *User Story Creator*
 
 For an easy first step, use the **User Story Creator** workflow in **n8n**. This workflow is designed to explore the basic functionality and interaction with the chat interface of **Open WebUI**.
 - 🔧 **Technically**, the workflow is based on a single AI-Agent that creates structured User Stories.
@@ -270,7 +272,7 @@ For an easy first step, use the **User Story Creator** workflow in **n8n**. This
   
 This entry point is ideal for getting familiar with the **core concepts** of the platform and testing your own ideas.
 
-## 2. Next Level: Multi-Agent System with Supervisor Architecture
+### 2. Next Level: Multi-Agent System with Supervisor Architecture
 
 For the next step, use the **Multi-Agent System** workflow in **n8n**. This workflow is designed to demonstrate how multiple specialized AI agents collaborate under a supervisor architecture to handle selected tasks from the software development process.
  It consists of several specialized AI agents that work together to solve more complex tasks related to selected aspects of the software development process.
@@ -305,9 +307,9 @@ For the next step, use the **Multi-Agent System** workflow in **n8n**. This work
 | **User-Story-Agent**| - Generating structured user stories from requests         |       - Idea for software feature            |       - User story             |
 
 
-# 💡 Notes
+## 💡 Notes
 
-## Default Model
+### Default Model
 The Llama 3.2 model is installed by default. You can use different LLMs by simply changing the model name in the `docker-compose.yml` file:
 
 
@@ -315,12 +317,12 @@ The Llama 3.2 model is installed by default. You can use different LLMs by simpl
 
    To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted.
 
-## Change logfile
+### Change logfile
 The **Logfile Agent** has access to a specific log file (`test.log`) located within the project folder.  
 If the log file is replaced or renamed, make sure to update the corresponding path and filename in the **n8n workflow** of the Logfile Agent to ensure correct analysis.
 
 
-## Setting up Jira to use the Jira-Agent
+### Setting up Jira to use the Jira-Agent
 
 1. Navigate to http://localhost:8080
 2. The Jira-Setup page will be visible
@@ -366,6 +368,64 @@ Click on Settings at the top right of your profile, select Issues from the menu 
    JIRA_USERNAME=your_username
 
    JIRA_PROJECT=project_key
+
+## 🔗 OpenWebUI and n8n Integration Architecture
+
+### Platform Architecture
+
+The platform leverages containerization technology, where each component runs in its own container connected through a shared virtual network. This architecture provides:
+- Hardware independence and platform portability
+- Low entry barrier for new users
+- Simplified deployment with minimal setup steps
+
+### How the Integration Works
+
+#### Communication Flow
+
+1. **User Input**: Users interact with the platform through OpenWebUI's chat interface, submitting requests for AI agent processing
+
+2. **n8n-Pipe Function**: OpenWebUI uses a custom Python function called "n8n-pipe" to bridge communication with n8n:
+   - Intercepts user messages instead of sending them directly to an AI model
+   - Forwards requests to n8n workflows via webhooks
+   - Maintains session management for continuous conversations
+
+3. **Webhook Trigger**: n8n receives the message through a webhook endpoint, which triggers the appropriate workflow containing the MAS implementation
+
+4. **Agent Processing**: Within n8n workflows:
+   - AI agents access Large Language Models (LLMs) through Ollama
+   - Agents can interact with external systems (e.g., Jira) via MCP clients
+   - Multiple specialized agents collaborate to process the request
+
+5. **Response Delivery**: The generated response is sent back to OpenWebUI via webhook, where it's formatted with features like:
+   - Markdown rendering
+   - Code syntax highlighting
+   - Structured message display
+
+### The n8n-Pipe Function
+
+The n8n-pipe is a Python function that bridges OpenWebUI with n8n workflows. Key features include:
+
+- **Webhook Configuration**: Configurable n8n webhook URL and bearer token authentication
+- **Field Mapping**: Customizable input and output field names for data exchange
+- **Status Indicators**: Real-time status emissions to show workflow progress
+- **Session Management**: Maintains session IDs for conversation continuity
+- **Error Handling**: Comprehensive error catching and reporting
+
+### Integration with External Systems
+
+The platform extends existing tools rather than replacing them. Through n8n's extensive node library and MCP support, AI agents can:
+
+- Retrieve information from connected systems
+- Update data in external tools
+- Create new entries (e.g., Jira tickets)
+- Reduce manual data entry through automation
+
+### Technical Considerations
+
+While the current implementation demonstrates technical feasibility and serves as an excellent proof of concept, please note:
+- This is designed for experimentation and educational purposes
+- Security, scalability, and reliability aspects would need enhancement for production use
+- The underlying concept can be adapted for enterprise-ready solutions
 
 ## 🤖 Chat-based Workflow Creation with n8n-MCP
 
