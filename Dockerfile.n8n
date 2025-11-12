@@ -1,0 +1,13 @@
+FROM n8nio/n8n:latest
+USER root
+# Install Python, pip, and git (for the git diff)
+RUN apk add --update python3 py3-pip git
+# Install Python libraries
+# tree-sitter-languages is critical: it bundles pre-compiled
+# parsers, avoiding C++ build tools in the container
+RUN pip3 install \
+    tree-sitter \
+    tree-sitter-languages \
+    transformers \
+    "nomic[local]" --break-system-packages
+USER node

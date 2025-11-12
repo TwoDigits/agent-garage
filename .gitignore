@@ -13,3 +13,9 @@ Thumbs.db
 
 # OpenWebUI model cache
 openwebui/cache/
+
+# Data directories (Podman volumes)
+data/
+
+# Environment files (contains credentials)
+.env
