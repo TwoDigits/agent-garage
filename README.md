@@ -14,6 +14,8 @@ This project builds upon the foundation of the **Self-hosted AI Starter Kit**, c
 - [Tech Stack](#tech-stack)
 - [Installation](#installation)
 - [Getting Started with the Agent Garage](#-getting-started-with-the-agent-garage)
+- [Podman Compatibility](#-podman-compatibility)
+- [CI/CD Pipeline](#-cicd-pipeline)
 - [Notes](#-notes)
 - [OpenWebUI and n8n Integration Architecture](#-openwebui-and-n8n-integration-architecture)
 - [Chat-based Workflow Creation with n8n-MCP](#-chat-based-workflow-creation-with-n8n-mcp)
@@ -59,11 +61,13 @@ Use of this project does not imply any affiliation with or endorsement by Accent
 
 ✅ [**Self-hosted n8n**](https://n8n.io/) - Low-code platform with over 400 integrations and advanced AI components
 
-✅ [**Ollama**](https://ollama.com/) - Cross-platform LLM platform to install and run the latest local LLMs
+✅ [**vLLM**](https://docs.vllm.ai/) - High-performance LLM inference engine with OpenAI-compatible API
 
 ✅ [**Qdrant**](https://qdrant.tech/) - Open-source, high-performance vector store with a comprehensive API
 
 ✅ [**PostgreSQL**](https://www.postgresql.org/) - Reliable database system that handles large amounts of data safely
+
+✅ [**pgAdmin**](https://www.pgadmin.org/) - Web-based PostgreSQL database management interface
 
 ## Installation
 
@@ -79,67 +83,20 @@ cd agent-garage
 A container engine is required to run this multi-container system. Either Docker or Podman can be used. One of these must be selected prior to installation, as it serves as the foundational component for hosting the containers.
 
 ### Using Docker Compose
- 
+
 #### For Nvidia GPU Users
 
 ```bash
 git clone https://github.com/twodigits/agent-garage.git
 cd agent-garage
-docker compose --profile gpu-nvidia up
+docker compose --profile gpu up
 ```
 
 > [!NOTE]
-> If you have not used your Nvidia GPU with Docker before, please follow the
-> [Ollama Docker instructions](https://github.com/ollama/ollama/blob/main/docs/docker.md).
+> If you have not used your Nvidia GPU with Docker before, you may need to install
+> [nvidia-container-toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html).
 
-#### For AMD GPU Users on Linux
-
-```bash
-git clone https://github.com/twodigits/agent-garage.git
-cd agent-garage
-docker compose --profile gpu-amd up
-```
-
-#### For Mac / Apple Silicon Users
-
-If you’re using a Mac with an M1 or newer processor, you can't expose your GPU
-to the Docker instance, unfortunately. There are two options in this case:
-
-1. Run the starter kit fully on CPU, like in the section "For everyone else"
-   below
-2. Run Ollama on your Mac for faster inference, and connect to that from the
-   n8n instance
-
-If you want to run Ollama on your Mac, check the
-[Ollama homepage](https://ollama.com/)
-for installation instructions, and run the starter kit as follows:
-
-```bash
-git clone https://github.com/twodigits/agent-garage.git
-cd agent-garage
-docker compose up
-```
-
-##### For Mac Users Running Ollama Locally
-
-If you're running Ollama locally on your Mac (not in Docker), you need to modify the OLLAMA_HOST environment variable
-in the n8n service configuration. Update the x-n8n section in your Docker Compose file as follows:
-
-```yaml
-x-n8n: &service-n8n
-  # ... other configurations ...
-  environment:
-    # ... other environment variables ...
-    - OLLAMA_HOST=host.docker.internal:11434
-```
-
-Additionally, after you see "Editor is now accessible via: <http://localhost:5678/>":
-
-1. Head to <http://localhost:5678/home/credentials>
-2. Click on "Local Ollama service"
-3. Change the base URL to "http://host.docker.internal:11434/"
-
-#### For Everyone Else (CPU Only)
+#### For CPU-Only Users
 
 ```bash
 git clone https://github.com/twodigits/agent-garage.git
@@ -147,39 +104,41 @@ cd agent-garage
 docker compose --profile cpu up
 ```
 
-### Using Podman
+### Using Podman Compose
 
-#### For Nvidia GPU Users
-
-```bash
-podman compose --profile gpu-nvidia --file docker-compose.yml up
-```
-
-#### For AMD GPU Users on Linux
+#### Install Podman Compose
 
 ```bash
-podman compose --profile gpu-amd --file docker-compose.yml up
+pip install podman-compose
 ```
+
+#### For GPU Users (Linux with NVIDIA)
+
+```bash
+git clone https://github.com/twodigits/agent-garage.git
+cd agent-garage
+podman-compose --profile gpu up -d
+```
+
+#### For CPU-Only Users
+
+```bash
+git clone https://github.com/twodigits/agent-garage.git
+cd agent-garage
+podman-compose --profile cpu up -d
+```
+
+> [!NOTE]
+> For detailed Podman setup and configuration, see [PODMAN_MIGRATION.md](PODMAN_MIGRATION.md).
 
 #### For Mac / Apple Silicon Users
 
-If you’re using a Mac with an M1 or newer processor, you can't expose your GPU
-to the Docker instance, unfortunately. There are two options in this case:
-
-1. Run the multi-container system fully on CPU, like in the section "For Everyone Else (CPU Only)"
-   below
-2. Run Ollama on your Mac for faster inference, and connect to that from the
-   n8n instance
-
+If you're using a Mac with Apple Silicon, GPU acceleration is not available for container workloads. Use the CPU profile:
 
 ```bash
-podman compose --file docker-compose.yml up
-```
-
-#### For Everyone Else (CPU Only)
-
-```bash
-podman compose --profile cpu --file docker-compose.yml up
+git clone https://github.com/twodigits/agent-garage.git
+cd agent-garage
+docker compose --profile cpu up
 ```
 
 
@@ -309,19 +268,87 @@ For the next step, use the **Multi-Agent System** workflow in **n8n**. This work
 | **User-Story-Agent**| - Generating structured user stories from requests         |       - Idea for software feature            |       - User story             |
 
 
+## 🐳 Podman Compatibility
+
+**Agent Garage is now fully compatible with both Docker Compose and Podman Compose!**
+
+### Key Changes for Podman
+
+- **Replaced Ollama with vLLM**: Now using vLLM for LLM inference with OpenAI-compatible API
+  - `vllm-cpu` profile: CPU-only inference
+  - `vllm-gpu` profile: GPU-accelerated inference (NVIDIA)
+- **Folder-based storage**: All data stored in `./data/` directory instead of named volumes
+- **Inline environment variables**: No `.env` file dependency
+- **Added pgAdmin**: Database management interface on port 5050
+
+### Running with Podman
+
+```bash
+# Install podman-compose
+pip install podman-compose
+
+# Start with CPU profile
+podman-compose --profile cpu up -d
+
+# Start with GPU profile
+podman-compose --profile gpu up -d
+```
+
+For detailed migration information, see [PODMAN_MIGRATION.md](PODMAN_MIGRATION.md).
+
+## 🔄 CI/CD Pipeline
+
+This repository includes comprehensive GitHub Actions workflows to ensure compatibility and quality:
+
+### Automated Testing
+
+- **Lint and Validate**: YAML, Dockerfile, shell script, and markdown validation
+- **Docker Tests**: Full integration testing with Docker Compose
+- **Podman Tests**: Complete compatibility testing with Podman Compose
+- **Security Scans**: Trivy vulnerability scanning on all configurations
+
+### Workflow Triggers
+
+All workflows run on:
+- Push to `main`, `develop`, or `claude/**` branches
+- Pull requests to `main` or `develop`
+
+### What's Tested
+
+✅ Image builds (Docker & Podman)
+✅ Service startup and health checks
+✅ PostgreSQL connectivity
+✅ Qdrant vector database
+✅ Security vulnerabilities
+✅ Configuration validation
+
+For detailed CI/CD documentation, see [.github/CI_README.md](.github/CI_README.md).
+
 ## 💡 Notes
 
 ### Default Model
-The Llama 3.2 model is installed by default. You can use different LLMs by simply changing the model name in the `docker-compose.yml` file:
+The default vLLM model is `facebook/opt-125m` (lightweight for testing). You can use different LLMs by changing the model name in the `docker-compose.yml` file:
 
+```yaml
+vllm-cpu:  # or vllm-gpu
+  command:
+    - "--model"
+    - "meta-llama/Llama-2-7b-hf"  # Change this to your preferred model
+    - "--host"
+    - "0.0.0.0"
+    - "--port"
+    - "8000"
+```
 
-   ![alt text](readme_images/change-llm.png)
-
-   To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted.
+To apply changes, restart the containers:
+```bash
+podman-compose down
+podman-compose --profile cpu up -d
+```
 
 ### Change logfile
-The **Logfile Agent** has access to a specific log file (`test.log`) located within the project folder.  
-If the log file is replaced or renamed, make sure to update the corresponding path and filename in the **n8n workflow** of the Logfile Agent to ensure correct analysis.
+The **Logfile Agent** can access log files from the `./logs` directory mounted in n8n.
+To analyze different log files, place them in the `./logs` directory and update the file path in the **n8n workflow** of the Logfile Agent.
 
 
 ### Setting up Jira to use the Jira-Agent

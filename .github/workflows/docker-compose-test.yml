@@ -1,0 +1,94 @@
+name: Docker Compose Tests
+
+on:
+  push:
+    branches: [ main, develop, 'claude/**' ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-images:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        profile: [cpu]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build n8n image
+        run: docker build -f Dockerfile.n8n -t n8n-custom:test .
+
+      - name: Build all services (dry-run)
+        run: docker compose --profile ${{ matrix.profile }} config
+
+  start-services:
+    name: Start and Test Services (Docker)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        profile: [cpu]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create data directories
+        run: mkdir -p data/{n8n,postgres,pgadmin,qdrant,openwebui,vllm,jira}
+
+      - name: Pull required images
+        run: |
+          docker compose --profile ${{ matrix.profile }} pull postgres qdrant openwebui || true
+
+      - name: Build custom images
+        run: docker compose --profile ${{ matrix.profile }} build n8n
+
+      - name: Start core services (Postgres, Qdrant)
+        run: |
+          docker compose up -d postgres qdrant
+          sleep 10
+
+      - name: Wait for Postgres to be healthy
+        run: |
+          timeout 60 bash -c 'until docker compose ps postgres | grep -q "healthy"; do sleep 2; done'
+
+      - name: Check Postgres logs
+        if: failure()
+        run: docker compose logs postgres
+
+      - name: Test Postgres connection
+        run: |
+          docker compose exec -T postgres psql -U root -d n8n -c "SELECT version();"
+
+      - name: Check service health
+        run: |
+          docker compose ps
+          docker compose logs --tail=50
+
+      - name: Tear down
+        if: always()
+        run: docker compose --profile ${{ matrix.profile }} down -v
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'

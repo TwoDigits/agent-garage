@@ -1,0 +1,171 @@
+name: Full CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    name: Lint and Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install linters
+        run: |
+          pip install yamllint
+          pip install podman-compose
+
+      - name: Lint YAML
+        run: |
+          yamllint -d "{extends: default, rules: {line-length: {max: 120}}}" docker-compose.yml || true
+
+      - name: Validate Docker Compose
+        run: docker compose config --quiet
+
+      - name: Validate Podman Compose
+        run: podman-compose config --quiet || true
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile.n8n
+          failure-threshold: warning
+
+  test-docker:
+    name: Test with Docker
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create data directories
+        run: mkdir -p data/{n8n,postgres,pgadmin,qdrant,openwebui,vllm,jira}
+
+      - name: Build n8n image
+        run: docker compose build n8n
+
+      - name: Start core services
+        run: |
+          docker compose up -d postgres qdrant
+          sleep 10
+
+      - name: Wait for health checks
+        run: |
+          timeout 60 bash -c 'until docker compose ps postgres | grep -q "healthy"; do sleep 2; done'
+
+      - name: Verify services
+        run: |
+          docker compose ps
+          docker compose exec -T postgres psql -U root -d n8n -c "SELECT version();"
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v
+
+  test-podman:
+    name: Test with Podman
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Podman and compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y podman
+          pip install podman-compose
+
+      - name: Verify installation
+        run: |
+          podman --version
+          podman-compose --version
+
+      - name: Create data directories
+        run: mkdir -p data/{n8n,postgres,pgadmin,qdrant,openwebui,vllm,jira}
+
+      - name: Build with Podman
+        run: podman-compose build
+
+      - name: Start core services
+        run: |
+          podman-compose up -d postgres qdrant
+          sleep 15
+
+      - name: Check Podman services
+        run: podman ps -a
+
+      - name: Test Postgres with Podman
+        run: |
+          for i in {1..20}; do
+            if podman exec postgres pg_isready -U root -d n8n; then
+              echo "Success!"
+              exit 0
+            fi
+            sleep 2
+          done
+          exit 1
+
+      - name: Cleanup
+        if: always()
+        run: |
+          podman-compose down || true
+          podman system prune -a -f
+
+  security:
+    name: Security Scan
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy config scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'table'
+        continue-on-error: true
+
+      - name: Run Trivy Dockerfile scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: 'Dockerfile.n8n'
+          format: 'table'
+        continue-on-error: true
+
+  compatibility-matrix:
+    name: Compatibility Check
+    needs: [test-docker, test-podman]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate compatibility report
+        run: |
+          echo "# Compatibility Report" > compatibility-report.md
+          echo "" >> compatibility-report.md
+          echo "✅ Docker Compose: PASSED" >> compatibility-report.md
+          echo "✅ Podman Compose: PASSED" >> compatibility-report.md
+          echo "" >> compatibility-report.md
+          echo "Both Docker and Podman tests completed successfully!" >> compatibility-report.md
+          cat compatibility-report.md
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: compatibility-report
+          path: compatibility-report.md

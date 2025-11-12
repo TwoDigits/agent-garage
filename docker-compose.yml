@@ -244,12 +244,5 @@ services:
       timeout: 5s
       retries: 5
 
-  logfile-writer:
-    image: alpine:3.20
-    container_name: logfile
-    networks: ['demo']
-    volumes:
-      - ./test.log:/app/logs/test.log:ro
-    working_dir: /app
-    command: ["sh", "-c", "sleep infinity"]
-    restart: unless-stopped
+  # logfile-writer service removed - was only for testing
+  # To add a test log service, create a test.log file first
