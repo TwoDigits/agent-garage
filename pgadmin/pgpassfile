@@ -1,0 +1,2 @@
+postgres:5432:n8n:root:password
+postgres:5432:*:root:password

@@ -1,0 +1,150 @@
+name: Podman Compose Tests
+
+on:
+  push:
+    branches: [ main, develop, 'claude/**' ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  podman-build:
+    name: Build with Podman
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        profile: [cpu]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Podman
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y podman
+
+      - name: Install podman-compose
+        run: |
+          pip install podman-compose
+
+      - name: Verify Podman installation
+        run: |
+          podman --version
+          podman-compose --version
+
+      - name: Build n8n image with Podman
+        run: podman build -f Dockerfile.n8n -t localhost/n8n-custom:test .
+
+      - name: Validate compose file with Podman
+        run: podman-compose --profile ${{ matrix.profile }} config
+
+  podman-services:
+    name: Start and Test Services (Podman)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        profile: [cpu]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Podman
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y podman
+
+      - name: Install podman-compose
+        run: pip install podman-compose
+
+      - name: Create data directories
+        run: mkdir -p data/{n8n,postgres,pgadmin,qdrant,openwebui,vllm,jira}
+
+      - name: Start Podman system service
+        run: |
+          podman system service --time=0 unix:///tmp/podman.sock &
+          sleep 5
+
+      - name: Pull images with Podman
+        run: |
+          podman pull postgres:17-alpine
+          podman pull qdrant/qdrant:latest
+        continue-on-error: true
+
+      - name: Build custom images
+        run: podman-compose --profile ${{ matrix.profile }} build
+
+      - name: Start core services
+        run: |
+          podman-compose up -d postgres qdrant
+          sleep 15
+
+      - name: Check running containers
+        run: podman ps -a
+
+      - name: Check Postgres health with Podman
+        run: |
+          for i in {1..30}; do
+            if podman exec postgres pg_isready -U root -d n8n; then
+              echo "Postgres is ready"
+              exit 0
+            fi
+            echo "Waiting for Postgres... ($i/30)"
+            sleep 2
+          done
+          echo "Postgres failed to become ready"
+          exit 1
+
+      - name: Test Postgres connection
+        run: |
+          podman exec postgres psql -U root -d n8n -c "SELECT version();"
+
+      - name: Check service logs
+        if: always()
+        run: |
+          podman-compose logs postgres || true
+          podman-compose logs qdrant || true
+
+      - name: Tear down
+        if: always()
+        run: |
+          podman-compose --profile ${{ matrix.profile }} down
+          podman system prune -a -f
+
+  podman-compatibility:
+    name: Podman Compatibility Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Podman
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y podman
+
+      - name: Install podman-compose
+        run: pip install podman-compose
+
+      - name: Check for Docker-specific features
+        run: |
+          echo "Checking compose file for Docker-specific features..."
+          if grep -q "deploy:" docker-compose.yml; then
+            echo "⚠️ Found 'deploy:' section - may need translation for Podman"
+          fi
+          if grep -q "x-" docker-compose.yml; then
+            echo "✓ Found extension fields (x-) - supported by both"
+          fi
+
+      - name: Test compose config parsing
+        run: |
+          podman-compose --profile cpu config > /tmp/podman-cpu.yml
+          podman-compose --profile gpu config > /tmp/podman-gpu.yml
+          echo "✓ Compose configurations validated successfully"
+
+      - name: Check for volume compatibility
+        run: |
+          echo "Checking volume mounts..."
+          if grep -q "./data/" docker-compose.yml; then
+            echo "✓ Using local directories (Podman compatible)"
+          else
+            echo "⚠️ May be using named volumes"
+          fi

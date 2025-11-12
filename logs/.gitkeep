@@ -1,0 +1,2 @@
+# This directory is for log files
+# It's mounted by services but logs should not be committed
