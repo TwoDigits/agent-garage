@@ -38,7 +38,8 @@ for any loss or damage resulting from its use.
 
 Use of this project does not imply any affiliation with or endorsement by Accenture.
 
-> [!NOTE] > **Enterprise Version Available:** While this is a showcase lab environment, an enterprise implementation version has been successfully deployed with one of our clients and has been in production for years. This demonstrates that the concepts behind this solution are enterprise-ready.
+> [!NOTE] 
+> **Enterprise Version Available:** While this is a showcase lab environment, an enterprise implementation version has been successfully deployed with one of our clients and has been in production for years. This demonstrates that the concepts behind this solution are enterprise-ready.
 
 ## Key Features
 
@@ -126,7 +127,7 @@ in the n8n service configuration. Update the x-n8n section in your Docker Compos
 
 ```yaml
 x-n8n: &service-n8n 
-# ... other configurations ...
+  # ... other configurations ...
   environment:
     # ... other environment variables ...
     - OLLAMA_HOST=host.docker.internal:11434
