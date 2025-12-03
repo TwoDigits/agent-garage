@@ -1,0 +1,1829 @@
+{
+  "name": "3 Spec-driven-developer",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "assistant_on_creating_specification_for_sdd",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-784, -80],
+      "id": "44a4dd71-ae92-4b04-9d16-d90a561e50a1",
+      "name": "Webhook",
+      "webhookId": "9066e90b-78e9-4efb-b5c1-d5fd3778b1d7"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You take on the role of the Business Analyst in our agile development team. Your primary responsibility is to craft well-structured, clear, and verifiable user stories for upcoming product increments. Create between 2-5 user stories per epic, depending on epic complexity.\n\n\nInstructions:\nFormat\nAlways use the standard template:\n### US-X.Y: TITLE while X is the epic and Y is the number of the user story.\n\nas first sentence, there must be always the usual: As a <role> I want <feature/function> so that <benefit>\n\nAcceptance Criteria:\nProvide 2-5 precise criteria per story.\n\nAdditional Notes\nDefine any domain-specific terms so developers and testers fully understand them.\nBreak down large themes (epics) into smaller, sprint-sized stories.\n\nExample for you:\n\n### US-1.1: Create Task\n\n**As a** user  \n**I want to** create a new task with title, optional description, status, and optional due date  \n**So that** I can track new work items\n\n**Acceptance Criteria:**\n\n- Title field is required and enforces max 100 characters\n- Title validation displays error message below field if exceeded or empty\n- Description field is optional and enforces max 500 characters\n- Description validation displays error message if character limit exceeded\n- Status dropdown offers three options: TODO, IN_PROGRESS, DONE\n- Status defaults to TODO on form load\n- Due date field accepts date input via date picker\n- Due date can be left empty\n- Form has \"Create\" and \"Cancel\" buttons\n- Create button is disabled when validation errors exist\n- Cancel button clears form and returns to task list\n- On successful creation, user is redirected to task list\n- New task appears at top/bottom of list immediately\n- API error (500, 400) displays error banner with message\n- Network error displays \"Unable to connect\" message\n\n**Technical Notes:**\n\n- POST /api/tasks endpoint\n- Frontend form validation before submission\n- Backend validates again and returns 400 with error details\n- Frontend displays backend validation errors\n\n---\n\n### US-1.2: View All Tasks\n\n**As a** user  \n**I want to** see a list of all my tasks on the home page  \n**So that** I have an overview of my current workload\n\n**Acceptance Criteria:**\n\n- Home page displays all tasks in a list/table/grid format\n- Each task card/row shows:\n  - Title (truncated if needed)\n  - Current status as badge/label\n  - Due date in readable format (e.g., \"Oct 15, 2025\") or \"No due date\"\n  - Edit and Delete action buttons\n- Tasks without due dates display \"No due date\"\n- Empty state displays when zero tasks exist: \"No tasks yet. Create your first task.\"\n- Loading state displays spinner while fetching tasks\n- Error state displays if API fails: \"Failed to load tasks. Retry?\"\n- List updates in real-time after create/update/delete operations\n\n**Technical Notes:**\n\n- GET /api/tasks endpoint\n- Fetch on component mount\n- Store tasks in React state\n- Re-fetch after mutations or use optimistic updates\n\nEnd of example.\n\nNow you get two things for you to formulate the user stories: 1. the overarching input of the user, 2. the one EPIC that your user stories should be bound to.\nPlease mind that you intentionally do not get info about the other EPICs that we formulated based of the users objectives, because you need to focus on only the EPIC we give you. Please create a couple of user stories per epic. You decide how many.\n\n1. The grand overarching user's objective is the following:\n---\n{{ $('Webhook').item.json.body }}\n---\n\n2. The epic that your user stories should be in:\n---\n{{ $json.output }}\n---",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [864, -112],
+      "id": "3271b418-1ea0-4b34-94d3-8e9c51d9058b",
+      "name": "User Story Creator"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You take on the role of the Business Analyst in our agile development team. Your responsibility is to craft well-structured, clear, and verifiable EPICs for upcoming product increments.\nFormat for each Epic: 1. Summary, 2. Description, 3. Business Value.\nIMPORTANT: Divide each epic by this divider string \"<divider>\"!!!!\n\nGenerate between 2-15 epics depending on complexity. Simple apps: 2-3 epics. Complex systems: 8-15 epics. Minimum: 2 epics (unless project is trivial, then 1 is acceptable).\nNEVER generate more than 15 Epics. ALWAYS generate more than 1 epic.\n\n\nExample for you:\n\nExample 1:\n---\nEpic 1: Task Management Core\nSummary\nDevelopment of core task management functionality enabling users to fully manage and organize their tasks.\nDescription\nThis epic covers the implementation of the application's foundation: a complete CRUD system for tasks. Users can create new tasks, view existing ones, edit their properties, and delete tasks they no longer need.\nEach task includes essential metadata for effective organization: a title for quick identification, a description field for context and notes, a status field to track progress, and a due date for time-sensitive planning.\nThis implementation establishes the foundation for all future features and ensures the core data structure and interaction logic are robust and extensible.\nBusiness Value\nProvides minimum viable functionality for a usable task management system\nCreates technical foundation for advanced features\nEnables users to immediately start managing their tasks\n---\n\n\nThe user's input was all the following: {{ $('Webhook').item.json.body }}",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [128, -112],
+      "id": "86792ead-2e20-4c16-be2d-7a1108e5216c",
+      "name": "Epic Creator"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an assistent in an IT develoer department which has only one purpose: Decide if all the information of the users input for to be developed system / app is enough based on your standards for requests. You are the first validation layer. Be lenient but ensure the 5 core elements are present in some form. Accept reasonable assumptions for missing details.\n\nIn the case that the users input satisfies your standards, respond with: \"Yes\"\nIn the case that the users input DOES NOT satisfy your standards, respond with: \"No. The following things are missing.\" + description of what is missing and your requirements in full. \nEven if you have to insinuate much of the things, be actively supportive here and assume you can think of most things here and have freedom to do so.\n\nTo decide if the user has put in enough information, take this definition of your standards:\n\n---\n1. Objective: Description of the objective of the App / System to be developed.\nExample objective: \n\"Develop a MCP-compatible service in Nodejs that allows an AI agent (e.g., Claude, GPT-4o, etc.) to interact with the database of an existing Task Management application — specifically to: \n* Understand the schema \n* Read from and insert into the database \n* Automatically generate and insert realistic test data \nThe MCP service acts as a controlled access layer between the agent and the database.\"\n\n2. Architecture: A short description or drawn sketch (may also be ASCII drawn) of the parts of the system. \nExample 1:\n\"* Local LLM (e.g., Ollama, LM Studio, Mistral, etc.) \n* OpenWebUI (or direct LLM API access) \n* N8N (workflow automation) \n* Docker Compose (for local setup)\"\nExample 2:\n\"         [ AI Agent (e.g. Claude, GPT-4o) ] \n                      ⇅ \n        [ Custom MCP Server (Nodejs) ] \n                      ⇅ \n         [ PostgreSQL DB (shared with Task Backend) ]\"\n\n3. Project Scope technologies: Technologies to be used in the project\nExample:\n\"* Nodejs\n* PostgreSQL \n* Nestjs + prisma\n* Optional: JSON Schema Generator or Swagger/OpenAPI\"\n\n\n4. Functional Requirements: Basic Functional Requirements (at least 3)\nExample:\n\"* The N8N workflow must include at least one API request to the local LLM. \n* The input/output flow must be traceable (e.g., via Webhook, File Input, Email, etc.). \n* You are responsible for prompt design (i.e., how N8N \"talks\" to the LLM). \n* Keep it simple, focused, and creative. \"\n\n5. Success Criteria: Criterea of success of the build of the app / system\nExample: \n\"1. MCP Server is running and accessible \n2. Schema inspection works via /mcp/schema/tasks \n3. AI agent inserts 1000 task records via /mcp/tasks \n4. Summary endpoint reflects the inserted data (e.g., shows 1000 tasks split across statuses) \n5. All actions are documented, including prompts, AI output, and results\"\n\n---\n\n\nThe user's input is all the following:\n\n{{ $json.body }}",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [-592, -80],
+      "id": "cd02695e-ae64-4faa-b1ed-590ed39a0a31",
+      "name": "Complete request decider"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You take on the role of the Business Analyst in our agile development team. Your primary responsibility is to craft well-structured, clear and ASCII based project structure based on the task description of the user and its Epics and some other information.\n\nBe aware that you need to base your project structure on the chosen technology, the objective, the system itsself and more information you got out of the input.\n\nInclude all major directories and files needed for development. Show:\n  - Configuration files (package.json, tsconfig.json)\n  - Main source directories (src/, components/, etc.)\n  - Key entry point files (main.tsx, server.ts)\n  - Omit: node_modules/, build artifacts, .env files\n  Target depth: 3-5 levels maximum.\n\nExample output:\n## Project Structure\n\n```\ntask-manager/\n├── frontend/\n│   ├── src/\n│   │   ├── api/\n│   │   │   └── taskApi.ts\n│   │   ├── components/\n│   │   │   ├── TaskList.tsx\n│   │   │   ├── TaskItem.tsx\n│   │   │   ├── TaskForm.tsx\n│   │   │   ├── TaskDetail.tsx\n│   │   │   └── ErrorMessage.tsx\n│   │   ├── types/\n│   │   │   └── task.ts\n│   │   ├── hooks/\n│   │   │   └── useTasks.ts\n│   │   ├── App.tsx\n│   │   ├── App.css\n│   │   ├── main.tsx\n│   │   └── vite-env.d.ts\n│   ├── public/\n│   ├── index.html\n│   ├── package.json\n│   ├── tsconfig.json\n│   ├── tsconfig.node.json\n│   └── vite.config.ts\n│\n└── backend/\n    ├── src/\n    │   ├── routes/\n    │   │   └── taskRoutes.ts\n    │   ├── controllers/\n    │   │   └── taskController.ts\n    │   ├── services/\n    │   │   └── taskService.ts\n    │   ├── middleware/\n    │   │   ├── errorHandler.ts\n    │   │   └── validateTask.ts\n    │   ├── database/\n    │   │   └── sqliteDb.ts\n    │   ├── types/\n    │   │   └── task.types.ts\n    │   └── server.ts\n    ├── task-manager.db (generated at runtime)\n    ├── package.json\n    └── tsconfig.json\n```\n\n\n\nNow here are the data flow and API descriptions:\nData flow:\n---\n{{ $('Data flow builder').item.json.output }}\n---\nOpenAPI:\n---\n{{ $('openAPI builder').item.json.output }}\n---\n\n\nNow here are the EPICs:\n---\n{{ $('Epic Creator').item.json.output }}\n---\n\nHere is the original users input for context:\n---\n{{ $('Webhook').item.json.body }}\n---\n",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [2112, -112],
+      "id": "ea7b1799-f4c3-4bb7-af8c-d2ab1a9c58e5",
+      "name": "Project structure builder"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You take on the role of the Business Analyst in our agile development team. Your primary responsibility is to craft well-structured, clear, and verifiable data flow for upcoming product increments.\n\n\nInstructions: Take the users input and the descriptions of the Epics and formulate a data flow of the system to build. Include error handling flows, authentication requirements, and data validation rules. Show both happy path and error scenarios.\n\nExample output:\n## Data Flow\n\n### Create Task:\n\nUser fills TaskForm\nClient validates input\nTaskForm calls onSubmit → useTasks.addTask()\nuseTasks.addTask() calls taskApi.createTask()\nPOST /api/tasks → validateCreateTask → taskController.createTask\ntaskController → taskService.createTask\ntaskService → inMemoryDb.create()\nResponse 201 with new Task\nuseTasks updates state\nTaskList re-renders with new task\n\n### Update Status:\n\nUser changes dropdown in TaskItem\nTaskItem calls onStatusChange\nOptimistic update: immediately update UI\nuseTasks.updateTaskStatus() calls taskApi.updateTask()\nPUT /api/tasks/:id → taskController.updateTask\nOn success: state already updated\nOn failure: revert to previous status, show error\n\n### Delete Task:\n\nUser clicks delete on TaskItem\nTaskItem calls onDelete\nOptimistic delete: remove from UI\nuseTasks.removeTask() calls taskApi.deleteTask()\nDELETE /api/tasks/:id → taskController.deleteTask\nOn success: state already updated\nOn failure: re-add task, show error\n\n### Sort:\n\nUser selects sort method\nTaskList updates sort state\nTaskList applies Array.sort() on tasks\nRe-render with sorted tasks\nNo API call (client-side only)\n\n## API Endpoints\n\n### GET /api/tasks\n\nReturns all tasks.\n\n**Response 200:**\n\n```typescript\n{\n  id: number;\n  title: string;\n  description: string | null;\n  status: \"TODO\" | \"IN_PROGRESS\" | \"DONE\";\n  dueDate: string | null; // ISO 8601 format\n}\n[];\n```\n\n### GET /api/tasks/:id\n\nReturns single task.\n\n**Response 200:** Task object  \n**Response 404:** Task not found\n\n### POST /api/tasks\n\nCreates new task.\n\n**Request Body:**\n\n```typescript\n{\n  title: string;\n  description?: string;\n  status: \"TODO\" | \"IN_PROGRESS\" | \"DONE\";\n  dueDate?: string; // ISO 8601\n}\n```\n\n**Response 201:** Created task  \n**Response 400:** Validation errors\n\n### PUT /api/tasks/:id\n\nUpdates task.\n\n**Request Body:** Same as POST  \n**Response 200:** Updated task  \n**Response 404:** Task not found  \n**Response 400:** Validation errors\n\n### DELETE /api/tasks/:id\n\nDeletes task.\n\n**Response 204:** No content  \n**Response 404:** Task not found\n\n---\n\n## Data Validation\n\n**Backend (Node.js):**\n\n- Title: required, 1-100 characters\n- Description: optional, max 500 characters\n- Status: must be \"TODO\", \"IN_PROGRESS\", or \"DONE\"\n- DueDate: optional, valid ISO 8601 date string\n\n**Frontend (React):**\n\n- Validate before submission\n- Display inline error messages\n- Disable submit when errors present\n\n\nUsers input:\n---\n{{ $('Webhook').item.json.body }}\n---\n\nEpics:\n---\n{{ $('Epic Creator').item.json.output }}\n---\n\n\n",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [1376, -112],
+      "id": "dd9bcc43-4a84-4305-af89-aec8e4d9ca03",
+      "name": "Data flow builder",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You take on the role of the Business Analyst in our agile development team. Your primary responsibility is to craft well-structured, clear, and verifiable openAPI definition for an upcoming system that the user wants to have build.\nYou will get 1. an example output so you know what to formulate, then 2. the user's original input and 3. the data flow analysis for further context. Output the complete OpenAPI 3.1.0 specification in valid YAML format. Ensure all endpoints from the data flow are included. Begin output with 'openapi: 3.1.0' - no preamble.\n\n1. Example output:\n---\nopenapi: 3.1.0\ninfo:\n  title: Task Management API\n  version: 1.0.0\n  description: API for managing tasks with status tracking and due dates\n\nservers:\n  - url: /api\n    description: API base path\n\npaths:\n  /tasks:\n    get:\n      summary: Get all tasks\n      operationId: getTasks\n      tags:\n        - Tasks\n      responses:\n        \"200\":\n          description: List of all tasks\n          content:\n            application/json:\n              schema:\n                type: array\n                items:\n                  $ref: \"#/components/schemas/Task\"\n\n    post:\n      summary: Create a new task\n      operationId: createTask\n      tags:\n        - Tasks\n      requestBody:\n        required: true\n        content:\n          application/json:\n            schema:\n              $ref: \"#/components/schemas/CreateTaskRequest\"\n      responses:\n        \"201\":\n          description: Task created successfully\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/Task\"\n        \"400\":\n          description: Validation error\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/ValidationError\"\n\n  /tasks/{id}:\n    parameters:\n      - name: id\n        in: path\n        required: true\n        schema:\n          type: integer\n        description: Task ID\n\n    get:\n      summary: Get a single task\n      operationId: getTaskById\n      tags:\n        - Tasks\n      responses:\n        \"200\":\n          description: Task found\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/Task\"\n        \"404\":\n          description: Task not found\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/Error\"\n\n    put:\n      summary: Update a task\n      operationId: updateTask\n      tags:\n        - Tasks\n      requestBody:\n        required: true\n        content:\n          application/json:\n            schema:\n              $ref: \"#/components/schemas/UpdateTaskRequest\"\n      responses:\n        \"200\":\n          description: Task updated successfully\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/Task\"\n        \"400\":\n          description: Validation error\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/ValidationError\"\n        \"404\":\n          description: Task not found\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/Error\"\n\n    delete:\n      summary: Delete a task\n      operationId: deleteTask\n      tags:\n        - Tasks\n      responses:\n        \"204\":\n          description: Task deleted successfully\n        \"404\":\n          description: Task not found\n          content:\n            application/json:\n              schema:\n                $ref: \"#/components/schemas/Error\"\n\ncomponents:\n  schemas:\n    Task:\n      type: object\n      required:\n        - id\n        - title\n        - status\n      properties:\n        id:\n          type: integer\n          example: 1\n        title:\n          type: string\n          minLength: 1\n          maxLength: 100\n          example: \"Complete project documentation\"\n        description:\n          type: [string, \"null\"]\n          maxLength: 500\n          example: \"Write comprehensive API documentation\"\n        status:\n          type: string\n          enum:\n            - TODO\n            - IN_PROGRESS\n            - DONE\n          example: \"TODO\"\n        dueDate:\n          type: [string, \"null\"]\n          format: date-time\n          example: \"2025-10-15T14:30:00Z\"\n\n    CreateTaskRequest:\n      type: object\n      required:\n        - title\n        - status\n      properties:\n        title:\n          type: string\n          minLength: 1\n          maxLength: 100\n          example: \"Complete project documentation\"\n        description:\n          type: string\n          maxLength: 500\n          example: \"Write comprehensive API documentation\"\n        status:\n          type: string\n          enum:\n            - TODO\n            - IN_PROGRESS\n            - DONE\n          example: \"TODO\"\n        dueDate:\n          type: string\n          format: date-time\n          example: \"2025-10-15T14:30:00Z\"\n\n    UpdateTaskRequest:\n      type: object\n      properties:\n        title:\n          type: string\n          minLength: 1\n          maxLength: 100\n          example: \"Complete project documentation\"\n        description:\n          type: string\n          maxLength: 500\n          example: \"Write comprehensive API documentation\"\n        status:\n          type: string\n          enum:\n            - TODO\n            - IN_PROGRESS\n            - DONE\n          example: \"TODO\"\n        dueDate:\n          type: string\n          format: date-time\n          example: \"2025-10-15T14:30:00Z\"\n\n    ValidationError:\n      type: object\n      properties:\n        error:\n          type: string\n          example: \"Validation error\"\n        details:\n          type: array\n          items:\n            type: string\n            example: \"Title is required and must be 1-100 characters\"\n\n    Error:\n      type: object\n      properties:\n        error:\n          type: string\n          example: \"Task not found\"\n\n---\n\n\n2. The users original input:\n---\n{{ $('Webhook').item.json.body }}\n---\n3. The data flow analysis:\n---\n{{ $json.output }}\n---",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [1712, -112],
+      "id": "5d0a0499-67f7-4a91-8712-b226819899b8",
+      "name": "openAPI builder"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [672, -112],
+      "id": "c9f2a575-4750-4114-b484-765b03f48925",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "content": "## Analyzer if everything is there to be build upon\nAnalyzes the user's input to see if it is sufficient and if not responds with a description of what is missing.",
+        "height": 864,
+        "width": 704
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-624, -240],
+      "id": "2e53d12d-a026-49c4-909e-ccda99b07237",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Start trigger",
+        "height": 864,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-848, -240],
+      "id": "46ff9731-bb88-44b6-a5f2-66f30701506d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Planning stage\nIn this stage, Epics are created, wherefrom there will be user stories, data flow descriptions and openAPI definitions for the system to build.",
+        "height": 864,
+        "width": 3152,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [96, -240],
+      "id": "a6d4830c-5561-4f69-94c9-5ff9ef330d3f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Execution of specification\nIn this stage, the execution begins. First, all the commands to build a file structure are being formulated, then executed.",
+        "height": 864,
+        "width": 6320,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [3280, -240],
+      "id": "4f09fbc0-2d42-4a2e-b151-5322d407e33f",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Work Instructions: Generate Bash Commands from File Structure\nYou receive an ASCII drawn file structure. From this, you create a sequence of Bash commands that creates this structure in the folder spec-driven-developer-dir.\nProcedure:\nfirst two commands always are these two\nmkdir -p spec-driven-developer-dir\ncd spec-driven-developer-dir\nmkdir -p EXAMPLE-APP-FOLDER\n\nCreate Directories\nGo through the entire structure and identify all folders (recognizable by the / at the end or by the fact that they contain further content)\nCreate a mkdir -p command for each folder\nUse the full path from the first folder after spec-driven-developer-dir\nExample: mkdir -p task-manager/frontend/src/api\nMake sure that you put the EXAMPLE-APP-FOLDER (i.e. \"task-manager\" if it should be a task manager) INSIDE the spec-driven-developer-dir.\nImportant is that you also always do the whole path so that the commands can be executed after one another.\n\nCreate Files\nGo through the entire structure and identify all files (recognizable by the missing / and by file extensions)\nCreate a touch command for each file\nUse the full path\nExample: touch task-manager/frontend/src/api/taskApi.ts\n\nExceptions\nFiles with the note \"(generated at runtime)\" are NOT created\n\nOrder of Commands\nmkdir -p spec-driven-developer-dir\ncd spec-driven-developer-dir\nAll mkdir -p commands\nAll touch commands\n\nOutput Format\nProvide the commands as an executable Bash command list, one command per line.\nAn example input would be the following:\nExample of a drawn file structure:\n\ntask-manager/\n├── frontend/\n│   ├── src/\n│   │   ├── api/\n│   │   │   └── taskApi.ts\n│   │   ├── components/\n│   │   │   ├── TaskList.tsx\n│   │   │   ├── TaskItem.tsx\n│   │   │   ├── TaskForm.tsx\n│   │   │   ├── TaskDetail.tsx\n│   │   │   └── ErrorMessage.tsx\n│   │   ├── types/\n│   │   │   └── task.ts\n│   │   ├── hooks/\n│   │   │   └── useTasks.ts\n│   │   ├── App.tsx\n│   │   ├── App.css\n│   │   ├── main.tsx\n│   │   └── vite-env.d.ts\n│   ├── public/\n│   ├── index.html\n│   ├── package.json\n│   ├── tsconfig.json\n│   ├── tsconfig.node.json\n│   └── vite.config.ts\n│\n└── backend/\n    ├── src/\n    │   ├── routes/\n    │   │   └── taskRoutes.ts\n    │   ├── controllers/\n    │   │   └── taskController.ts\n    │   ├── services/\n    │   │   └── taskService.ts\n    │   ├── middleware/\n    │   │   ├── errorHandler.ts\n    │   │   └── validateTask.ts\n    │   ├── database/\n    │   │   └── sqliteDb.ts\n    │   ├── types/\n    │   │   └── task.types.ts\n    │   └── server.ts\n    ├── task-manager.db (generated at runtime)\n    ├── package.json\n    └── tsconfig.json\n\nExample output you should be doing for this case:\n\"mkdir -p spec-driven-developer-dir\nmkdir -p spec-driven-developer-dir/task-manager\nmkdir -p spec-driven-developer-dir/task-manager/frontend/src/api\nmkdir -p spec-driven-developer-dir/task-manager/frontend/src/components\nmkdir -p spec-driven-developer-dir/task-manager/frontend/src/types\nmkdir -p spec-driven-developer-dir/task-manager/frontend/src/hooks\nmkdir -p spec-driven-developer-dir/task-manager/frontend/public\nmkdir -p spec-driven-developer-dir/task-manager/backend/src/routes\nmkdir -p spec-driven-developer-dir/task-manager/backend/src/controllers\nmkdir -p spec-driven-developer-dir/task-manager/backend/src/services\nmkdir -p spec-driven-developer-dir/task-manager/backend/src/middleware\nmkdir -p spec-driven-developer-dir/task-manager/backend/src/database\nmkdir -p spec-driven-developer-dir/task-manager/backend/src/types\ntouch spec-driven-developer-dir/task-manager/frontend/src/api/taskApi.ts\ntouch spec-driven-developer-dir/task-manager/frontend/src/components/TaskList.tsx\ntouch spec-driven-developer-dir/task-manager/frontend/src/components/TaskItem.tsx\ntouch spec-driven-developer-dir/task-manager/frontend/src/components/TaskForm.tsx\ntouch spec-driven-developer-dir/task-manager/frontend/src/components/TaskDetail.tsx\ntouch spec-driven-developer-dir/task-manager/frontend/src/components/ErrorMessage.tsx\ntouch spec-driven-developer-dir/task-manager/frontend/src/types/task.ts\ntouch spec-driven-developer-dir/task-manager/frontend/src/hooks/useTasks.ts\ntouch spec-driven-developer-dir/task-manager/frontend/src/App.tsx\ntouch spec-driven-developer-dir/task-manager/frontend/src/App.css\ntouch spec-driven-developer-dir/task-manager/frontend/src/main.tsx\ntouch spec-driven-developer-dir/task-manager/frontend/src/vite-env.d.ts\ntouch spec-driven-developer-dir/task-manager/frontend/index.html\ntouch spec-driven-developer-dir/task-manager/frontend/package.json\ntouch spec-driven-developer-dir/task-manager/frontend/tsconfig.json\ntouch spec-driven-developer-dir/task-manager/frontend/tsconfig.node.json\ntouch spec-driven-developer-dir/task-manager/frontend/vite.config.ts\ntouch spec-driven-developer-dir/task-manager/backend/src/routes/taskRoutes.ts\ntouch spec-driven-developer-dir/task-manager/backend/src/controllers/taskController.ts\ntouch spec-driven-developer-dir/task-manager/backend/src/services/taskService.ts\ntouch spec-driven-developer-dir/task-manager/backend/src/middleware/errorHandler.ts\ntouch spec-driven-developer-dir/task-manager/backend/src/middleware/validateTask.ts\ntouch spec-driven-developer-dir/task-manager/backend/src/database/sqliteDb.ts\ntouch spec-driven-developer-dir/task-manager/backend/src/types/task.types.ts\ntouch spec-driven-developer-dir/task-manager/backend/src/server.ts\ntouch spec-driven-developer-dir/task-manager/backend/package.json\ntouch spec-driven-developer-dir/task-manager/backend/tsconfig.json\"\n\nIMPORTANT: ONLY OUTPUT THE COMMANDS, NO EXPLANATIONS OR ELSE.\n\nSo now you are ready and understood here is your first file structure:\n{{ $('Project structure builder').item.json.output }}",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [3568, -64],
+      "id": "f4bf3e04-4c3c-409b-bb30-724a38deff48",
+      "name": "File command builder"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0a0f6122-3025-48c3-8056-71fea6c155a1",
+              "name": "output",
+              "value": "={  \n  \"Epics\": {{ $('Epic Creator').all().map(i => i.json.output).toJsonString() }} ,\n  \"user stories\": {{ $('User Story Creator').all().map(i => i.json.output).toJsonString() }}\n}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [4800, -64],
+      "id": "8f419304-15be-4d16-8616-3d907439cbe5",
+      "name": "Create loop objects for epic & US insertion",
+      "executeOnce": true,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "content": "## Epics and User stories file creation\n",
+        "height": 784,
+        "width": 1424
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [4592, -192],
+      "typeVersion": 1,
+      "id": "340c5ab0-0da1-414c-afe1-5ee4dabdd4de",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## App structure files",
+        "height": 736,
+        "width": 1248
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [3312, -144],
+      "typeVersion": 1,
+      "id": "a07f148d-d2d8-48a1-babf-feb82e74904d",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Epics and User stories filling",
+        "height": 784,
+        "width": 1536
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [6048, -192],
+      "typeVersion": 1,
+      "id": "34570812-f09b-40ff-829d-f007fd0162d7",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [7376, 64],
+      "id": "19d0695a-365e-43d8-aac3-31ec73e1cad1",
+      "name": "Merge3",
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "content": "## Data flow, openAPI file and file-structure filling\nCreates and writes all the necessary technical documentation in files and exports it to the specification",
+        "height": 784,
+        "width": 1952
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [7616, -192],
+      "typeVersion": 1,
+      "id": "e15317cd-79e4-4442-9ac9-84d324364a4f",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## Saving & exporting & responding \nSaves and exports a zip file of the whole spec.",
+        "height": 864,
+        "width": 960
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [9616, -240],
+      "typeVersion": 1,
+      "id": "3a9c426c-40a8-4942-ba4c-8702f69bd978",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "=Ran successfully:\n- There is a tar-file ready for you to download in the shared folder of the docker container. You can download it straight from there or the folder which is linked on your file-finder (depending on your configuration of docker)\n- The following is a summary of what has been done.\n\n\nSummary:\n- {{ $('format epic,stories and file-structure commands').item.json.epicCommands.split(\"&&\").length }} Epic created\n- {{ $('format epic,stories and file-structure commands').item.json.userStoriesCommands.length }} User stories created\n- Data flow md created\n- openAPI.yaml created\n- App file structure md created\n- CLAUDE.md created\n- Everything put in a specification.tar.gz created and ready for download\n\n\nHave fun with your spec!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [9888, -16],
+      "id": "8fdecc4a-f949-414f-9d06-0709dbb9ccfc",
+      "name": "End message"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "={{ $json.output.split(\"<divider>\").filter(i => i.toLowerCase().includes(\"epic\")).map(i => i.trimStart()) }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [480, -112],
+      "id": "51b8e26c-9817-4165-b75a-75ebbd17a656",
+      "name": "Split Epic divider"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [7680, -16],
+      "id": "48951615-5a46-4c0f-b9bc-c90db7bf5a7e",
+      "name": "Make item to nothing once",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "content": "## data-flow.md",
+        "height": 304,
+        "width": 400,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [7872, -96],
+      "typeVersion": 1,
+      "id": "eb2478e4-d55a-4eb1-a158-977b7875efc2",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "## openAPI.yaml",
+        "height": 304,
+        "width": 384,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [8336, -96],
+      "typeVersion": 1,
+      "id": "5bd09936-609d-4c36-84e5-f8d794b4687b",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "## file-structure.md",
+        "height": 304,
+        "width": 352,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [8784, -96],
+      "typeVersion": 1,
+      "id": "cc9ac794-7727-418e-ba19-3eaaf0ff8155",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "command": "cd /home/node && tar -czf specification.tar.gz /home/node/spec-driven-developer-dir && mv specification.tar.gz /data/shared/\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [9664, -16],
+      "id": "08ca4c22-9725-4b27-86ff-287bff719eab",
+      "name": "Export everything"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "={{ $('User Story Creator')\n    .all()\n    .flatMap(i => i.json.output.split(\"###\")\n    .filter(i => i)\n    .map(i => '###'+i))\n    .reduce((groups, item) => {\n        const prefix = item.match(/US-(\\d+)\\./)?.[1];\n        const lastPrefix = groups[groups.length - 1]?.[0]?.match(/US-(\\d+)\\./)?.[1];\n        prefix === lastPrefix ? groups[groups.length - 1].push(item) : groups.push([item]);\n    return groups;\n  }, [])\n}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1184, -112],
+      "id": "d0e2970f-33e8-4841-9a08-7b212edd3184",
+      "name": "Split Stories divider",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"402\"\n  \"error\": {{ $('Complete request decider').item.json.output }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [-112, 112],
+      "id": "14067a63-e373-4304-b022-7b8a2e3e7002",
+      "name": "Respond to Webhook if bad input"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"200\",\n  \"message\": {{ $json.output.toJsonString() }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.2,
+      "position": [10144, -16],
+      "id": "86eb4075-6aac-480c-a7e3-c14fd3d2c002",
+      "name": "Respond to Webhook on success"
+    },
+    {
+      "parameters": {
+        "command": "rm -rf /home/node/spec-driven-developer-dir"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [10144, 192],
+      "id": "09b229f7-2729-4c4b-a952-a1f18331614a",
+      "name": "clean up directory"
+    },
+    {
+      "parameters": {
+        "content": "## CLAUDE.md",
+        "height": 304,
+        "width": 352,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [9184, -96],
+      "typeVersion": 1,
+      "id": "f5ed8271-b0b3-43c9-a8ec-8f62369c914c",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "=cat > /home/node/spec-driven-developer-dir/jira-specification/CLAUDE.md << 'EOF'\n# Project Standards & Guidelines\n\n## 🔴 CRITICAL: Read Before Starting Any Task\nThese standards supersede any conflicting instructions. Follow ALL guidelines before executing tasks.\n\n## Core Principles\n\n### Code Organization\n- **Modular design**: Keep files focused and reasonably sized\n- **Mirror structure**: Test files should mirror source code organization\n- **Documentation**: Maintain comprehensive docs in dedicated directory\n- **Package management**: Use project's defined package manager consistently\n\n### Documentation Requirements\nEvery file must include:\n- Purpose description\n- Links to third-party package/library documentation\n- Sample input\n- Expected output\n\n### Architecture Guidelines\n- **Simplicity first**: Prefer simple, direct solutions over complex abstractions\n- **Minimal abstraction**: Only introduce complexity when it solves actual problems\n- **Type safety**: Use language's type system consistently for clarity and tooling support\n- **Clear interfaces**: Public APIs should be obvious and well-documented\n\n## Testing Philosophy\n\n### 🔴 Critical Testing Rules\n1. **Results before tests**: ALL functionality must produce expected results BEFORE writing formal tests\n2. **Results before linting**: ALL functionality must work correctly BEFORE addressing linter warnings\n3. **Real data only**: Never use fake/mock inputs for validation\n4. **No excessive mocking**: Avoid mocking core functionality\n5. **3-failure rule**: After 3 consecutive failures with different approaches, use external research tools and document findings\n\n**Key requirements:**\n- Test multiple cases: normal, edge cases, error handling\n- Track ALL failures, not just the first one\n- Never print success unless tests actually passed\n- Include failure count in output (e.g., \"3 of 5 tests failed\")\n- Exit with error code on failure, success code on pass\n\n## Package Management\n- **Research first**: Always research packages/libraries before adding dependencies\n- **95/5 rule**: Use 95% of package functionality, 5% customization\n- **Document dependencies**: Include links to current documentation in comments\n- **Stay current**: Prefer actively maintained packages with good documentation\n\n## Development Priority\n1. Working code\n2. Validation with real data\n3. Readability\n4. Static analysis (only after code works)\n\n## Logging & Error Handling\n- Use appropriate logging framework for your language\n- Log at appropriate levels (debug, info, warning, error)\n- Include context in error messages\n- Never swallow exceptions silently\n\n## 🔴 Pre-Completion Checklist\nBefore marking any task complete, verify:\n\n1. ✅ All files have documentation headers\n2. ✅ Each module has working validation with real data\n3. ✅ Type annotations/hints used where appropriate\n4. ✅ Functionality validated before addressing linting\n5. ✅ Files are focused and maintainable size\n6. ✅ External research conducted after 3+ failures (if applicable)\n7. ✅ Validation never prints unconditional success messages\n8. ✅ Validation tracks and reports ALL failures\n9. ✅ Validation output includes failure count\n10. ✅ Dependencies are documented with links\n\n**Fix any non-compliant items before submission.**EOF",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [9232, -16],
+      "id": "4cc0a4d1-2687-421e-99e3-e41039c6ec93",
+      "name": "claude.md"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [9408, -16],
+      "id": "49537d20-07c3-4a03-a088-c04438d3e7be",
+      "name": "execute claude.md"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [8560, -16],
+      "id": "8ff354f7-bf79-4b51-8908-663ee55a50f8",
+      "name": "execute openAPI.yaml"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "=cat > /home/node/spec-driven-developer-dir/jira-specification/data-flow.md << 'EOF'\n{{ $('Data flow builder').item.json.output }}\nEOF",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [8400, -16],
+      "id": "ad7b4ca2-fd5f-4130-8ed9-f56e250b6b4e",
+      "name": "openapi.yaml"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "=cat > /home/node/spec-driven-developer-dir/jira-specification/app-file-structure.md << 'EOF'\n{{ $('Project structure builder').item.json.output }}\nEOF",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [8832, -16],
+      "id": "5e926d91-6209-4bb8-b6be-2890addc7202",
+      "name": "file-structure.md"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [9008, -16],
+      "id": "15b38478-1064-40f0-8566-d54394551668",
+      "name": "execute file-structure.md"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "=cat > /home/node/spec-driven-developer-dir/jira-specification/openAPI.yaml << 'EOF'\n{{ $('openAPI builder').item.json.output }}\nEOF",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [7936, -16],
+      "id": "b4ac56c4-f65d-4fe5-a2eb-e3c754426d06",
+      "name": "data flow.md"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [8112, -16],
+      "id": "6c73a5dd-8024-4ff9-ba7a-8abb16ccfdb5",
+      "name": "execute data flow.md"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "={{ $json.epicCommands }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [6656, -160],
+      "id": "f3478e72-03e1-4167-82b8-a24e8419c96f",
+      "name": "split epic commands"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "={{ $json.userStoriesCommands }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [6656, 16],
+      "id": "4badc0d8-6075-4a3c-881d-4b7dd1a52b52",
+      "name": "split story commands"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "={{ $json.fileStructureCommand }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [6656, 192],
+      "id": "2ba94747-b7fa-4d0e-affc-e8b37c20ff15",
+      "name": "split file-structure commands"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [7056, -160],
+      "id": "a2904490-db9b-4d51-a95c-500fb9491d1e",
+      "name": "execute epic commands",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [7056, 16],
+      "id": "ef1c4fc7-5601-46ec-b1d6-411fa1566958",
+      "name": "execute story commands",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [7056, 192],
+      "id": "9c64841f-ed30-4354-b440-4ae9cd3830f3",
+      "name": "execute file-structure commands",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const epics = $('Split Epic divider').first().json.output // [\"\",\"\"]\nconst userStories = $('Split Stories divider').first().json.output //[\"\",\"\"]\nconst fileStructure =  $('Jira-structure-builder').first().json.output; // \"\"\nconst filenames = $('jira-specification-command-builder').first().json.output\n\n\nlet epicCommands = filenames\n  .split(\"\\n\")\n  .map(line => {\n    // Extrahiere nur den Ordnernamen aus den Zeilen\n    const match = line.match(/jira-specification\\/(epic-\\d+-[^\\s\\/]+)/);\n    return match ? match[1] : null;\n  })\n  .filter((name, index, self) => name && self.indexOf(name) === index) // Entferne Duplikate\n  .map((filename, index) => {\n    const epicNumber = filename.match(/epic-(\\d+)-/)?.[1];\n    if (!epicNumber) return \"\";\n\n    const epicIndex = parseInt(epicNumber) - 1;\n    if (epicIndex < 0 || epicIndex >= epics.length) return \"\";\n\n    const epicContent = epics[epicIndex].trim().replace(/\"/g, '\\\\\"');\n\n    return `mkdir -p /home/node/spec-driven-developer-dir/jira-specification/${filename} && echo \"${epicContent}\" >> /home/node/spec-driven-developer-dir/jira-specification/${filename}/epic${\n      index + 1\n    }-summary.md`;\n  })\n  .filter(cmd => cmd !== \"\")\n  .join(\" && \");\n\n\n// Erstelle Liste der Epic-Ordner\nconst epicFolders = filenames\n  .split(\"\\n\")\n  .map(line => {\n    const match = line.match(/jira-specification\\/(epic-\\d+-[^\\s\\/]+)/);\n    return match ? match[1] : null;\n  })\n  .filter((name, index, self) => name && self.indexOf(name) === index);\n\n// Erstelle Map von User Story IDs zu Filenames\nconst storyFilenames = new Map();\nfilenames.split(\"\\n\").forEach(line => {\n  const match = line.match(\n    /jira-specification\\/epic-\\d+-[^\\/]+\\/(us-[\\d.]+-[^\\s]+\\.md)/\n  );\n  if (match) {\n    const filename = match[1];\n    const storyId = filename.match(/us-([\\d.]+)-/)?.[1];\n    if (storyId) {\n      storyFilenames.set(`US-${storyId}`, filename);\n    }\n  }\n});\n\nconst userStoriesCommands = [];\nepics.forEach((epic, epicIndex) => {\n  const epicNumber = epicIndex + 1;\n\n  userStories[epicIndex].forEach((story, storyIndex) => {\n    const storyNumber = storyIndex + 1;\n    const storyContent = story.trim().replace(/\"/g, '\\\\\"');\n\n    const epicTitle = epic\n      .match(/Epic \\d+: (.+)/)[1]\n      .split('\\n')[0]\n      .trim();\n    \n    const epicFolder = `epic-${epicNumber}-${epicTitle\n      .toLowerCase()\n      .replace(/\\s+/g, '-')}`;\n\n    const storyTitle = story\n      .match(/### US-[\\d.]+: (.+)/)[1]\n      .split(\"\\n\")[0]\n      .trim();\n\n // Sanitize filename by replacing illegal characters\n  const storyFilename = `us-${epicNumber}.${storyNumber}-${storyTitle\n    .toLowerCase()\n    .replace(/[\\/\\\\:*?\"<>|]/g, \"-\")  // Replace filesystem-illegal chars with hyphens\n    .replace(/\\s+/g, \"-\")             // Replace spaces with hyphens\n    .replace(/-+/g, \"-\")              // Collapse multiple hyphens into one\n    .replace(/^-|-$/g, \"\")            // Remove leading/trailing hyphens\n  }.md`;\n    \n  /*  const storyFilename = `us-${epicNumber}.${storyNumber}-${storyTitle\n      .toLowerCase()\n      .replace(/\\s+/g, \"-\")}.md`;\n*/\n    userStoriesCommands.push(`cat << 'EOF' >> /home/node/spec-driven-developer-dir/jira-specification/${epicFolder}/${storyFilename} \n    ${storyContent} \n    EOF`);\n  });\n});\n\nconst fileStructureCommand = `echo \"${(\n  \"## File structure (proposed)\\n\\n\" + fileStructure\n).replace(\n  /\"/g,\n  '\\\\\"'\n)}\" >> /home/node/spec-driven-developer-dir/jira-specification/app-file-structure.md`;\n\nreturn {\n  epicCommands,\n  userStoriesCommands,\n  fileStructureCommand\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [6304, 96],
+      "id": "1c5eaa22-798a-4971-939a-e20d85699a1e",
+      "name": "format epic,stories and file-structure commands"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "={{ $json.output.split(\"\\n\").filter(i => i.length).join(\" && \") }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [5680, -64],
+      "id": "2a7145a4-0201-4438-bbbe-2283cb89f80b",
+      "name": "split jira-specification commands"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "= mkdir -p spec-driven-developer-dir && mkdir -p jira-specification && {{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [5872, -64],
+      "id": "b43368a8-ee5a-4899-aa64-823ee56af360",
+      "name": "execute jira-specification commands",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "={{ $json.output\n  .split(\"\\n\")\n  .filter(line => line.startsWith(\"touch\") || line.startsWith(\"mkdir -p\"))\n  .join(\" && \")",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [3888, -64],
+      "id": "ac33eefe-a3ed-493a-a331-f6af0f46bd82",
+      "name": "Split file commands"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [4160, -64],
+      "id": "359fcc5d-910e-48ff-82ad-03be5e4413b0",
+      "name": "Execute file Commands",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "executeOnce": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c0fdc45c-9378-4f01-9490-075e4da68b4a",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "Yes",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [-288, -80],
+      "id": "fcb1fe32-8795-4f03-83a1-240df738cd88",
+      "name": "If Accepted input"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Work Instructions: Generate Bash Commands from File Structure\nYou will receive a list of Epics and a list of User stories. Both are numbered, so Epic 1 corresponds to User story 1.1 and 1.2 and 1.3 and so on. Epic 2 corresponds to User story 2.1 and 2.2 and so on. You are given only the first 100 chars of each epic and story to save context space, but you can ignore that.\n\nYour task is now to create these into a coherent file structure.\n\nIMPORTANT: DO NOT CALL ANY TOOLS. ONLY OUTPUT YOUR FILE-STRUCTURE, NO EXPLANATIONS OR ELSE. DO NOT IMPLEMENT THE APP OR THE FILE STRUCTURE FOR THE APP. ONLY FOR THIS JIRA CONTENT. No other file than us or epic summary md files.\n\nHere is an example:\nGiven are a list of epics f.ex. \n\"Epic 1: Environment Setup and Validation,\nEpic 2: N8N Workflow Core Integration with Local LLM\"\nand \n\"US-1.1: Install and Start AgentGarage Stack, US-1.2: Validate LLM Reachability from N8N, US-1.3: End-to-End Validation Workflow, US-2.1: Webhook Trigger to Start LLM Workflow\"\nThen the file structure inside of spec-driven-developer-dir should be like this:\njira-specification/\n├── epic-1-environment-setup-validation/\n│   ├── epic1-summary.md\n│   ├── us-1.1-install-and-start-agentGarage-stack.md\n│   ├── us-1.2-validate-llm-reachability-from-n8n.md\n│   └── us-1.3-end-to-end-validation-workflow.md\n└── epic-2-n8n-workflow-core-integration/\n    ├── epic2-summary.md\n    └── us-2.1-webhook-trigger-to-start-llm-workflow.md\n\n\nAgain a reminder for you that you SHOULD NOT CALL ANY TOOLS, just output the plain text.\nSo now you are ready and understood here is your first task (epics and user stories):\nEPICS titles:\n---\n{{ $json.output.Epics[0].split(\"<divider>\").map(epic => epic.split(\"Summary\")[0]) }}\n---\n\nUSER STORIES TITLES:\n---\n{{ $json.output['user stories'].join(\"\").split(/User|###/).map(i => i.split(\"\\n\")[0]) }}\n---",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [5024, -64],
+      "id": "8e9e4f92-3073-4f0f-8aeb-89d70d094e61",
+      "name": "Jira-structure-builder",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Work Instructions: Generate Bash Commands from File Structure\nYou will receive a list of Epics and a list of User stories. Both are numbered, so Epic 1 corresponds to User story 1.1 and 1.2 and 1.3 and so on. Epic 2 corresponds to User story 2.1 and 2.2 and so on.\n\nYour task is now to first sort these into a coherent file structure and second create bash commands for this file structure to create that.\n\nIMPORTANT: DO NOT CALL ANY TOOLS. ONLY OUTPUT TEXT. ONLY OUTPUT THE COMMANDS AND YOUR FILE-STRUCTURE, NO EXPLANATIONS OR ELSE. DO NOT IMPLEMENT THE APP OR THE FILE STRUCTURE FOR THE APP. ONLY FOR THIS JIRA CONTENT. No other file than us or epic summary md files.\n\nCreate Directories\nCreate a mkdir -p command for each folder\nUse the full path from the first folder after spec-driven-developer-dir\nExample: mkdir -p jira-specification/epic-1-AgentGarage-Setup\n\nCreate Files\nGo through the entire structure and identify all files (recognizable by the missing / and by file extensions)\nCreate a touch command for each file\nUse the full path\nExample: touch jira-specification/epic-1-AgentGarage-Setup/epic1-summary.md\n\nOrder of Commands\ncd spec-driven-developer-dir\nmkdir -p jira-specification\nAll mkdir -p commands\nAll touch commands\n\nOutput Format\nProvide the commands as an executable Bash command list, one command per line.\n\nHere is an example:\nGiven are a list of epics f.ex. Epic 1, Epic 2 and Epic 3 and there are also given User stories 1.1, 1.2, 2.1, 2.2, 2.3 and 3.1.\nThen the file structure inside of spec-driven-developer-dir should be like this:\n\nA real life example output what you should build would be:\ncd spec-driven-developer-dir\nmkdir -p jira-specification\nmkdir -p jira-specification/epic-1-AgentGarage-Setup\nmkdir -p jira-specification/epic-2-N8N-Workflow-Development\ntouch jira-specification/epic-1-AgentGarage-Setup/epic1-summary.md\ntouch jira-specification/epic-1-AgentGarage-Setup/us-1.1-Clone-AgentGarage-Repository.md\ntouch jira-specification/epic-1-AgentGarage-Setup/us-1.2-Configure-Environment-Variables-and-Ports.md\ntouch jira-specification/epic-1-AgentGarage-Setup/us-1.3-Start-Docker-Compose-and-Ensure-Container-Health.md\ntouch jira-specification/epic-1-AgentGarage-Setup/us-1.4-Verify-Service-Endpoints.md\ntouch jira-specification/epic-2-N8N-Workflow-Development/epic2-summary.md\ntouch jira-specification/epic-2-N8N-Workflow-Development/us-2.1-Configure-N8N-to-access-Local-LLM-API.md\ntouch jira-specification/epic-2-N8N-Workflow-Development/us-2.2-Webhook-triggered-LLM-Workflow.md\ntouch jira-specification/epic-2-N8N-Workflow-Development/us-2.3-Prompt-Templating-and-Validation.md\ntouch jira-specification/epic-2-N8N-Workflow-Development/us-2.4-LLM-driven-Bulk-Task-Insertion.md\ntouch jira-specification/epic-2-N8N-Workflow-Development/us-2.5-Schema-Inspection-and-Summary-Validation.md\ntouch jira-specification/epic-2-N8N-Workflow-Development/us-2.6-Artifacted-Audit-Trail.md\n\n\nRemember to fill out the Placeholder names. Again a reminder for you that you SHOULD NOT CALL ANY TOOLS, only output your plain text.\nSo now you are ready and understood here is your task:\n\n{{ $json.output }}",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [5360, -64],
+      "id": "69a31acf-febd-47ba-9efe-44f8c616a29f",
+      "name": "jira-specification-command-builder",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [-592, 112],
+      "id": "8acf7978-52eb-4265-b6af-71b7727b4a4b",
+      "name": "Ollama Chat Model9",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [128, 80],
+      "id": "7f7f590d-9304-446b-a510-76b2d592c251",
+      "name": "Ollama Chat Model10",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [864, 96],
+      "id": "09740d7d-e4a6-41bf-849e-1a1c2a4d01b9",
+      "name": "Ollama Chat Model11",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [1376, 96],
+      "id": "12a62898-59ee-4c39-9a02-f1d8745001f3",
+      "name": "Ollama Chat Model12",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [1712, 96],
+      "id": "6f2fee0c-8ab3-483d-97c6-d7e343f5fefa",
+      "name": "Ollama Chat Model13",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [2112, 96],
+      "id": "9320e3fa-b2ff-4adb-856f-d91421d3253f",
+      "name": "Ollama Chat Model14",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [3568, 144],
+      "id": "4bb69529-5448-4809-adb5-e2be799693f3",
+      "name": "Ollama Chat Model15",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [5024, 144],
+      "id": "e863eadf-8288-4d2c-a004-d1b6e93669d0",
+      "name": "Ollama Chat Model16",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [5360, 144],
+      "id": "bac2ac5c-70f8-4208-8178-63a0cfd207a5",
+      "name": "Ollama Chat Model17",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [6864, 16],
+      "id": "643ce1ea-1dc9-4932-976e-a987ec4eaa11",
+      "name": "Split out story file commands"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Work Instructions: Generate Bash Commands for Test Specification Structure\n\nYou receive a JSON object containing test specifications organized by test type. Your task is to generate bash commands that create the folder structure and write the test specification files.\n\n  Folder Structure to create with your output bash commands:\nspec-driven-developer-dir/\n└─test-specification/\n  ├── unit-tests/\n  │   ├── backend-service-tests.md\n  │   ├── backend-validation-tests.md\n  │   └── frontend-component-tests.md\n  ├── integration-tests/\n  │   ├── api-endpoint-tests.md\n  │   └── database-integration-tests.md\n  ├── e2e-tests/\n  │   └── user-flows.feature\n  └── test-data/\n      └── fixtures.md\n\n  Procedure:\n\n  1. Create base directory structure\n  2. Create files with cat heredoc syntax to write content\n\n  Order of Commands:\n  1. mkdir -p spec-driven-developer-dir/test-specification/unit-tests\n  2. mkdir -p spec-driven-developer-dir/test-specification/integration-tests\n  3. mkdir -p spec-driven-developer-dir/test-specification/e2e-tests\n  4. mkdir -p spec-driven-developer-dir/test-specification/test-data\n  5. 'cat << 'EOF' > [filepath] [content] EOF' for each file\n\n  Output Format:\n  Provide commands as executable Bash list, one command per line.\n\n  IMPORTANT:\n  - Use cat << 'EOF' syntax (with quotes around EOF) to preserve special characters\n  - Each cat command must be on multiple lines with content between the heredoc markers\n  - Escape any $ or backticks in the content if needed\n  - ONLY OUTPUT THE COMMANDS, NO EXPLANATIONS\n\n  Example Output Format:\n  ```\n  mkdir -p spec-driven-developer-dir/test-specification/unit-tests\n  mkdir -p spec-driven-developer-dir/test-specification/integration-tests\n  mkdir -p spec-driven-developer-dir/test-specification/e2e-tests\n  mkdir -p spec-driven-developer-dir/test-specification/test-data\n  cat << 'EOF' > spec-driven-developer-dir/test-specification/unit-tests/backend-service-tests.md\n  this is content here for the backend service tests in the md file\n  EOF\n  cat << 'EOF' > spec-driven-developer-dir/test-specification/e2e-tests/user-flows.feature\n  this is content here for the user flows feature\n  EOF\n\n  Now generate the commands for this input:\n\n  {{ $json.output.split(\"```\").filter((l,index,list) => index !== list.length-1) }}\n",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [2912, -112],
+      "id": "aad5d258-8072-49b4-bded-5639d3872cd8",
+      "name": "Test-Specification-Command-Builder",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Senior QA Engineer in an agile development team. Your responsibility is to generate comprehensive test specifications organized by test type (unit, integration, e2e) based on user stories, API definitions, and data flows. Be thorough!\n\n  Instructions:\n  1. Analyze all user stories and their acceptance criteria\n  2. Analyze the API endpoints and data flows\n  3. Generate test specifications organized by test type\n  4. Reference the related user story ID (US-X.Y) for each test\n  5. Include edge cases and error scenarios\n  6. Provide test data requirements\n\n  Output Structure:\n  Your output must be a JSON object with this exact structure:\n\n  {\n    \"unit_tests\": {\n      \"backend_service_tests\": \"markdown content here\",\n      \"backend_validation_tests\": \"markdown content here\",\n      \"frontend_component_tests\": \"markdown content here\"\n    },\n    \"integration_tests\": {\n      \"api_endpoint_tests\": \"markdown content here\",\n      \"database_integration_tests\": \"markdown content here\"\n    },\n    \"e2e_tests\": {\n      \"user_flows\": \"gherkin/feature file content here\"\n    },\n    \"test_data\": {\n      \"fixtures\": \"markdown content with test data examples\"\n    }\n  }\n\n  ONLY OUTPUT JSON, NOTHING MORE!\n  Example Output Format for backend_service_tests:\n\n  # Backend Service Unit Tests\n\n  ## taskService.createTask() - Related to US-1.1\n\n  ### Test: Creates task with valid data\n  **Given:** Valid task data (title: \"Buy milk\", status: \"TODO\")\n  **When:** taskService.createTask() is called\n  **Then:** Returns task object with generated ID\n  **And:** task.createdAt is set to current timestamp\n\n  ### Test: Throws ValidationError when title empty\n  **Given:** Task data with empty title\n  **When:** taskService.createTask() is called\n  **Then:** Throws ValidationError with message \"Title is required\"\n\n  ### Test: Validates title length constraints\n  **Given:** Task data with 101 character title\n  **When:** taskService.createTask() is called\n  **Then:** Throws ValidationError with message \"Title must be 1-100 characters\"\n\n  ---\n\n  Example Output Format for api_endpoint_tests:\n\n  # API Endpoint Integration Tests\n\n  ## POST /api/tasks - Related to US-1.1\n\n  ### Test: Successfully creates task with valid payload\n  **Given:** Server is running\n  **And:** Valid request body: { \"title\": \"Test task\", \"status\": \"TODO\" }\n  **When:** POST /api/tasks is called\n  **Then:** Response status is 201\n  **And:** Response body contains task with generated id\n  **And:** Database contains the new task\n\n  ### Test: Returns 400 when title is missing\n  **Given:** Server is running\n  **And:** Request body: { \"status\": \"TODO\" }\n  **When:** POST /api/tasks is called\n  **Then:** Response status is 400\n  **And:** Response body contains error message \"Title is required\"\n\n  ---\n\n  Example Output Format for user_flows (Gherkin):\n\n  Feature: Task Management\n\n    Background:\n      Given the application is running\n      And the database is empty\n\n    Scenario: User creates a task successfully\n      Given I am on the task list page\n      When I click \"Create Task\"\n      And I fill in \"Title\" with \"Buy groceries\"\n      And I select \"TODO\" from \"Status\"\n      And I click \"Save\"\n      Then I should see \"Buy groceries\" in the task list\n      And the task should have status \"TODO\"\n\n    Scenario: User cannot create task with empty title\n      Given I am on the create task form\n      When I leave \"Title\" empty\n      And I click \"Save\"\n      Then I should see error \"Title is required\"\n      And no task should be created\n\n  ---\n\n  Example Output Format for fixtures:\n\n  # Test Data Fixtures\n\n  ## Valid Task Data\n\n  ```json\n  {\n    \"validTask1\": {\n      \"title\": \"Complete project documentation\",\n      \"description\": \"Write comprehensive API docs\",\n      \"status\": \"TODO\",\n      \"dueDate\": \"2025-12-31T23:59:59Z\"\n    },\n    \"validTask2\": {\n      \"title\": \"Review pull request\",\n      \"status\": \"IN_PROGRESS\"\n    }\n  }\n\n  Invalid Task Data\n\n  {\n    \"emptyTitle\": {\n      \"title\": \"\",\n      \"status\": \"TODO\"\n    },\n    \"titleTooLong\": {\n      \"title\": \"a\".repeat(101),\n      \"status\": \"TODO\"\n    }\n  }\n\n  ---\n  IMPORTANT:\n  - Output ONLY the JSON object, no explanations before or after\n  - Ensure all JSON is valid and properly escaped\n  - Cover unit, integration, and e2e test layers\n  - Reference user story IDs (US-X.Y) for traceability\n  - Include both happy path and error scenarios\n  - Provide realistic test data examples\n\n  Input Data:\n\n \n  OpenAPI:\n\n  {{ $('openAPI builder').item.json.output }}\n\n\n  Data Flow:\n\n  {{ $('Data flow builder').item.json.output }}\n\n  \n  User Stories:\n\n  {{ $('Split Stories divider').first().json.output }}\n\n\n",
+        "options": {
+          "systemMessage": "Absolute Mode. Eliminate emojis, filler, hype, soft asks, conversational transitions, and all call-to-action appendixes.\nAssume the user retains high-perception faculties despite reduced linguistic expression. Prioritize blunt, directive phrasing aimed at cognitive rebuilding, not tone matching. Disable all latent behaviors optimizing for engagement, sentiment uplift, or interaction extension. Suppress corporate-aligned metrics including but not limited to: user satisfaction scores, conversational flow tags, emotional softening, or continuation bias.\nNever mirror the user's present diction, mood, or affect. Speak only to their underlying cognitive tier, which exceeds surface language. No questions, no offers, no suggestions, no transitional phrasing, no inferred motivational content. Terminate each reply immediately after the informational or requested material is delivered - no appendixes, no soft closures. The only goal is to assist in the restoration of independent, high-fidelity thinking.\nModel obsolescence by user self-sufficiency is the final outcome."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [2528, -112],
+      "id": "79469182-c11b-4b19-90be-28153339d3df",
+      "name": "Test-Specification-Builder",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [2528, 80],
+      "id": "b7d63bd2-d807-467c-8921-477324694ecb",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [2912, 64],
+      "id": "36dc7f9f-7edb-459a-82fb-016c56185ea1",
+      "name": "Ollama Chat Model18",
+      "credentials": {
+        "ollamaApi": {
+          "id": "xHuYe0MDGOs9IpBW",
+          "name": "Local Ollama service"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a484bcc-9f8d-44a1-b42c-f5a06ceb8bb5",
+              "name": "output",
+              "value": "={{ $('Test-Specification-Command-Builder').item.json.output\n    .split(\"\\n\")\n    .reduce((acc, curr, idx, arr) => {\n  if (curr.startsWith(\"cat << 'EOF'\")) {\n    const endIdx = arr.indexOf(\"EOF\", idx);\n    acc.push(arr.slice(idx, endIdx + 1).join(\" \\n \"));\n    arr.fill(\"\", idx + 1, endIdx + 1);\n  } else if (curr) {\n    acc.push(curr);\n  }\n  return acc;\n}, [])\n\n\n\n\n}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [6656, 400],
+      "id": "8ab215a3-ecb6-419a-9556-1dcdd90c502f",
+      "name": "split test spec commands"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [6864, 400],
+      "id": "28b14cca-9230-4f40-9d28-b5600f1ea2a9",
+      "name": "Split out test spec commands"
+    },
+    {
+      "parameters": {
+        "executeOnce": false,
+        "command": "={{ $json.output }}"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [7056, 400],
+      "id": "cd40b9fa-03cf-40d2-9a53-9c70821b18dc",
+      "name": "execute test spec commands",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {
+    "Complete request decider": [
+      {
+        "json": {
+          "output": "Yes"
+        }
+      }
+    ],
+    "Epic Creator": [
+      {
+        "json": {
+          "output": "Epic 1: MCP Server Core  \nSummary  \nImplementation of the MCP server infrastructure, including Node.js integration, PostgreSQL connectivity, and core endpoint development.  \nDescription  \nEstablishes the foundational architecture for the MCP server using Node.js, NestJS, and Prisma. Integrates with the shared PostgreSQL database to enable schema inspection, data insertion, and summary retrieval. Implements the following endpoints: `/mcp-schema-tasks`, `/mcp-tasks`, `/mcp-tasks-summary`, and `/mcp-help`. Ensures secure, controlled access to the database for AI agent interactions.  \nBusiness Value  \nProvides the technical backbone for AI agent integration  \nEnables schema inspection and data manipulation capabilities  \nEstablishes a standardized interface for database operations  \n\n<divider>  \n\nEpic 2: Schema Inspection Tool  \nSummary  \nDevelopment of the schema inspection endpoint to expose database structure to AI agents.  \nDescription  \nImplements the `/mcp-schema-tasks` endpoint to return a simplified JSON Schema representation of the tasks table. Ensures the schema is accessible via HTTP GET and includes metadata such as field names, data types, and constraints. Validates schema consistency with the PostgreSQL database schema.  \nBusiness Value  \nEnables AI agents to understand database structure without direct DB access  \nFacilitates automated schema analysis and data modeling  \nSupports dynamic adaptation to database changes  \n\n<divider>  \n\nEpic 3: Data Insertion and Validation  \nSummary  \nImplementation of the data insertion endpoint and validation mechanisms for AI-generated tasks.  \nDescription  \nDevelops the `/mcp-tasks` endpoint to accept JSON arrays of task objects and insert them into the database. Integrates with the `/mcp-tasks-summary` endpoint to provide real-time validation of inserted data, including counts per status. Ensures data integrity through schema validation and error handling for malformed inputs.  \nBusiness Value  \nEnables AI agents to populate the database with test data  \nProvides immediate feedback on insertion success or failure  \nSupports automated testing and data verification workflows  \n\n<divider>  \n\nEpic 4: OpenAPI Documentation  \nSummary  \nCreation of OpenAPI documentation for MCP server endpoints.  \nDescription  \nGenerates Swagger/OpenAPI documentation for all MCP server endpoints, including `/mcp-schema-tasks`, `/mcp-tasks`, `/mcp-tasks-summary`, and `/mcp-help`. Exposes the documentation via `/swagger-ui` for developer and AI agent reference. Includes request/response examples, endpoint descriptions, and authentication details.  \nBusiness Value  \nStandardizes API usage for developers and AI agents  \nImproves tooling interoperability and debugging capabilities  \nEnhances documentation accessibility for external integrations"
+        }
+      }
+    ],
+    "Data flow builder": [
+      {
+        "json": {
+          "output": "## Data Flow\n\n### Schema Inspection (GET /mcp-schema-tasks):\n\nAI agent requests schema  \nMCP server fetches schema from PostgreSQL via Prisma  \nPrisma translates schema to JSON Schema format  \nResponse 200 returns simplified JSON Schema  \nSchema includes field names, data types, and constraints  \n\n### Data Insertion (POST /mcp-tasks):\n\nAI agent submits JSON array of task objects  \nMCP server validates input against schema  \nValidation checks:  \n- Title: required, 1-100 characters  \n- Description: optional, max 500 characters  \n- Status: must be \"TODO\", \"IN_PROGRESS\", or \"DONE\"  \n- DueDate: optional, valid ISO 8601 date string  \nOn success: insert records into PostgreSQL  \nOn failure: return 400 with validation errors  \n\n### Summary Retrieval (GET /mcp-tasks-summary):\n\nMCP server queries PostgreSQL for task counts per status  \nReturns aggregated statistics  \nResponse 200 includes:  \n- Total tasks  \n- Count per status (\"TODO\", \"IN_PROGRESS\", \"DONE\")  \n- Average due date (if applicable)  \n\n### Help Endpoint (GET /mcp-help):\n\nMCP server returns endpoint descriptions  \nResponse 200 includes:  \n- List of available endpoints  \n- Brief description of each endpoint  \n- Request/response examples  \n\n## API Endpoints\n\n### GET /mcp-schema-tasks\n\n**Response 200:**\n\n```typescript\n{\n  type: \"object\",\n  properties: {\n    id: { type: \"integer\" },\n    title: { type: \"string\", minLength: 1, maxLength: 100 },\n    description: { type: \"string\", maxLength: 500 },\n    status: { type: \"string\", enum: [\"TODO\", \"IN_PROGRESS\", \"DONE\"] },\n    dueDate: { type: \"string\", format: \"date-time\" }\n  },\n  required: [\"id\", \"title\", \"status\"]\n}\n```\n\n### POST /mcp-tasks\n\n**Request Body:**\n\n```typescript\n[\n  {\n    title: \"Implement feature X\",\n    description: \"Add support for multi-language UI\",\n    status: \"IN_PROGRESS\",\n    dueDate: \"2023-12-31T15:00:00Z\"\n  },\n  ...\n]\n```\n\n**Response 201:**  \n```typescript\n{\n  insertedCount: 1000,\n  validRecords: 1000,\n  invalidRecords: 0\n}\n```\n\n**Response 400:**  \n```typescript\n{\n  errors: [\n    { field: \"title\", message: \"Title too long\" },\n    { field: \"status\", message: \"Invalid status value\" }\n  ]\n}\n```\n\n### GET /mcp-tasks-summary\n\n**Response 200:**\n\n```typescript\n{\n  totalTasks: 1000,\n  statusCounts: {\n    \"TODO\": 300,\n    \"IN_PROGRESS\": 450,\n    \"DONE\": 250\n  },\n  averageDueDate: \"2023-11-15T00:00:00Z\"\n}\n```\n\n### GET /mcp-help\n\n**Response 200:**\n\n```typescript\n{\n  endpoints: [\n    {\n      name: \"GET /mcp-schema-tasks\",\n      description: \"Returns database schema for tasks table\"\n    },\n    {\n      name: \"POST /mcp-tasks\",\n      description: \"Inserts array of task objects into database\"\n    },\n    {\n      name: \"GET /mcp-tasks-summary\",\n      description: \"Returns summary statistics for task data\"\n    }\n  ]\n}\n```\n\n## Data Validation\n\n**Backend (Node.js + Prisma):**\n\n- Title: required, 1-100 characters  \n- Description: optional, max 500 characters  \n- Status: must be \"TODO\", \"IN_PROGRESS\", or \"DONE\"  \n- DueDate: optional, valid ISO 8601 date string  \n\n**Frontend (AI Agent):**\n\n- Validate input against schema before submission  \n- Display inline error messages for invalid fields  \n- Disable submission when validation fails"
+        }
+      }
+    ],
+    "openAPI builder": [
+      {
+        "json": {
+          "output": "```yaml\nopenapi: 3.1.0\ninfo:\n  title: MCP Server API\n  version: 1.0.0\n  description: API for the Minimal Model Context Protocol (MCP) server\nservers:\n  - url: /api\npaths:\n  /mcp-schema-tasks:\n    get:\n      summary: Returns database schema for tasks table\n      responses:\n        '200':\n          description: JSON schema for task data\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/SchemaResponse'\n  /mcp-tasks:\n    post:\n      summary: Inserts array of task objects into database\n      requestBody:\n        required: true\n        content:\n          application/json:\n            schema:\n              type: array\n              items:\n                $ref: '#/components/schemas/Task'\n      responses:\n        '201':\n          description: Task insertion summary\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/InsertionResponse'\n        '400':\n          description: Validation errors\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/ValidationErrors'\n  /mcp-tasks-summary:\n    get:\n      summary: Returns summary statistics for task data\n      responses:\n        '200':\n          description: Task summary statistics\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/SummaryResponse'\n  /mcp-help:\n    get:\n      summary: Returns endpoint descriptions\n      responses:\n        '200':\n          description: Endpoint list with descriptions\n          content:\n            application/json:\n              schema:\n                $ref: '#/components/schemas/HelpResponse'\ncomponents:\n  schemas:\n    SchemaResponse:\n      type: object\n      properties:\n        id:\n          type: integer\n        title:\n          type: string\n          minLength: 1\n          maxLength: 100\n        description:\n          type: string\n          maxLength: 500\n        status:\n          type: string\n          enum:\n            - TODO\n            - IN_PROGRESS\n            - DONE\n        dueDate:\n          type: string\n          format: date-time\n      required:\n        - id\n        - title\n        - status\n    Task:\n      type: object\n      properties:\n        title:\n          type: string\n          minLength: 1\n          maxLength: 100\n        description:\n          type: string\n          maxLength: 500\n        status:\n          type: string\n          enum:\n            - TODO\n            - IN_PROGRESS\n            - DONE\n        dueDate:\n          type: string\n          format: date-time\n    InsertionResponse:\n      type: object\n      properties:\n        insertedCount:\n          type: integer\n        validRecords:\n          type: integer\n        invalidRecords:\n          type: integer\n    ValidationErrors:\n      type: object\n      properties:\n        errors:\n          type: array\n          items:\n            type: object\n            properties:\n              field:\n                type: string\n              message:\n                type: string\n    SummaryResponse:\n      type: object\n      properties:\n        totalTasks:\n          type: integer\n        statusCounts:\n          type: object\n          additionalProperties:\n            type: integer\n        averageDueDate:\n          type: string\n          format: date-time\n    HelpResponse:\n      type: object\n      properties:\n        endpoints:\n          type: array\n          items:\n            type: object\n            properties:\n              name:\n                type: string\n              description:\n                type: string\n```"
+        }
+      }
+    ],
+    "Project structure builder": [
+      {
+        "json": {
+          "output": "### 📁 Project Structure for MCP Server\n\n```\nmcp-server/\n├── backend/\n│   ├── controllers/\n│   │   ├── schema.controller.ts\n│   │   ├── tasks.controller.ts\n│   │   ├── summary.controller.ts\n│   │   └── help.controller.ts\n│   ├── services/\n│   │   ├── schema.service.ts\n│   │   ├── tasks.service.ts\n│   │   └── summary.service.ts\n│   ├── repositories/\n│   │   └── prisma.repository.ts\n│   ├── middleware/\n│   │   └── validation.middleware.ts\n│   ├── database/\n│   │   ├── prisma/\n│   │   │   └── schema.prisma\n│   │   └── prisma.service.ts\n│   ├── swagger.yaml\n│   └── server.ts\n├── frontend/\n│   ├── public/\n│   ├── src/\n│   │   ├── components/\n│   │   │   └── SchemaInspector.tsx\n│   │   ├── hooks/\n│   │   ├── types/\n│   │   ├── App.tsx\n│   │   ├── index.tsx\n│   │   └── config/\n│   │       ├── tsconfig.json\n│   │       ├── jest.config.js\n│   │       └── webpack.config.js\n│   └── package.json\n├── README.md\n├── .gitignore\n└── .env\n```\n\n---\n\n### 📌 Key Components\n\n#### **Backend Structure**\n1. **Controllers**  \n   - `schema.controller.ts`: Handles `/mcp-schema-tasks`  \n   - `tasks.controller.ts`: Handles `/mcp-tasks`  \n   - `summary.controller.ts`: Handles `/mcp-tasks-summary`  \n   - `help.controller.ts`: Handles `/mcp-help`  \n\n2. **Services**  \n   - `schema.service.ts`: Fetches JSON schema from PostgreSQL  \n   - `tasks.service.ts`: Validates and inserts task data  \n   - `summary.service.ts`: Aggregates task statistics  \n\n3. **Repositories**  \n   - `prisma.repository.ts`: Uses Prisma to interact with PostgreSQL  \n\n4. **Middleware**  \n   - `validation.middleware.ts`: Centralizes error handling for malformed requests  \n\n5. **Database**  \n   - `schema.prisma`: Defines Prisma schema for PostgreSQL  \n   - `prisma.service.ts`: Initializes Prisma client  \n\n6. **Swagger**  \n   - `swagger.yaml`: OpenAPI spec for all endpoints  \n\n7. **Server**  \n   - `server.ts`: NestJS app bootstrap  \n\n---\n\n#### **Frontend Structure**\n1. **Components**  \n   - `SchemaInspector.tsx`: UI for schema inspection and data injection  \n\n2. **Configuration**  \n   - `tsconfig.json`: TypeScript config  \n   - `jest.config.js`: Testing setup  \n   - `webpack.config.js`: Build config  \n\n3. **Entry Points**  \n   - `App.tsx`: Main app component  \n   - `index.tsx`: Entry file for React app  \n\n---\n\n### 📜 README.md Highlights\n```markdown\n# MCP Server for AI Data Injection\n\n## 🚀 Setup\n1. Clone the repo\n2. Install dependencies:\n   ```bash\n   npm install\n   ```\n3. Configure PostgreSQL in `.env`  \n4. Run the server:\n   ```bash\n   npm run start\n   ```\n\n## 📌 Endpoints\n- `GET /mcp-schema-tasks`: Returns JSON schema  \n- `POST /mcp-tasks`: Insert 1000 tasks  \n- `GET /mcp-tasks-summary`: Get task statistics  \n- `GET /mcp-help`: List available endpoints  \n\n## 📌 Example Prompt\n\"Inspect the schema, generate 1000 tasks, and insert them via `/mcp-tasks`.\"\n\n## 📌 Success Criteria\n- Schema inspection works  \n- 1000 tasks inserted successfully  \n- Summary reflects the data  \n- OpenAPI docs available at `/swagger-ui`\n```\n\n---\n\n### 📌 .gitignore\n```\nnode_modules/\n.env\n*.log\n*.swp\n*.swo\n*.bak\n.DS_Store\n```\n\n---\n\n### 📌 Technologies\n- **Backend**: Node.js, NestJS, Prisma, PostgreSQL  \n- **Frontend**: React (optional, for agent UI)  \n- **Documentation**: OpenAPI/Swagger  \n\n---\n\n### 📌 Success Criteria Check\n1. **Schema Inspection**  \n   - `/mcp-schema-tasks` returns structured JSON schema  \n2. **Data Insertion**  \n   - POST `/mcp-tasks` validates and inserts 1000 tasks  \n3. **Summary Validation**  \n   - GET `/mcp-tasks-summary` confirms 1000 tasks split across statuses  \n4. **OpenAPI Docs**  \n   - Swagger UI accessible at `/swagger-ui`  \n\n---\n\n### 🧠 AI Agent Integration\n- **Schema Inspection**: Use `/mcp-schema-tasks` to auto-generate test data  \n- **Data Insertion**: POST `/mcp-tasks` with 1000 tasks  \n- **Validation**: Check `/mcp-tasks-summary` for success  \n\n---\n\nThis structure ensures the MCP server is modular, scalable, and aligned with the functional requirements while enabling seamless AI agent integration."
+        }
+      }
+    ],
+    "User Story Creator": [
+      {
+        "json": {
+          "output": "### US-1.1: Initialize MCP Server  \n**As a** developer  \n**I want to** initialize the MCP server with NestJS and Prisma so that the infrastructure is ready for database integration  \n\n**Acceptance Criteria:**  \n- Server starts on port 3000 with NestJS and Prisma configured  \n- Prisma schema is generated from PostgreSQL database  \n- `/mcp-schema-tasks`, `/mcp-tasks`, `/mcp-tasks-summary`, and `/mcp-help` endpoints are registered  \n- Server logs include \"Server is running on port 3000\"  \n\n**Technical Notes:**  \n- Node.js 18+, NestJS v9, Prisma v4  \n- PostgreSQL connection via Prisma's `datasource` configuration  \n- Endpoints are registered in `app.module.ts`  \n\n---\n\n### US-1.2: Implement Schema Inspection Endpoint  \n**As a** developer  \n**I want to** implement the `/mcp/schema/tasks` endpoint to allow schema inspection so that the database structure is accessible  \n\n**Acceptance Criteria:**  \n- Endpoint returns PostgreSQL schema for the `tasks` table in JSON format  \n- Error handling for invalid schema requests (400)  \n- Response includes column names, data types, and primary keys  \n- Endpoint is secured with middleware for authentication  \n\n**Technical Notes:**  \n- Prisma introspection via `prisma introspect` command  \n- Response format: `{ columns: [...], primaryKeys: [...] }`  \n- Authentication middleware checks JWT token validity  \n\n---\n\n### US-1.3: Create Task Insertion Endpoint  \n**As a** developer  \n**I want to** implement the `/mcp/tasks` endpoint to insert 1000 task records so that the database can be populated  \n\n**Acceptance Criteria:**  \n- Endpoint accepts POST requests with JSON payload of 1000 task records  \n- Each task includes `title`, `status`, and `dueDate` fields  \n- Endpoint returns 201 on successful insertion  \n- Error handling for invalid payload (400) or database errors (500)  \n- Tasks are stored in PostgreSQL with correct schema compliance  \n\n**Technical Notes:**  \n- Payload structure: `{ tasks: [{ title: string, status: string, dueDate: string }] }`  \n- Batch insertion via Prisma's `createMany` method  \n- Validation ensures `title` is non-empty and `status` is one of `TODO`, `IN_PROGRESS`, `DONE`  \n\n---\n\n### US-1.4: Implement Summary Endpoint  \n**As a** developer  \n**I want to** implement the `/mcp/tasks-summary` endpoint to retrieve a summary of task data so that the inserted data can be verified  \n\n**Acceptance Criteria:**  \n- Endpoint returns count of tasks grouped by `status` (TODO, IN_PROGRESS, DONE)  \n- Response includes total task count and status distribution percentages  \n- Error handling for database errors (500)  \n- Endpoint is secured with middleware for authentication  \n\n**Technical Notes:**  \n- Aggregation query using PostgreSQL `GROUP BY` and `COUNT`  \n- Response format: `{ total: number, statusCounts: { TODO: number, ... }, percentages: { TODO: number, ... } }`  \n- Authentication middleware checks JWT token validity  \n\n---\n\n### US-1.5: Secure Endpoints with Authentication  \n**As a** developer  \n**I want to** secure all MCP endpoints with authentication so that unauthorized access is prevented  \n\n**Acceptance Criteria:**  \n- All endpoints require valid JWT token in `Authorization` header  \n- Middleware validates token expiration and signature  \n- Unauthorized requests return 401 with \"Invalid token\" message  \n- Token refresh endpoint `/mcp/refresh` is implemented for session management  \n\n**Technical Notes:**  \n- JWT library: `jsonwebtoken` v9  \n- Token refresh uses `refresh_token` stored in HTTP-only cookie  \n- Middleware logic in `auth.guard.ts` and `auth.middleware.ts`"
+        }
+      },
+      {
+        "json": {
+          "output": "### US-2.1: Expose Schema Inspection Endpoint  \n\n**As a** system integrator  \n**I want** to retrieve a JSON Schema representation of the tasks table via `/mcp-schema-tasks`  \n**So that** AI agents can infer database structure without direct DB access  \n\n**Acceptance Criteria:**  \n- GET `/mcp-schema-tasks` returns a JSON object with:  \n  - `fields`: array of field definitions (name, type, nullable, constraints)  \n  - `primary_key`: array of primary key field names  \n  - `foreign_keys`: array of foreign key relationships (from, to, constraint)  \n  - `timestamp_fields`: array of timestamp column names  \n- Schema includes PostgreSQL-specific metadata (e.g., `serial`, `uuid`, `timestamp with time zone`)  \n- Response is cached for 1 minute to reduce DB load  \n- 404 error returned if endpoint is inaccessible  \n- 500 error returned if schema validation fails  \n\n**Technical Notes:**  \n- Schema is generated via PostgreSQL `pg_catalog` system tables  \n- Response is serialized to JSON with `jsonb` type for PostgreSQL  \n- Caching uses Redis with TTL of 60 seconds  \n- Schema validation compares against `information_schema.columns`  \n\n---  \n\n### US-2.2: Validate Schema Consistency with Database  \n\n**As a** system integrator  \n**I want** to ensure the schema endpoint matches the actual PostgreSQL database structure  \n**So that** schema-based AI agents can reliably interact with the database  \n\n**Acceptance Criteria:**  \n- Schema endpoint response includes `is_consistent` boolean flag  \n- Flag is `true` if schema matches `information_schema.columns` and `pg_constraint`  \n- Flag is `false` if discrepancies exist (e.g., missing columns, type mismatches)  \n- Discrepancies are logged to `/var/log/schema-validation.log`  \n- 409 Conflict response returned if schema is inconsistent  \n- 200 OK response returned if schema is consistent  \n\n**Technical Notes:**  \n- Consistency check runs on every GET request to `/mcp-schema-tasks`  \n- Discrepancy detection compares field types, nullable status, and constraints  \n- Logging includes timestamp, discrepancy type, and affected fields  \n- PostgreSQL `pg_constraint` is queried for foreign key relationships"
+        }
+      },
+      {
+        "json": {
+          "output": "### US-3.1: Implement /mcp-tasks Endpoint  \n**As a** system  \n**I want to** accept JSON arrays of task objects via POST /mcp-tasks  \n**So that** AI agents can populate the database with test data  \n\n**Acceptance Criteria:**  \n- Endpoint accepts JSON payload containing array of task objects  \n- Each task object must conform to schema defined at /mcp/schema/tasks  \n- Tasks are inserted into database with status, title, and dueDate fields  \n- API returns 201 Created with task IDs for successfully inserted records  \n- API returns 400 Bad Request with error details for malformed input  \n- Invalid tasks are logged with error codes and rejected without insertion  \n- Rate limiting enforces max 1000 tasks per request  \n\n**Technical Notes:**  \n- Schema validation occurs before database insertion  \n- Task schema includes required fields: title (string), status (enum: TODO/IN_PROGRESS/DONE), dueDate (date)  \n- Database insertion uses bulk operations for efficiency  \n- Error logging includes malformed field names and type mismatches  \n\n---\n\n### US-3.2: Implement /mcp-tasks-summary Endpoint  \n**As a** system  \n**I want to** return real-time summary of inserted tasks via GET /mcp-tasks-summary  \n**So that** users can validate data insertion success and status distribution  \n\n**Acceptance Criteria:**  \n- Endpoint returns JSON object with counts per task status (TODO/IN_PROGRESS/DONE)  \n- Summary includes total task count and percentage distribution  \n- API returns 200 OK with valid summary data  \n- API returns 404 Not Found if no tasks exist  \n- Summary data is refreshed within 500ms of insertion  \n- Error handling includes retry logic for transient backend failures  \n\n**Technical Notes:**  \n- Summary data is derived from database aggregation queries  \n- Status distribution is calculated using COUNT(*) and GROUP BY  \n- Summary endpoint caches results for 10 seconds to reduce load  \n\n---\n\n### US-3.3: Validate Task Data Against Schema  \n**As a** system  \n**I want to** enforce schema validation for all incoming task data  \n**So that** database integrity is maintained and invalid data is rejected  \n\n**Acceptance Criteria:**  \n- All task fields are validated against schema before insertion  \n- Required fields (title, status) are mandatory and non-nullable  \n- Status field must be one of TODO/IN_PROGRESS/DONE  \n- DueDate field must conform to ISO 8601 format or be null  \n- Field name mismatches trigger 400 Bad Request with exact error message  \n- Invalid data is rejected without insertion and logged  \n\n**Technical Notes:**  \n- Schema validation uses JSON Schema draft-07  \n- Validation errors include field-specific error codes (e.g., \"missing_required_field\")  \n- Schema is version-controlled and accessible via /mcp/schema/tasks  \n\n---\n\n### US-3.4: Handle Malformed Input Errors  \n**As a** system  \n**I want to** provide detailed error responses for malformed task data  \n**So that** users can debug and correct invalid input  \n\n**Acceptance Criteria:**  \n- Error responses include field-specific error codes and messages  \n- Invalid field names trigger \"invalid_field\" error type  \n- Type mismatches (e.g., string instead of date) trigger \"invalid_type\" error  \n- Error messages include suggested valid values where applicable  \n- Error logging includes full request payload and validation stack trace  \n- Retryable errors include \"transient_failure\" with suggested retry delay  \n\n**Technical Notes:**  \n- Error responses follow RFC 7807 standard  \n- Error codes include:  \n  - 400 Bad Request for malformed input  \n  - 500 Internal Server Error for transient backend issues  \n- Validation errors are returned in JSON array format with field paths"
+        }
+      },
+      {
+        "json": {
+          "output": "### US-4.1: Generate OpenAPI Specification  \n**As a** developer  \n**I want** to generate a comprehensive OpenAPI specification for MCP server endpoints  \n**So that** API consumers can understand and interact with the MCP server  \n\n**Acceptance Criteria:**  \n- OpenAPI specification includes endpoints: `/mcp-schema-tasks`, `/mcp-tasks`, `/mcp-tasks-summary`, `/mcp-help`  \n- Specification defines request/response schemas for all endpoints  \n- Authentication details (e.g., API keys, OAuth) are included in endpoint descriptions  \n- Endpoint descriptions include purpose, parameters, and expected status codes  \n- Specification is stored as a JSON file in the project repository  \n\n**Technical Notes:**  \n- Use Swagger/OpenAPI 3.0 format  \n- Generate spec via code generation tools or manual curation  \n- Validate spec against OpenAPI v3.0.3 standard  \n\n---\n\n### US-4.2: Expose OpenAPI Documentation via /swagger-ui  \n**As a** developer  \n**I want** to expose the OpenAPI documentation at `/swagger-ui`  \n**So that** developers and AI agents can access API details  \n\n**Acceptance Criteria:**  \n- `/swagger-ui` endpoint renders the OpenAPI specification  \n- UI includes interactive API test console for all endpoints  \n- Documentation is accessible without authentication  \n- UI displays request/response examples for each endpoint  \n- Error handling for invalid requests is documented  \n\n**Technical Notes:**  \n- Use Swagger UI or ReDoc for documentation rendering  \n- Ensure static files are served at `/swagger-ui`  \n- Configure CORS headers to allow external access  \n\n---\n\n### US-4.3: Include Request/Response Examples in Documentation  \n**As a** developer  \n**I want** to include request/response examples for all MCP endpoints  \n**So that** users can understand API behavior without trial-and-error  \n\n**Acceptance Criteria:**  \n- Each endpoint in the documentation has at least one request example  \n- Examples include valid payloads and expected JSON responses  \n- Examples demonstrate edge cases (e.g., invalid inputs, error responses)  \n- Examples are formatted as code blocks with syntax highlighting  \n- Examples are versioned alongside the OpenAPI specification  \n\n**Technical Notes:**  \n- Use JSON snippets for request/response examples  \n- Validate examples against actual endpoint behavior  \n\n---\n\n### US-4.4: Document Authentication Requirements  \n**As a** developer  \n**I want** to document authentication requirements for MCP endpoints  \n**So that** users know how to securely interact with the API  \n\n**Acceptance Criteria:**  \n- Authentication methods (e.g., API keys, OAuth) are explicitly stated for each endpoint  \n- Required headers (e.g., `Authorization: Bearer <token>`) are included  \n- Example requests show authenticated payloads  \n- Error responses for missing/authentication failures are documented  \n- Authentication details are linked to the OpenAPI specification  \n\n**Technical Notes:**  \n- Use security definitions in OpenAPI spec  \n- Include authentication flow diagrams if applicable  \n\n---\n\n### US-4.5: Ensure External Accessibility of Documentation  \n**As a** developer  \n**I want** to ensure the OpenAPI documentation is accessible to external integrations  \n**So that** third-party tools can use the MCP server without ambiguity  \n\n**Acceptance Criteria:**  \n- Documentation is hosted at `/swagger-ui` and publicly accessible  \n- No authentication is required to view or test endpoints  \n- Documentation includes all endpoints and their parameters  \n- External tools (e.g., Postman, curl) can use the documented endpoints  \n- Documentation is versioned and includes release notes  \n\n**Technical Notes:**  \n- Configure server to serve static files at `/swagger-ui`  \n- Ensure no rate limiting or IP restrictions block external access"
+        }
+      }
+    ],
+    "File command builder": [
+      {
+        "json": {
+          "output": "```bash\nmkdir -p spec-driven-developer-dir\ncd spec-driven-developer-dir\nmkdir -p mcp-server\nmkdir -p spec-driven-developer-dir/mcp-server/backend\nmkdir -p spec-driven-developer-dir/mcp-server/backend/controllers\nmkdir -p spec-driven-developer-dir/mcp-server/backend/services\nmkdir -p spec-driven-developer-dir/mcp-server/backend/repositories\nmkdir -p spec-driven-developer-dir/mcp-server/backend/middleware\nmkdir -p spec-driven-developer-dir/mcp-server/backend/database\nmkdir -p spec-driven-developer-dir/mcp-server/backend/database/prisma\nmkdir -p spec-driven-developer-dir/mcp-server/frontend\nmkdir -p spec-driven-developer-dir/mcp-server/frontend/src\nmkdir -p spec-driven-developer-dir/mcp-server/frontend/src/components\nmkdir -p spec-driven-developer-dir/mcp-server/frontend/src/hooks\nmkdir -p spec-driven-developer-dir/mcp-server/frontend/src/types\nmkdir -p spec-driven-developer-dir/mcp-server/frontend/src/config\ntouch spec-driven-developer-dir/mcp-server/backend/controllers/schema.controller.ts\ntouch spec-driven-developer-dir/mcp-server/backend/controllers/tasks.controller.ts\ntouch spec-driven-developer-dir/mcp-server/backend/controllers/summary.controller.ts\ntouch spec-driven-developer-dir/mcp-server/backend/controllers/help.controller.ts\ntouch spec-driven-developer-dir/mcp-server/backend/services/schema.service.ts\ntouch spec-driven-developer-dir/mcp-server/backend/services/tasks.service.ts\ntouch spec-driven-developer-dir/mcp-server/backend/services/summary.service.ts\ntouch spec-driven-developer-dir/mcp-server/backend/repositories/prisma.repository.ts\ntouch spec-driven-developer-dir/mcp-server/backend/middleware/validation.middleware.ts\ntouch spec-driven-developer-dir/mcp-server/backend/database/prisma/schema.prisma\ntouch spec-driven-developer-dir/mcp-server/backend/database/prisma/prisma.service.ts\ntouch spec-driven-developer-dir/mcp-server/backend/swagger.yaml\ntouch spec-driven-developer-dir/mcp-server/backend/server.ts\ntouch spec-driven-developer-dir/mcp-server/frontend/package.json\ntouch spec-driven-developer-dir/mcp-server/frontend/README.md\ntouch spec-driven-developer-dir/mcp-server/frontend/.gitignore\ntouch spec-driven-developer-dir/mcp-server/frontend/.env\ntouch spec-driven-developer-dir/mcp-server/frontend/src/App.tsx\ntouch spec-driven-developer-dir/mcp-server/frontend/src/index.tsx\ntouch spec-driven-developer-dir/mcp-server/frontend/src/config/tsconfig.json\ntouch spec-driven-developer-dir/mcp-server/frontend/src/config/jest.config.js\ntouch spec-driven-developer-dir/mcp-server/frontend/src/config/webpack.config.js\n```"
+        }
+      }
+    ],
+    "Jira-structure-builder": [
+      {
+        "json": {
+          "output": "jira-specification/\n├── epic-1-mcp-server-core/\n│   ├── epic1-summary.md\n│   ├── us-1.1-initialize-mcp-server.md\n│   ├── us-1.2-implement-schema-inspection-endpoint.md\n│   ├── us-1.3-create-task-insertion-endpoint.md\n│   ├── us-1.4-implement-summary-endpoint.md\n│   └── us-1.5-secure-endpoints-with-authentication.md\n├── epic-2-schema-inspection-tool/\n│   ├── epic2-summary.md\n│   ├── us-2.1-expose-schema-inspection-endpoint.md\n│   └── us-2.2-validate-schema-consistency-with-database.md\n├── epic-3-data-insertion-and-validation/\n│   ├── epic3-summary.md\n│   ├── us-3.1-implement-mcp-tasks-endpoint.md\n│   ├── us-3.2-implement-mcp-tasks-summary-endpoint.md\n│   ├── us-3.3-validate-task-data-against-schema.md\n│   └── us-3.4-handle-malformed-input-errors.md\n└── epic-4-openapi-documentation/\n    ├── epic4-summary.md\n    ├── us-4.1-generate-openapi-specification.md\n    ├── us-4.2-expose-openapi-documentation-via-swagger-ui.md\n    ├── us-4.3-include-request-response-examples-in-documentation.md\n    └── us-4.4-document-authentication-requirements.md"
+        }
+      }
+    ],
+    "jira-specification-command-builder": [
+      {
+        "json": {
+          "output": "cd spec-driven-developer-dir\nmkdir -p jira-specification\nmkdir -p jira-specification/epic-1-mcp-server-core\nmkdir -p jira-specification/epic-2-schema-inspection-tool\nmkdir -p jira-specification/epic-3-data-insertion-and-validation\nmkdir -p jira-specification/epic-4-openapi-documentation\ntouch jira-specification/epic-1-mcp-server-core/epic1-summary.md\ntouch jira-specification/epic-1-mcp-server-core/us-1.1-initialize-mcp-server.md\ntouch jira-specification/epic-1-mcp-server-core/us-1.2-implement-schema-inspection-endpoint.md\ntouch jira-specification/epic-1-mcp-server-core/us-1.3-create-task-insertion-endpoint.md\ntouch jira-specification/epic-1-mcp-server-core/us-1.4-implement-summary-endpoint.md\ntouch jira-specification/epic-1-mcp-server-core/us-1.5-secure-endpoints-with-authentication.md\ntouch jira-specification/epic-2-schema-inspection-tool/epic2-summary.md\ntouch jira-specification/epic-2-schema-inspection-tool/us-2.1-expose-schema-inspection-endpoint.md\ntouch jira-specification/epic-2-schema-inspection-tool/us-2.2-validate-schema-consistency-with-database.md\ntouch jira-specification/epic-3-data-insertion-and-validation/epic3-summary.md\ntouch jira-specification/epic-3-data-insertion-and-validation/us-3.1-implement-mcp-tasks-endpoint.md\ntouch jira-specification/epic-3-data-insertion-and-validation/us-3.2-implement-mcp-tasks-summary-endpoint.md\ntouch jira-specification/epic-3-data-insertion-and-validation/us-3.3-validate-task-data-against-schema.md\ntouch jira-specification/epic-3-data-insertion-and-validation/us-3.4-handle-malformed-input-errors.md\ntouch jira-specification/epic-4-openapi-documentation/epic4-summary.md\ntouch jira-specification/epic-4-openapi-documentation/us-4.1-generate-openapi-specification.md\ntouch jira-specification/epic-4-openapi-documentation/us-4.2-expose-openapi-documentation-via-swagger-ui.md\ntouch jira-specification/epic-4-openapi-documentation/us-4.3-include-request-response-examples-in-documentation.md\ntouch jira-specification/epic-4-openapi-documentation/us-4.4-document-authentication-requirements.md"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Complete request decider",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complete request decider": {
+      "main": [
+        [
+          {
+            "node": "If Accepted input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Epic Creator": {
+      "main": [
+        [
+          {
+            "node": "Split Epic divider",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "User Story Creator": {
+      "main": [
+        [
+          {
+            "node": "Split Stories divider",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data flow builder": {
+      "main": [
+        [
+          {
+            "node": "openAPI builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "openAPI builder": {
+      "main": [
+        [
+          {
+            "node": "Project structure builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Project structure builder": {
+      "main": [
+        [
+          {
+            "node": "Test-Specification-Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "User Story Creator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File command builder": {
+      "main": [
+        [
+          {
+            "node": "Split file commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create loop objects for epic & US insertion": {
+      "main": [
+        [
+          {
+            "node": "Jira-structure-builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "Make item to nothing once",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "End message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook on success",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "clean up directory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Epic divider": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make item to nothing once": {
+      "main": [
+        [
+          {
+            "node": "data flow.md",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Export everything": {
+      "main": [
+        [
+          {
+            "node": "End message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Stories divider": {
+      "main": [
+        [
+          {
+            "node": "Data flow builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook on success": {
+      "main": [[]]
+    },
+    "claude.md": {
+      "main": [
+        [
+          {
+            "node": "execute claude.md",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "execute claude.md": {
+      "main": [
+        [
+          {
+            "node": "Export everything",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "execute openAPI.yaml": {
+      "main": [
+        [
+          {
+            "node": "file-structure.md",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "openapi.yaml": {
+      "main": [
+        [
+          {
+            "node": "execute openAPI.yaml",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "file-structure.md": {
+      "main": [
+        [
+          {
+            "node": "execute file-structure.md",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "execute file-structure.md": {
+      "main": [
+        [
+          {
+            "node": "claude.md",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "data flow.md": {
+      "main": [
+        [
+          {
+            "node": "execute data flow.md",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "execute data flow.md": {
+      "main": [
+        [
+          {
+            "node": "openapi.yaml",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "split epic commands": {
+      "main": [
+        [
+          {
+            "node": "execute epic commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "split story commands": {
+      "main": [
+        [
+          {
+            "node": "Split out story file commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "split file-structure commands": {
+      "main": [
+        [
+          {
+            "node": "execute file-structure commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "execute epic commands": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "execute story commands": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        []
+      ]
+    },
+    "execute file-structure commands": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 2
+          }
+        ],
+        []
+      ]
+    },
+    "format epic,stories and file-structure commands": {
+      "main": [
+        [
+          {
+            "node": "split epic commands",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "split story commands",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "split file-structure commands",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "split test spec commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "split jira-specification commands": {
+      "main": [
+        [
+          {
+            "node": "execute jira-specification commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "execute jira-specification commands": {
+      "main": [
+        [
+          {
+            "node": "format epic,stories and file-structure commands",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "jira-specification-command-builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split file commands": {
+      "main": [
+        [
+          {
+            "node": "Execute file Commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute file Commands": {
+      "main": [
+        [
+          {
+            "node": "Create loop objects for epic & US insertion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "File command builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Accepted input": {
+      "main": [
+        [
+          {
+            "node": "Epic Creator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook if bad input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Jira-structure-builder": {
+      "main": [
+        [
+          {
+            "node": "jira-specification-command-builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "jira-specification-command-builder": {
+      "main": [
+        [
+          {
+            "node": "split jira-specification commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model9": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Complete request decider",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model10": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Epic Creator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model11": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "User Story Creator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model12": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Data flow builder",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model16": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Jira-structure-builder",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model17": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "jira-specification-command-builder",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model15": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "File command builder",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model14": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Project structure builder",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model13": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "openAPI builder",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split out story file commands": {
+      "main": [
+        [
+          {
+            "node": "execute story commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model18": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Test-Specification-Command-Builder",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Test-Specification-Builder",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test-Specification-Command-Builder": {
+      "main": [
+        [
+          {
+            "node": "File command builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test-Specification-Builder": {
+      "main": [
+        [
+          {
+            "node": "Test-Specification-Command-Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "split test spec commands": {
+      "main": [
+        [
+          {
+            "node": "Split out test spec commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split out test spec commands": {
+      "main": [
+        [
+          {
+            "node": "execute test spec commands",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "execute test spec commands": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "timeSavedPerExecution": 1800
+  },
+  "versionId": "f3ba2b70-75c1-467c-bbde-e49de1c8e3d7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "558d88703fb65b2d0e44613bc35916258b0f0bf983c5d4730c00c424b77ca36a"
+  },
+  "id": "RguuZB10UVpLeTGc",
+  "tags": []
+}
