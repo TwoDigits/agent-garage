@@ -38,8 +38,7 @@ for any loss or damage resulting from its use.
 
 Use of this project does not imply any affiliation with or endorsement by Accenture.
 
-> [!NOTE]
-> **Enterprise Version Available:** While this is a showcase lab environment, an enterprise implementation version has been successfully deployed with one of our clients and has been in production for years. This demonstrates that the concepts behind this solution are enterprise-ready.
+> [!NOTE] > **Enterprise Version Available:** While this is a showcase lab environment, an enterprise implementation version has been successfully deployed with one of our clients and has been in production for years. This demonstrates that the concepts behind this solution are enterprise-ready.
 
 ## Key Features
 
@@ -79,7 +78,7 @@ cd agent-garage
 A container engine is required to run this multi-container system. Either Docker or Podman can be used. One of these must be selected prior to installation, as it serves as the foundational component for hosting the containers.
 
 ### Using Docker Compose
- 
+
 #### For Nvidia GPU Users
 
 ```bash
@@ -126,8 +125,7 @@ If you're running Ollama locally on your Mac (not in Docker), you need to modify
 in the n8n service configuration. Update the x-n8n section in your Docker Compose file as follows:
 
 ```yaml
-x-n8n: &service-n8n
-  # ... other configurations ...
+x-n8n: &service-n8n # ... other configurations ...
   environment:
     # ... other environment variables ...
     - OLLAMA_HOST=host.docker.internal:11434
@@ -171,7 +169,6 @@ to the Docker instance, unfortunately. There are two options in this case:
 2. Run Ollama on your Mac for faster inference, and connect to that from the
    n8n instance
 
-
 ```bash
 podman compose --file docker-compose.yml up
 ```
@@ -182,16 +179,15 @@ podman compose --file docker-compose.yml up
 podman compose --profile cpu --file docker-compose.yml up
 ```
 
-
 ## 🚀 Getting Started with the Agent Garage
 
 ### Key Goals of the Platform
 
-*  Use and interact with **preconfigured AI agents**
+- Use and interact with **preconfigured AI agents**
 
-* Create your **own workflows** using modular components
+- Create your **own workflows** using modular components
 
-* Get started quickly thanks to **labeled and guided workflows**
+- Get started quickly thanks to **labeled and guided workflows**
 
 All workflows in n8n are clearly labeled and structured, making it easy to understand their purpose and discover how agents are connected.
 The agent garage encourages to follow, explore, and build on the existing components.
@@ -206,13 +202,12 @@ The core of Agent Garage is a Docker Compose file, pre-configured with network a
 3. Enter the requested data. However, these do not have to be valid, as the e-mail address is not checked. You only have to set this up once.
 
    ![alt text](readme_images/SetUp-n8n.png)
+
 4. The dashboard will be loaded.
-
-
 
 ### Open WebUI
 
-1. Navigate to http://localhost:3000 .The Sign In page will appear: 
+1. Navigate to http://localhost:3000 .The Sign In page will appear:
 
    ![alt text](readme_images/sign_in_n8n.png)
 
@@ -227,6 +222,7 @@ The core of Agent Garage is a Docker Compose file, pre-configured with network a
 **Disclaimer:** Open WebUI is still under active development and is intended for experimentation and testing only. It is not recommended for production use. You may occasionally experience display delays within the Open WebUI interface. In this case, reloading the page or waiting a few seconds will usually solve the problem.
 
 ### Further steps
+
 When opening the n8n interface, you’ll see an overview of all available workflows .
 
 ![alt text](readme_images/n8n-Dashboard.png)
@@ -245,84 +241,270 @@ We recommend starting with this workflow to explore the basics before diving int
 
 Workflows belonging to the multi-agent system are marked with a green border. The structure follows a clear hierarchy:
 
-* The Manager-Agent is labeled with the number 2.
+- The **Manager-Agent** is labeled with the number **2**.
 
-* The connected sub-agents are numbered 2.1 to 2.4, each handling a specific task (e.g. log analysis, bug reporting, Jira interaction, user story generation).
+- The connected sub-agents are numbered 2.1 to 2.4, each handling a specific task (e.g. log analysis, bug reporting, Jira interaction, user story generation).
 
-* These workflows belong together and operate as a collaborative system coordinated by the Manager-Agent.
+- These workflows belong together and operate as a collaborative system coordinated by the Manager-Agent.
+
+🟪 **Advanced Automation Workflows**
+
+Advanced workflows demonstrate sophisticated multi-agent orchestration:
+
+- The **Spec-Driven Developer** (labeled 3) is a comprehensive workflow that transforms project ideas into complete specification packages using 11 specialized LLM agents working in sequence and parallel.
 
 ---
-### 1. Simple Workflow – *User Story Creator*
+
+### 1. Simple Workflow – _User Story Creator_
 
 For an easy first step, use the **User Story Creator** workflow in **n8n**. This workflow is designed to explore the basic functionality and interaction with the chat interface of **Open WebUI**.
+
 - 🔧 **Technically**, the workflow is based on a single AI-Agent that creates structured User Stories.
 
-- ✅ **Goal**: Get quick results & understand the platform basics  
-### How it works:  
-  1. Double click on the User Story Creator workflow 
+- ✅ **Goal**: Get quick results & understand the platform basics
 
-      ![alt text](readme_images/User-Story-Creator-n8n.png)
-  2. Take a moment to review the explanations in the workflow and explore AI agents in n8n.
-  3. Activate the workflow by clicking the Active Button:
+### How it works:
 
-      ![alt text](readme_images/Activated-Workflow.png)
-  4. In the chat interface of **Open WebUI** , select the **User Story Creator** chat from the list:
+1. Double click on the User Story Creator workflow
 
-      ![alt text](readme_images/User-Story-Creator-Chat.png)
+   ![alt text](readme_images/User-Story-Creator-n8n.png)
 
-  5. Enter a request (e.g. “Create a user story for a login function”)  via the chat interface and start interacting with the User Story Creator!
-  
+2. Take a moment to review the explanations in the workflow and explore AI agents in n8n.
+3. Activate the workflow by clicking the Active Button:
+
+   ![alt text](readme_images/Activated-Workflow.png)
+
+4. In the chat interface of **Open WebUI** , select the **User Story Creator** chat from the list:
+
+   ![alt text](readme_images/User-Story-Creator-Chat.png)
+
+5. Enter a request (e.g. “Create a user story for a login function”) via the chat interface and start interacting with the User Story Creator!
+
 This entry point is ideal for getting familiar with the **core concepts** of the platform and testing your own ideas.
 
 ### 2. Next Level: Multi-Agent System with Supervisor Architecture
 
 For the next step, use the **Multi-Agent System** workflow in **n8n**. This workflow is designed to demonstrate how multiple specialized AI agents collaborate under a supervisor architecture to handle selected tasks from the software development process.
- It consists of several specialized AI agents that work together to solve more complex tasks related to selected aspects of the software development process.
+It consists of several specialized AI agents that work together to solve more complex tasks related to selected aspects of the software development process.
 
-- 👥 Agents are clearly separated and each focuses on a specific task within the software development process.  
-- 🧠 The **Supervisor Architecture** ensures that a central agent (Manager-Agent) coordinates workflows and distributes tasks  
+- 👥 Agents are clearly separated and each focuses on a specific task within the software development process.
+- 🧠 The **Supervisor Architecture** ensures that a central agent (Manager-Agent) coordinates workflows and distributes tasks
 
 - 🔧 **Technically**, the workflow is coordinated by a central **Manager-Agent**, which delegates tasks to other specialized agents ( User-Story-Agent, Logfile-Agent, Bugreport-Agent, Jira-Agent).
 
-- ✅ **Goal**: Understand agent collaboration 
+- ✅ **Goal**: Understand agent collaboration
 
-### How it works:  
-  1. Double click on the **Manager-Agent** workflow
+### How it works:
 
-      ![alt text](readme_images/Manager-Agent.png)
-  2. Take a moment to review the explanations in the workflow and explore how the Manager-Agent and the other AI agents interact in **n8n**.  
-  3. Activate the workflow by clicking the Active Button:
+1. Double click on the **Manager-Agent** workflow
 
-      ![alt text](readme_images/Activated-Manager-Agent.png)
-  4. In the chat interface of **Open WebUI**, select the chat named **SDLC Agents**: 
+   ![alt text](readme_images/Manager-Agent.png)
 
-      ![alt text](readme_images/SDLC-Agents-Chat.png)
-  5. Enter a request (e.g. “Analyze this log file and create a bug report”) via the chat interface. The Manager-Agent will automatically coordinate the involved agents and return the result to you.
+2. Take a moment to review the explanations in the workflow and explore how the Manager-Agent and the other AI agents interact in **n8n**.
+3. Activate the workflow by clicking the Active Button:
+
+   ![alt text](readme_images/Activated-Manager-Agent.png)
+
+4. In the chat interface of **Open WebUI**, select the chat named **SDLC Agents**:
+
+   ![alt text](readme_images/SDLC-Agents-Chat.png)
+
+5. Enter a request (e.g. “Analyze this log file and create a bug report”) via the chat interface. The Manager-Agent will automatically coordinate the involved agents and return the result to you.
 
 ### Overview: Specialized Agents in the Multi-Agent System
 
-| Agent Name         | Responsibility                                         | Input / Artifacts | Output / Artifacts |
-|--------------------|--------------------------------------------------------|-------------------|--------------------|
-| **Jira-Agent**      | - Creating, searching, and updating tickets        |      - Ticket change <br>     - Search request for ticket <br>   - Ticket description     |  - Correctly modified data in Jira                  |
-| **Logfile-Agent**   | - Analysis of logfiles for critical bugs and stack traces    |   -Logfile                 |          - Detailed analysis of bugs (error description, cause of error, etc.)          |
-| **Bugreport-Agent** | - Generating structured bug reports based on analysis      |      - Detailed description of a bug             |       - Bugreport             |
-| **User-Story-Agent**| - Generating structured user stories from requests         |       - Idea for software feature            |       - User story             |
+| Agent Name           | Responsibility                                            | Input / Artifacts                                                          | Output / Artifacts                                                    |
+| -------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| **Jira-Agent**       | - Creating, searching, and updating tickets               | - Ticket change <br> - Search request for ticket <br> - Ticket description | - Correctly modified data in Jira                                     |
+| **Logfile-Agent**    | - Analysis of logfiles for critical bugs and stack traces | -Logfile                                                                   | - Detailed analysis of bugs (error description, cause of error, etc.) |
+| **Bugreport-Agent**  | - Generating structured bug reports based on analysis     | - Detailed description of a bug                                            | - Bugreport                                                           |
+| **User-Story-Agent** | - Generating structured user stories from requests        | - Idea for software feature                                                | - User story                                                          |
 
+### 3. Advanced Workflow: Spec-Driven Developer
+
+The **Spec-Driven Developer** is a comprehensive n8n workflow that transforms high-level project ideas into complete, specification-driven development documentation. This advanced workflow demonstrates the power of multi-agent orchestration for automating complex, multi-stage processes.
+
+- 🏗️ **11 Specialized LLM Agents**: Each agent is highly customized for specific specification tasks
+- 📦 **Complete Documentation Package**: Generates epics, user stories, data flows, OpenAPI specs, project structure, and test specifications
+- 🎯 **Test-Driven Development Ready**: Includes comprehensive test specifications organized by type (unit, integration)
+- 📋 **Jira-Compatible Output**: Exports specifications in Jira-ready format for immediate project management integration
+
+#### What It Generates
+
+The workflow produces a comprehensive specification package including:
+
+- **Epics & User Stories**: Structured breakdown with 1-15 epics and detailed user stories in standard format
+- **Data Flow Documentation**: Complete data architecture, entities, relationships, and flows
+- **OpenAPI Specification**: Production-ready API definitions (OpenAPI 3.1.0)
+- **Project Structure**: Detailed file and directory organization optimized for your tech stack
+- **Test Specifications**: Complete test suite organized by type:
+  - **Unit Tests**: Component-level tests for services, validators, and UI components
+  - **Integration Tests**: API endpoint and database integration scenarios
+  - **Test Data**: Fixtures and sample data
+- **CLAUDE.md**: AI-friendly specification file for seamless handoff to development agents
+
+#### Output Structure
+
+The workflow creates a `specification.tar.gz` file (located in `agent-garage/shared/`) containing:
+
+```
+example-app-folder/
+└── [proposed architecture folders & files]
+
+jira-specification/
+├── CLAUDE.md                               # AI-friendly specification
+├── data-flow.md                            # Data architecture
+├── openAPI.yaml                            # API specification
+├── app-file-structure.md                   # Project directory structure
+├── epic-1-[title]/
+│   ├── epic1-summary.md
+│   ├── us-1.1-[title].md
+│   └── us-1.2-[title].md
+└── epic-2-[title]/
+    ├── epic2-summary.md
+    ├── us-2.1-[title].md
+    └── us-2.2-[title].md
+
+test-specification/
+├── unit-tests/
+│   ├── backend-service-tests.md
+│   ├── backend-validation-tests.md
+│   └── frontend-component-tests.md
+├── integration-tests/
+│   ├── api-endpoint-tests.md
+│   └── database-integration-tests.md
+└── test-data/
+    └── fixtures.md
+```
+
+#### How It Works
+
+1. **Input**: Send a POST request to the webhook with your project parameters:
+
+   - Objectives
+   - Project scope
+   - Technologies
+   - Functional requirements
+   - Success criteria
+
+2. **Validation**: The "Complete Request Decider" agent validates input completeness and requests more information if needed
+
+3. **Multi-Stage Processing**: 11 specialized LLM agents work in sequence and parallel:
+
+   - **Core Specification Agents**:
+
+     - Epic Creator (generates 1-15 epics based on complexity)
+     - User Story Creator (detailed stories with acceptance criteria)
+     - Data Flow Builder
+     - OpenAPI Builder (OpenAPI 3.1.0)
+     - Project Structure Builder
+     - File Command Builder
+     - Jira Structure Builder
+     - Jira Specification Command Builder
+
+   - **Test Specification Agents**:
+     - Test Specification Builder (comprehensive test cases by type)
+     - Test Specification Command Builder (test folder structure)
+
+4. **Output**: Receive a webhook response with summary statistics and a downloadable tarball
+
+#### Example Response
+
+```json
+{
+    "status": "200",
+    "message": "Ran successfully:
+                - There is a tar-file ready for you to download in the shared
+                  folder of the docker container.
+                - The following is a summary of what has been done.
+
+Summary:
+- 9 Epics created
+- 27 User stories created
+- Data flow md created
+- openAPI.yaml created
+- App file structure md created
+- Test specifications created (unit, integration, e2e)
+- specification.tar.gz created and ready for download
+
+Have fun with your spec!"
+}
+```
+
+#### Usage
+
+1. Navigate to the **Spec-Driven Developer** workflow in n8n
+2. Review the workflow configuration and agent setup
+3. Activate the workflow
+4. Send a POST request to the webhook endpoint with your project description
+5. Download the generated `specification.tar.gz` from `agent-garage/shared/`
+
+#### Example Input
+
+```markdown
+# Build a Minimal Model Context Protocol (MCP) Server
+
+🎯 Objective
+Develop a MCP-compatible service in Node.js that allows an AI agent
+to interact with a Task Management database.
+
+🧩 Architecture
+[ AI Agent ] ⇅ [ Custom MCP Server (Node.js) ] ⇅ [ PostgreSQL DB ]
+
+📦 Project Scope
+Technologies: Node.js, PostgreSQL, NestJS + Prisma
+
+🔧 Functional Requirements
+
+- GET /mcp/schema/tasks - Returns database schema as JSON-Schema
+- POST /mcp/tasks - Accepts JSON array of Task objects
+- GET /mcp/tasks/summary - Returns task statistics
+
+✅ Success Criteria
+
+1. MCP Server running and accessible
+2. Schema inspection works
+3. AI agent can insert 1000 task records
+4. Summary reflects inserted data
+```
+
+#### Key Features
+
+- **Intelligent Complexity Analysis**: Automatically determines appropriate number of epics (1-15) based on project complexity
+- **Sprint-Ready Output**: User stories follow standard format with acceptance criteria
+- **Full Traceability**: Each test references related User Story (US-X.Y) for requirement tracking
+- **Test-Driven Development**: Developers can start with TDD approach from day one
+- **QA-Ready**: QA team can review test scenarios in parallel with development
+- **Absolute Mode Agents**: All agents configured for direct, no-filler responses
+- **Time Savings**: Estimated 1800 seconds of manual effort saved per execution
+
+#### Known Limitations
+
+- **n8n Timeout Behavior**: n8n may occasionally throw timeouts on random LLM calls due to the high number of agent nodes
+- **Response Delay**: Sometimes of unknown reasons, an n8n Agent Nodes takes up to 30 seconds to accept LLM API responses.
+- **LLM Model Requirements**: Requires competent LLM (20B+ parameters recommended) for reliable command execution. With smaller models (~20B), expect ~90% success rate - simply retrigger if needed
+
+#### Technical Configuration
+
+- **Execution Order**: v1 (sequential processing)
+- **Caller Policy**: workflowsFromSameOwner
+- **LLM Agents**: 11 specialized agents with custom system and user messages
+- **Output Format**: Tarball containing organized markdown and YAML files
 
 ## 💡 Notes
 
 ### Default Model
+
 The Llama 3.2 model is installed by default. You can use different LLMs by simply changing the model name in the `docker-compose.yml` file:
 
+![alt text](readme_images/change-llm.png)
 
-   ![alt text](readme_images/change-llm.png)
-
-   To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted.
+To be able to use the new LLM, all containers must be shut down and removed. The setup can then be restarted.
 
 ### Change logfile
+
 The **Logfile Agent** has access to a specific log file (`test.log`) located within the project folder.  
 If the log file is replaced or renamed, make sure to update the corresponding path and filename in the **n8n workflow** of the Logfile Agent to ensure correct analysis.
-
 
 ### Setting up Jira to use the Jira-Agent
 
@@ -344,13 +526,14 @@ If the log file is replaced or renamed, make sure to update the corresponding pa
 ![alt text](readme_images/Jira-License-Key.png)
 
 7. Now, Jira can be configured and projects can be set up. Note that only “tasks” exist as issue types in the jira version. The issue types "Story" and "Bug" must first be configured.
-Click on Settings at the top right of your profile, select Issues from the menu and configure the issue types Story and Bug as shown in the image.
+   Click on Settings at the top right of your profile, select Issues from the menu and configure the issue types Story and Bug as shown in the image.
 
 ![alt text](readme_images/Jira_issue_types.png)
 
 8. In order to link Jira with the n8n workflows, adapt the `.env` file.
 
 ### Create and configure personal access tokens
+
 1. Log in to your profile and open Settings.
 
 2. Select Personal Access Tokens in the left sidebar.
@@ -361,8 +544,8 @@ Click on Settings at the top right of your profile, select Issues from the menu 
 
    JIRA_PERSONAL_TOKEN=your_token
 
-
 ### Create project and store metadata
+
 1. Create a new repository or project in your GitHub organization or user account.
 
 2. Enter the following information in the .env file:
@@ -376,6 +559,7 @@ Click on Settings at the top right of your profile, select Issues from the menu 
 ### Platform Architecture
 
 The platform leverages containerization technology, where each component runs in its own container connected through a shared virtual network. This architecture provides:
+
 - Hardware independence and platform portability
 - Low entry barrier for new users
 - Simplified deployment with minimal setup steps
@@ -387,6 +571,7 @@ The platform leverages containerization technology, where each component runs in
 1. **User Input**: Users interact with the platform through OpenWebUI's chat interface, submitting requests for AI agent processing
 
 2. **n8n-Pipe Function**: OpenWebUI uses a custom Python function called "n8n-pipe" to bridge communication with n8n:
+
    - Intercepts user messages instead of sending them directly to an AI model
    - Forwards requests to n8n workflows via webhooks
    - Maintains session management for continuous conversations
@@ -394,6 +579,7 @@ The platform leverages containerization technology, where each component runs in
 3. **Webhook Trigger**: n8n receives the message through a webhook endpoint, which triggers the appropriate workflow containing the MAS implementation
 
 4. **Agent Processing**: Within n8n workflows:
+
    - AI agents access Large Language Models (LLMs) through Ollama
    - Agents can interact with external systems (e.g., Jira) via MCP clients
    - Multiple specialized agents collaborate to process the request
@@ -425,6 +611,7 @@ The platform extends existing tools rather than replacing them. Through n8n's ex
 ### Technical Considerations
 
 While the current implementation demonstrates technical feasibility and serves as an excellent proof of concept, please note:
+
 - This is designed for experimentation and educational purposes
 - Security, scalability, and reliability aspects would need enhancement for production use
 - The underlying concept can be adapted for enterprise-ready solutions
@@ -436,6 +623,7 @@ Agent Garage becomes even more powerful with the n8n-MCP (Model Context Protocol
 ### What is n8n-MCP?
 
 The n8n-MCP Server gives AI assistants comprehensive access to n8n node documentation and enables:
+
 - Chat-based workflow creation without deep n8n knowledge
 - Smart node search and suggestions
 - Validation of node configurations before deployment
@@ -444,18 +632,20 @@ The n8n-MCP Server gives AI assistants comprehensive access to n8n node document
 ### Quick Start
 
 1. **Installation via npx (recommended):**
+
    ```bash
    npx n8n-mcp
    ```
 
 2. **Configure in your AI development environment:**
+
    - Add the MCP server to your Claude/Cursor/Windsurf configuration
    - Start a new chat and describe your desired workflow
 
 3. **Create workflows:**
    Simply describe in chat what you want to automate:
    ```
-   "Create a workflow that daily fetches emails from Gmail, 
+   "Create a workflow that daily fetches emails from Gmail,
    saves attachments to Google Drive, and sends a Slack notification"
    ```
 
@@ -466,7 +656,6 @@ The n8n-MCP Server gives AI assistants comprehensive access to n8n node document
 - **Error reduction:** Automatic validation of node configurations
 
 For more details and complete documentation, visit the [n8n-MCP Repository](https://github.com/czlonkowski/n8n-mcp).
-
 
 ## Upgrading
 
@@ -547,7 +736,6 @@ interact with the local filesystem.
 > workflows. While it’s not fully optimized for production environments, it
 > combines robust components that work well together for proof-of-concept
 > projects. You can customize it to meet your specific needs
-
 
 ## 📜 License
 
