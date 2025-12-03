@@ -125,7 +125,8 @@ If you're running Ollama locally on your Mac (not in Docker), you need to modify
 in the n8n service configuration. Update the x-n8n section in your Docker Compose file as follows:
 
 ```yaml
-x-n8n: &service-n8n # ... other configurations ...
+x-n8n: &service-n8n 
+# ... other configurations ...
   environment:
     # ... other environment variables ...
     - OLLAMA_HOST=host.docker.internal:11434
