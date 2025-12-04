@@ -513,26 +513,24 @@ If the log file is replaced or renamed, make sure to update the corresponding pa
 1. Navigate to http://localhost:8080
 2. The Jira-Setup page will be visible
 
-![alt text](readme_images/Jira-Setup.png)
-
-3. Click on "I'll set it up myself" and continue.
-
-4. Choose "Built In Database".
+3. Select Database Type PostgreSQL and fill in the required fields. Default values are provided in the `.env` file.
 
 ![alt text](readme_images/Jira-Database-Setup.png)
 
-5. The application properties can be adopted by default.
+4. The application properties can be adopted by default.
 
-6. The next step is to generate a Server ID, which is required to use Jira. In addition, a Jira license must be available to which the Server ID is linked. If the license is not available, click on the “Generate a new trial license” for jira Software (Data Center) with the link below.
+![alt text](readme_images/Jira-Application-Properties.png)
+
+5. The next step is to generate a Server ID, which is required to use Jira. In addition, a Jira license must be available to which the Server ID is linked. If the license is not available, click on the “Generate a new trial license” for jira Software (Data Center) with the link below.
 
 ![alt text](readme_images/Jira-License-Key.png)
 
-7. Now, Jira can be configured and projects can be set up. Note that only “tasks” exist as issue types in the jira version. The issue types "Story" and "Bug" must first be configured.
-   Click on Settings at the top right of your profile, select Issues from the menu and configure the issue types Story and Bug as shown in the image.
+6. Now, Jira can be configured and projects can be set up. Note that only “tasks” exist as issue types in the jira version. The issue types "Story" and "Bug" must first be configured.
+Click on Settings at the top right of your profile, select Issues from the menu and configure the issue types Story and Bug as shown in the image.
 
 ![alt text](readme_images/Jira_issue_types.png)
 
-8. In order to link Jira with the n8n workflows, adapt the `.env` file.
+7. In order to link Jira with the n8n workflows, adapt the `.env` file.
 
 ### Create and configure personal access tokens
 

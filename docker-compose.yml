@@ -1,6 +1,7 @@
 volumes:
   n8n_storage:
   postgres_storage:
+  postgres_jira_storage:
   ollama_storage:
   qdrant_storage:
   jira_storage:
@@ -84,6 +85,24 @@ services:
       - postgres_storage:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -h localhost -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  postgres-jira:
+    image: postgres:16-alpine
+    hostname: postgres-jira
+    container_name: postgres-jira
+    networks: ['demo']
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${JIRA_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${JIRA_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${JIRA_POSTGRES_DB}
+    volumes:
+      - postgres_jira_storage:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -h localhost -U ${JIRA_POSTGRES_USER} -d ${JIRA_POSTGRES_DB}']
       interval: 5s
       timeout: 5s
       retries: 10
@@ -195,7 +214,7 @@ services:
      - ollama-gpu-amd
 
   jira:
-    image: cptactionhank/atlassian-jira:latest
+    image: atlassian/jira-software:latest
     hostname: jira
     container_name: jira
     networks: ['demo']
@@ -203,7 +222,10 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - jira_storage:/var/atlassian/jira
+      - jira_storage:/var/atlassian/application-data/jira
+    depends_on:
+      postgres-jira:
+        condition: service_healthy
 
   mcp-server:
     image: ghcr.io/sooperset/mcp-atlassian:latest
